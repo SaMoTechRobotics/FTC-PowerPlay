@@ -39,6 +39,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.Came
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 
+
+import com.acmerobotics.dashboard.FtcDashboard;
+
 /**
  * This 2022-2023 OpMode illustrates the basics of using the TensorFlow Object Detection API to
  * determine which image is being presented to the robot.
@@ -68,18 +71,6 @@ public class CameraTest extends LinearOpMode {
       "3 Panel"
     };
 
-    /*
-     * IMPORTANT: You need to obtain your own license key to use Vuforia. The string below with which
-     * 'parameters.vuforiaLicenseKey' is initialized is for illustration only, and will not function.
-     * A Vuforia 'Development' license key, can be obtained free of charge from the Vuforia developer
-     * web site at https://developer.vuforia.com/license-manager.
-     *
-     * Vuforia license keys are always 380 characters long, and look as if they contain mostly
-     * random data. As an example, here is a example of a fragment of a valid key:
-     *      ... yIgIzTqZ4mWjk9wd3cZO9T1axEqzuhxoGlfOOI2dRzKS4T0hQ8kT ...
-     * Once you've obtained a license key, copy the string from the Vuforia web site
-     * and paste it in to your code on the next line, between the double quotes.
-     */
     private static final String VUFORIA_KEY =
             "Abp0NU7/////AAABmQedb7TAVUQatPEi5Nz7wMISMvR04YthYTgVl234gSVsQt8WS71fidOvJDcokKxADcc2bb8Qy44vEOU8YMM6lwH3wYBMF3fFG49XWRHU1MYUDsx93i1rwmSYt0SOehFf3dsnN5QBHJRrb0gYHPVV9rOal3ZdvXHS8pnAgnWxueyo5Ctsn4pU3qUox9lEgM8ZpKnKJHeYGWoLV+zuerA+dr+SpQj4CCSv9qsAc9vCS+iI46cKTuzgBG8navGrn8r9LO9yKuXOVkjD3l0rxLNH54FNfKWvmxTsJR3jKGzW8fCuMdEpHESGwQeMr34KZ9tyaeB12fdnZI+XjgjIlKRv6aSWSP0BQJPK1fZIUkWdsOID";
 
@@ -179,10 +170,11 @@ public class CameraTest extends LinearOpMode {
         tfodParameters.isModelTensorFlow2 = true;
         tfodParameters.inputSize = 300;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-
+        
         // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
         // Use loadModelFromFile() if you have downloaded a custom team model to the Robot Controller's FLASH.
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
         // tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
+        // FtcDashboard.getInstance().startCameraStream(hardwareMap.appContext.getPackageName(), 0);
     }
 }
