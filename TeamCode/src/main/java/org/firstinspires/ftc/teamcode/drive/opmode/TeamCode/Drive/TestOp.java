@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 
+
 @TeleOp(name = "TestOp", group = "Drive")
 public class TestOp extends LinearOpMode {
 
@@ -23,11 +24,11 @@ public class TestOp extends LinearOpMode {
             
             TelemetryPacket packet = new TelemetryPacket();
             packet.put("working", "yes!");
-            packet.fieldOverlay()
-            .setFill("blue")
-            .fillRect(-20, -20, 40, 40);
             dashboard.sendTelemetryPacket(packet);
             
+
+            DashboardPreview.updateField();
         }
     }
 }
+
