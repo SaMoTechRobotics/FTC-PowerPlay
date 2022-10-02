@@ -19,6 +19,7 @@ public class TestOp extends LinearOpMode {
         
         while (opModeIsActive()) {
             telemetry.addData("ROBOT IS WORKING?", "Yes it is!");
+            telemetry.addData("Using PLTW Laptop?", "Yep!");
             telemetry.addData("Saved Drive Speed Mid", DriveSpeeds.MidDriveSpeed);
             telemetry.update();
             
