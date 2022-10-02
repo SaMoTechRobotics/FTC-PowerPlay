@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.acmerobotics.dashboard.FtcDashboard;
-
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 @TeleOp(name = "SlideTest", group = "TeleOp")
 public class SlideTest extends LinearOpMode {
