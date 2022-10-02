@@ -24,6 +24,7 @@ public class TestOp extends LinearOpMode {
             telemetry.update();
             
             TelemetryPacket packet = new TelemetryPacket();
+            packet.put("Status", "Status: Running");
             packet.put("working", "yes!");
             dashboard.sendTelemetryPacket(packet);
             
