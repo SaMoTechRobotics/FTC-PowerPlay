@@ -14,7 +14,8 @@ public class Slide {
 
     
     public static void init() {
-           
+
+
     }
    
     public static void set(int heightPercentage, double speed) {
