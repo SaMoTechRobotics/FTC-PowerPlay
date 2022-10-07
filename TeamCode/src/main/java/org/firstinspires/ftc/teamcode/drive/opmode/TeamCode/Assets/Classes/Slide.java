@@ -2,13 +2,21 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 public class Slide {
     public static double MaxTicks = -2000;
     public static double MinTicks = 0;
 
+    public static DcMotor LeftMotor;
+    public static DcMotor RightMotor;
+
     
+    public static void init() {
+           
+    }
+   
     public static void set(int heightPercentage, double speed) {
         int ticks = Slide.percentToTicks(heightPercentage);
 

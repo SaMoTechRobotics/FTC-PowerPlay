@@ -18,38 +18,20 @@ public class SlideTest extends LinearOpMode {
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
-        SlideMotor = hardwareMap.get(DcMotor.class, "slide");
+
+        Slide.LeftMotor = hardwareMap.get(DcMotor.class, "slide");
+
+        Slide.init();
+
+
         SlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         SlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         SlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        // SlideMotor.setTargetPosition((int) SlideInfo.MaxTicks);
-
-        // SlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         waitForStart();
-
-        // SlideMotor.setPower(0.2);
-
-        // while (opModeIsActive() && SlideMotor.isBusy()) {
-        //     if (gamepad1.a) {
-        //         SlideMotor.setPower(SlideSpeeds.Stop);
-        //     }
-
-        //     telemetry.addData("Busy", SlideMotor.isBusy());
-        //     telemetry.addData("Position", SlideMotor.getCurrentPosition());
-        //     telemetry.addData("Target", SlideMotor.getTargetPosition());
-        //     telemetry.addData("Power", SlideMotor.getPower());
-        //     telemetry.addData("Mode", SlideMotor.getMode());
-        //     telemetry.addData("Direction", SlideMotor.getDirection());
-
-        //     telemetry.update();
-        //     idle();
-        // }
-
-        // SlideMotor.setPower(SlideSpeeds.Stop);
-
+        
         while (opModeIsActive()) {
 
             if (gamepad1.left_stick_y != 0) {
@@ -64,22 +46,22 @@ public class SlideTest extends LinearOpMode {
             }
 
             if (gamepad1.dpad_up) {
-            setSlide(SlideHeights.HighPole, SlideSpeeds.Max);
+            setSlide(SlideHeight.HighPole, SlideSpeed.Max);
             }
             if (gamepad1.dpad_down) {
-            setSlide(SlideHeights.LowPole, SlideSpeeds.Max);
+            setSlide(SlideHeight.LowPole, SlideSpeed.Max);
             }
             if (gamepad1.dpad_left) {
-            setSlide(SlideHeights.MidPole, SlideSpeeds.Max);
+            setSlide(SlideHeight.MidPole, SlideSpeed.Max);
             }
             if (gamepad1.dpad_right) {
-            setSlide(SlideHeights.Ground, SlideSpeeds.Max);
+            setSlide(SlideHeight.Ground, SlideSpeed.Max);
             }
 
             telemetry.addData("SlideHeight", SlideMotor.getCurrentPosition());
             
             if (SlideMotor.isBusy()) {
-                telemetry.addData("SlideMotor", "Busy");
+                 telemetry.addData("SlideMotor", "Busy");
                 SlideMoving = true;
             } else {
                 telemetry.addData("SlideMotor", "Not Busy");

@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class SlideHeights {
+public class SlideHeight {
     public static double HighPole = 100.0;
     public static double MidPole = 75.0;
     public static double LowPole = 50.0;
