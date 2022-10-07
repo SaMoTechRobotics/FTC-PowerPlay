@@ -6,38 +6,38 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 public class Slide {
-    public static double MaxTicks = -2000;
-    public static double MinTicks = 0;
+    public DcMotor LeftMotor;
+    public DcMotor RightMotor;
 
-    public static DcMotor LeftMotor;
-    public static DcMotor RightMotor;
+    public Slide(DcMotor LeftMotor, DcMotor RightMotor) {
+        this.LeftMotor = LeftMotor;
+        this.RightMotor = RightMotor;
+    }
 
-    
-    public static void init() {
 
-
+    public void setPower(double power) {
+        this.LeftMotor.setPower(power);
+        this.RightMotor.setPower(power);
     }
    
-    public static void set(int heightPercentage, double speed) {
-        int ticks = Slide.percentToTicks(heightPercentage);
+    public void setHeight(int heightPercentage, double speed) {
+        int ticks = this.percentToTicks(heightPercentage);
 
-        SlideMotor.setTargetPosition(ticks);
-        SlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        SlideMotor.setPower(speed);
+        this.LeftMotor.setTargetPosition(ticks);
+        this.LeftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.LeftMotor.setPower(speed);
 
-        SlideMoving = true;
 
-        while (SlideMotor.isBusy()) {
+        while (this.LeftMotor.isBusy()) {
             telemetry.addData("Slide Moving", SlideMotor.getCurrentPosition());
             telemetry.update();
         }
 
-        SlideMotor.setPower(0);
-        SlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        SlideMoving = false;
+        this.LeftMotor.setPower(0);
+        this.LeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     }
 
-    public static int percentToTicks(int heightPercentage) {
+    public int percentToTicks(int heightPercentage) {
         return (int)(((double) heightPercentage) / 100 * SlideInfo.MaxTicks);
     }
 }
