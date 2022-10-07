@@ -19,9 +19,7 @@ public class SlideTest extends LinearOpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
 
-        Slide.LeftMotor = hardwareMap.get(DcMotor.class, "slide");
-
-        Slide.init();
+        SlideMotor = hardwareMap.get(DcMotor.class, "slide");
 
 
         SlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
