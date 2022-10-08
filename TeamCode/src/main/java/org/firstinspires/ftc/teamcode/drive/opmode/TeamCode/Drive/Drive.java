@@ -9,6 +9,7 @@ public class Drive extends LinearOpMode {
 
 
     private Slide Slide;
+    private Chassis Chassis;
     
     @Override
     public void runOpMode() throws InterruptedException {
@@ -18,6 +19,13 @@ public class Drive extends LinearOpMode {
         Slide = new Slide(
             hardwareMap.get(DcMotor.class, "slideLeft"),
             hardwareMap.get(DcMotor.class, "slideRight")
+        );
+
+        Chassis = new Chassis(
+            hardwareMap.get(DcMotor.class, "frontLeft"),
+            hardwareMap.get(DcMotor.class, "frontRight"),
+            hardwareMap.get(DcMotor.class, "backLeft"),
+            hardwareMap.get(DcMotor.class, "backRight")
         );
         
         waitForStart();

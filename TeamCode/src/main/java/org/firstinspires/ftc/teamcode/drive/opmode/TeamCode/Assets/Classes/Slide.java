@@ -4,7 +4,9 @@ import com.acmerobotics.dashboard.config.Config;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-
+/**
+ * Slide class which contains all the methods for the slide of the robot
+*/
 public class Slide {
     public DcMotor LeftMotor;
     public DcMotor RightMotor;
