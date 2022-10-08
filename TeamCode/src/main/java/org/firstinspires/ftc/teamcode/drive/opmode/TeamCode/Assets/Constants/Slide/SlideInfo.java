@@ -13,7 +13,7 @@ public class SlideInfo {
      * The max and min ticks of the slide
      * The max is the ticks of the motor when slide is fully extended
     */
-    public static double MaxTicks = 520.0;
+    public static double MaxTicks = -2000.0;
     public static double MinTicks = 0.0;
     
     /**
