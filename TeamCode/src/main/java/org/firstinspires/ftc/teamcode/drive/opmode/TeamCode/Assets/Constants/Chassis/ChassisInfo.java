@@ -23,7 +23,7 @@ public static class ChassisInfo {
     /**
      * The circumference of the wheel in inches
      */
-    public static double WheelCircumference = WheelDiameter * Math.PI;
+    public static final double WheelCircumference = WheelDiameter * Math.PI;
 
     /**
      * The width of the wheel in inches
@@ -33,10 +33,10 @@ public static class ChassisInfo {
     /**
      * The ticks per revolution of the motor
     */
-    public static double TicksPerRev = 537.6;
+    public static final double TicksPerRev = 537.6;
 
     /**
      * The distance between the center of the wheels
     */
-    public static double InnerWidth = FullWidth - WheelWidth;
+    public static final double InnerWidth = FullWidth - WheelWidth;
 }

@@ -33,6 +33,6 @@ public class ChassisSpeed {
     /**
      * The max and min speeds of the chassis motors
     */
-    public static double Max = 1.0;
-    public static double Min = 0.0;
+    public static final double Max = 1.0;
+    public static final double Min = 0.0;
 }
