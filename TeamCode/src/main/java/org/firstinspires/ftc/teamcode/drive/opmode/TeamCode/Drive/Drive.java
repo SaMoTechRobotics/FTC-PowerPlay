@@ -17,8 +17,7 @@ public class Drive extends LinearOpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         
         Slide = new Slide(
-            hardwareMap.get(DcMotor.class, "slideLeft"),
-            hardwareMap.get(DcMotor.class, "slideRight")
+            hardwareMap.get(DcMotor.class, "slide")
         );
 
         Chassis = new Chassis(
@@ -27,7 +26,7 @@ public class Drive extends LinearOpMode {
             hardwareMap.get(DcMotor.class, "backLeft"),
             hardwareMap.get(DcMotor.class, "backRight")
         );
-        
+       
         waitForStart();
         
         while (opModeIsActive()) {

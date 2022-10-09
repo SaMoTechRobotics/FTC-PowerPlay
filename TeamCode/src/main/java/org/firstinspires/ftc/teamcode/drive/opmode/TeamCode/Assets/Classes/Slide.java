@@ -8,26 +8,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Slide class which contains all the methods for the slide of the robot
 */
 public class Slide {
-    public DcMotor LeftMotor;
-    public DcMotor RightMotor;
+    public DcMotor SlideMotor;
 
     /**
      * Creates a new slide with only 1 motor
-     * @param MainMotor The motor that will be used for the slide as both left and right
+     * @param SlideMotor The motor that will be used for the slide as both left and right
     */     
-    public Slide(DcMotor MainMotor) {
-        this.LeftMotor = MainMotor;
-        this.RightMotor = MainMotor;
-    }
-
-    /**
-     * Creates a new slide with 2 motors
-     * @param LeftMotor The left motor of the slide
-     * @param RightMotor The right motor of the slide
-    */
-    public Slide(DcMotor LeftMotor, DcMotor RightMotor) {
-        this.LeftMotor = LeftMotor;
-        this.RightMotor = RightMotor;
+    public Slide(DcMotor SlideMotor) {
+        this.SlideMotor = SlideMotor;
     }
 
     /**
@@ -35,8 +23,7 @@ public class Slide {
      * @param power The power to set the motors to, from -1.0 to 1.0
     */
     public void setPower(double power) {
-        this.LeftMotor.setPower(power);
-        this.RightMotor.setPower(power);
+        this.SlideMotor.setPower(power);
     }
 
     /**
@@ -44,8 +31,7 @@ public class Slide {
      * @param mode The mode to set the motors to, from DcMotor.RunMode enum
     */
     public void setMode(DcMotor.RunMode mode) {
-        this.LeftMotor.setMode(mode);
-        this.RightMotor.setMode(mode);
+        this.SlideMotor.setMode(mode);
     }
 
     /**
@@ -53,8 +39,7 @@ public class Slide {
      * @param target The target position in ticks
     */
     public void setTarget(int target) {
-        this.LeftMotor.setTargetPosition(target);
-        this.RightMotor.setTargetPosition(target);
+        this.SlideMotor.setTargetPosition(target);
     }
    
     /**
