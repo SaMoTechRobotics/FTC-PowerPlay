@@ -7,7 +7,7 @@ import com.acmerobotics.dashboard.config.Config;
  * This class contains all the constants for the chassis
  * All measurements are in inches
 */
-public static class ChassisInfo {
+public class ChassisInfo {
     /**
      * The full dimensions of the robot measured from outside to outside
      */

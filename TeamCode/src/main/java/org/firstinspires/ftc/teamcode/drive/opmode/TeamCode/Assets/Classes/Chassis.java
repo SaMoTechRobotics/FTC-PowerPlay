@@ -12,11 +12,11 @@ public class Chassis {
     /**
      * The motors of the chassis
     */
-    public static class Wheels {
-        public DcMotor FrontLeft;
-        public DcMotor FrontRight;
-        public DcMotor BackLeft;
-        public DcMotor BackRight;
+    public class Wheels {
+        public static DcMotor FrontLeft;
+        public static DcMotor FrontRight;
+        public static DcMotor BackLeft;
+        public static DcMotor BackRight;
     }
 
     /**

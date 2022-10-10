@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.acmerobotics.dashboard.FtcDashboard;
 
+import com.qualcomm.robotcore.hardware.DcMotor;
+
 @TeleOp(name = "Drive", group = "TeleOp")
 public class Drive extends LinearOpMode {
 

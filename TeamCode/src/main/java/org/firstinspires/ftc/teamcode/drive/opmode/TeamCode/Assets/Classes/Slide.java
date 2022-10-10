@@ -47,7 +47,7 @@ public class Slide {
      * @param height The target position as percentage
     */
     public void setHeight(int height, double speed) {
-        int ticks = this.percentToTicks(heightPercentage);
+        int ticks = this.percentToTicks(height);
 
         this.setTarget(ticks);
         this.setMode(DcMotor.RunMode.RUN_TO_POSITION);
