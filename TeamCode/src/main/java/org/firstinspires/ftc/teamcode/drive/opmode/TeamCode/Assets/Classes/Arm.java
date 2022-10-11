@@ -20,4 +20,9 @@ public class Arm {
 
     }
 
+    
+
+    private final double rotationToPosition(double rotation) {
+        return (rotation - ArmPosition.Min) / (ArmPosition.Max - ArmPosition.Min);
+    }
 }
