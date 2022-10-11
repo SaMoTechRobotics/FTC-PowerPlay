@@ -5,20 +5,22 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.acmerobotics.dashboard.FtcDashboard;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Drive", group = "TeleOp")
 public class Drive extends LinearOpMode {
 
-    private Slide Slide;
     private Chassis Chassis;
+    private Slide Slide;
+    private Claw Claw;
+
+    private GampepadEx Gamepad1;
+    private GamepadEx Gamepad2;
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
-
-        // Initialize the slide
-        Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
 
         // Chassis = new Chassis(
         // hardwareMap.get(DcMotor.class, "frontLeft"),
@@ -26,6 +28,17 @@ public class Drive extends LinearOpMode {
         // hardwareMap.get(DcMotor.class, "backLeft"),
         // hardwareMap.get(DcMotor.class, "backRight")
         // );
+
+        // Initialize the slide
+        Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
+
+        // Initialize the claw
+        Claw = new Claw(hardwareMap.get(Servo.class, "claw"));
+
+        // Initialize the gamepad
+        Gamepad1 = new GamepadEx(gamepad1);
+        Gamepad2 = new GamepadEx(gamepad2);
+            
 
         waitForStart();
 

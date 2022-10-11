@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * Slide class which contains all the methods for the slide of the robot
 */
 public class Slide {
-    public DcMotor SlideMotor;
+    private DcMotor SlideMotor;
 
     /**
      * Creates a new slide with only 1 motor
@@ -62,7 +62,7 @@ public class Slide {
      * Converts a percentage to ticks
      * @param height The target position as percentage
     */
-    public int percentToTicks(int percent) {
+    private int percentToTicks(int percent) {
         return (int)(((double) percent) / 100 * SlideInfo.MaxTicks);
     }
 }
