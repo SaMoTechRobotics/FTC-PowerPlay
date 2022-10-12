@@ -20,8 +20,22 @@ public class Arm {
 
     }
 
+    /**
+     * Sets the position of the servo
+     * @param position The position to set the servo to as rotation in degrees
+    */
+    public final void setRotation(double rotation) {
+        this.ArmServo.setPosition(
+            this.percentToPosition(rotation) // Converts the position to a percentage
+        );
+    }
     
 
+    /**
+     * Converts a percentage to a servo position
+     * @param percent The percentage to convert as an int
+     * @return The servo position as a double
+    */
     private final double rotationToPosition(double rotation) {
         return (rotation - ArmPosition.Min) / (ArmPosition.Max - ArmPosition.Min);
     }

@@ -63,6 +63,6 @@ public class Slide {
      * @param height The target position as percentage
     */
     private int percentToTicks(int percent) {
-        return (int)(((double) percent) / 100 * SlideInfo.MaxTicks);
+        return (int)(((double) percent) / 100 * SlideHeight.MaxTicks);
     }
 }

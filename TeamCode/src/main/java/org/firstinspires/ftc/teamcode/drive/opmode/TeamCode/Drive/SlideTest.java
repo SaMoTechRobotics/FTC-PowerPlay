@@ -74,7 +74,7 @@ public class SlideTest extends LinearOpMode {
         // if (SlideMoving)
         //     return;
 
-        double ticks = (height * 0.01) * SlideInfo.MaxTicks;
+        double ticks = (height * 0.01) * SlideHeight.MaxTicks;
         telemetry.addData("SlideTicks", ticks);
         telemetry.update();
 

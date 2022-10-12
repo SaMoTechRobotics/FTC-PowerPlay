@@ -12,6 +12,7 @@ public class Drive extends LinearOpMode {
 
     private Chassis Chassis;
     private Slide Slide;
+    private Arm Arm;
     private Claw Claw;
 
     private GampepadEx Gamepad1;
@@ -31,6 +32,9 @@ public class Drive extends LinearOpMode {
 
         // Initialize the slide
         Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
+
+        // Initialize the arm
+        Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
 
         // Initialize the claw
         Claw = new Claw(hardwareMap.get(Servo.class, "claw"));
