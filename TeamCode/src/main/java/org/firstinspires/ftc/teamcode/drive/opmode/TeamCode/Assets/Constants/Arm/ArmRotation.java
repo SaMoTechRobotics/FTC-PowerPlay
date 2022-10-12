@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class ArmPosition {
+public class ArmRotation {
     
     /**
      * Max and min rotations of the arm, ex: -90.0 to 90.0 degrees resulting in 180 degree range
@@ -18,7 +18,7 @@ public class ArmPosition {
     public static double FullRight = 90.0;
 
     /**
-     * The half rotations of the arm to the left and right
+     * The half rotations of the arm to the left and right where arm is still within robot boundries
      */
     public static double Left = -45.0;
     public static double Right = 45.0;

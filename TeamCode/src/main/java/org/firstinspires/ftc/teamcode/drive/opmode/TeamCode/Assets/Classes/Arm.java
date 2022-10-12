@@ -18,6 +18,7 @@ public class Arm {
     public Arm(Servo ArmServo) {
         this.ArmServo = ArmServo;
 
+        this.ArmServo.scaleRange(ArmRotation.Min, ArmRotation.Max);
     }
 
     /**
@@ -32,11 +33,11 @@ public class Arm {
     
 
     /**
-     * Converts a percentage to a servo position
-     * @param percent The percentage to convert as an int
-     * @return The servo position as a double
+     * Converts a rotation to a servo position
+     * @param percent The rotation to convert to servo position
+     * @return The servo position from rotation
     */
     private final double rotationToPosition(double rotation) {
-        return (rotation - ArmPosition.Min) / (ArmPosition.Max - ArmPosition.Min);
+        return rotation;
     }
 }
