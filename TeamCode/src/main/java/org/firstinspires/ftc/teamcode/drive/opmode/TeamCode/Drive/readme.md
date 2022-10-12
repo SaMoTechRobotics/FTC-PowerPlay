@@ -15,7 +15,7 @@ Joysticks
 
 Buttons
 ---
-| Button | Type | Description  |
+| Button | Description  |
 | --- | --- | --- |
 | `Y` | Unassigned |
 | `X` | Unassigned |
