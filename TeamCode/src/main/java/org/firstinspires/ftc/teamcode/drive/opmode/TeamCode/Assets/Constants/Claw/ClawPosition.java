@@ -14,14 +14,14 @@ public class ClawPosition {
     /**
      * The max open and close positions of the claw
      */
-    public static int MaxOpen = 100;
-    public static int MaxClosed = 0;
+    public static double MaxOpen = 100;
+    public static double MaxClosed = 0;
 
     /**
-     * The normal open and close positions of the claw
+     * The open and close positions of the claw
      */
-    public static int Open = 90;
-    public static int Closed = 40;
+    public static double Open = 90;
+    public static double Closed = 40;
 
     
     

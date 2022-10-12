@@ -46,7 +46,7 @@ public class Slide {
      * Sets the target position of the motors
      * @param height The target position as percentage
     */
-    public void setHeight(int height, double speed) {
+    public void setHeight(double height, double speed) {
         int ticks = this.percentToTicks(height);
 
         this.setTarget(ticks);
@@ -62,7 +62,7 @@ public class Slide {
      * Converts a percentage to ticks
      * @param height The target position as percentage
     */
-    private int percentToTicks(int percent) {
-        return (int)(((double) percent) / 100 * SlideHeight.MaxTicks);
+    private int percentToTicks(double percent) {
+        return (int)(percent / 100 * SlideHeight.MaxTicks);
     }
 }

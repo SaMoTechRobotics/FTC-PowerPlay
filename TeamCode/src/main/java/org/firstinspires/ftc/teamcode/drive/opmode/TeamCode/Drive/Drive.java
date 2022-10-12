@@ -42,25 +42,37 @@ public class Drive extends LinearOpMode {
         // Initialize the gamepad
         Gamepad1 = new GamepadEx(gamepad1);
         Gamepad2 = new GamepadEx(gamepad2);
-            
+
+        ToggleButtonReader clawToggleButton = new ToggleButtonReader(
+                Gamepad2, GamepadKeys.Button.X);
+
 
         waitForStart();
 
         while (opModeIsActive()) {
 
-            if (gamepad1.dpad_up) {
+            if (clawToggleButton.getState()) {
+                // if toggle state true
+                Claw.open();
+            } else {
+                // if toggle state false
+                Claw.close();
+            }
+            clawToggleButton.readValue();
+
+            if (gamepad2.dpad_up) {
                 Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
             }
 
-            if (gamepad1.dpad_down) {
+            if (gamepad2.dpad_down) {
                 Slide.setHeight(SlideHeight.LowPole, SlideSpeed.Max);
             }
 
-            if (gamepad1.dpad_left) {
+            if (gamepad2.dpad_left) {
                 Slide.setHeight(SlideHeight.MidPole, SlideSpeed.Max);
             }
 
-            if (gamepad1.dpad_right) {
+            if (gamepad2.dpad_right) {
                 Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
             }
 
