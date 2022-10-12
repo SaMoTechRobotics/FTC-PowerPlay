@@ -29,7 +29,7 @@ D-pad
 | `Up` | Unassigned |
 | `Left` | Unassigned |
 | `Down` | Unassigned |
-| `Right` Unassigned |
+| `Right` | Unassigned |
 
 Bumpers
 ---
@@ -61,7 +61,7 @@ Joysticks
 Buttons
 ---
 | Button | Description  |
-| --- | --- | --- |
+| --- | --- |
 | `Y` | Unassigned |
 | `X` | Toggles claw to open and close |
 | `A` | Unassigned |
