@@ -7,6 +7,9 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+
 @TeleOp(name = "Drive", group = "TeleOp")
 public class Drive extends LinearOpMode {
 
@@ -59,6 +62,11 @@ public class Drive extends LinearOpMode {
                 Claw.close();
             }
             clawToggleButton.readValue();
+
+            if(gamepad2.left_y != 0) {
+                Slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                Slide.setPower((gamepad2.left_y));
+            }
 
             if (gamepad2.dpad_up) {
                 Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
