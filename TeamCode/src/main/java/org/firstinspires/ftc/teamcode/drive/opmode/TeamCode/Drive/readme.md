@@ -9,8 +9,8 @@ Joysticks
 | `Left X` | Controls strafing of chassis |
 | `Left Y` | Controls forward and backwards movement of chassis |
 | `Left Button` | Unassigned |
-| `Right X` | Unassigned |
-| `Right X` | Unassigned |
+| `Right X` | Controls turning of the chassis |
+| `Right Y` | Unassigned |
 | `Right Button` | Unassigned |
 
 Buttons
@@ -35,8 +35,8 @@ Bumpers
 ---
 | Bumper | Description |
 | --- | --- |
-| `Left` | Unassigned |
-| `Right` | Unassigned |
+| `Left` | Max Speed |
+| `Right` | Min Speed |
 
 Triggers
 ---
@@ -54,7 +54,7 @@ Joysticks
 | `Left Y` | Manual control of slide vertical movement |
 | `Left Button` | Unassigned |
 | `Right X` | Unassigned |
-| `Right X` | Unassigned |
+| `Right Y` | Unassigned |
 | `Right Button` | Unassigned |
 
 
