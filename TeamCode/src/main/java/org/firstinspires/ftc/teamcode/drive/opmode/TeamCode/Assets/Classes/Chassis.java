@@ -19,6 +19,10 @@ public class Chassis {
         public DcMotor BackRight;
     }
 
+    public static double DriveSpeed = ChassisSpeed.MidDrive;
+    public static double TurnSpeed = ChassisSpeed.MidTurn;
+    public static double StrafeSpeed = ChassisSpeed.MidStrafe;
+
     /**
      * Creates a new chassis with 4 motors
      * @param FrontLeft
@@ -40,6 +44,18 @@ public class Chassis {
     */
     public void setPower(DcMotor motor, double power) {
         motor.setPower(power);
+    }
+
+    public void updateWithControls(double leftStickX, double leftStickY, double rightStickX) {
+        double frontLeftPower = +((leftStickY * ChassisSpeed.Drive) + (rightStickX * ChassisSpeed.Turn) - (leftStickX * ChassisSpeed.Strafe));
+        double frontRightPower = +((leftStickY * ChassisSpeed.Drive) + (rightStickX * ChassisSpeed.Turn) + (leftStickX * ChassisSpeed.Strafe));
+        double backLeftPower = +((leftStickY * ChassisSpeed.Drive) - (rightStickX * ChassisSpeed.Turn) + (leftStickX * ChassisSpeed.Strafe));
+        double backRightPower = +((leftStickY * ChassisSpeed.Drive) - (rightStickX * ChassisSpeed.Turn) - (leftStickX * ChassisSpeed.Strafe));
+
+        setPower(this.Wheels.FrontLeft, frontLeftPower);
+        setPower(this.Wheels.FrontRight, frontRightPower);
+        setPower(this.Wheels.BackLeft, backLeftPower);
+        setPower(this.Wheels.BackRight, backRightPower);
     }
 
 

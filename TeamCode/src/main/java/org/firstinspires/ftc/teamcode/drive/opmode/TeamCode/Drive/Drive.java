@@ -26,12 +26,12 @@ public class Drive extends LinearOpMode {
 
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
-        // Chassis = new Chassis(
-        // hardwareMap.get(DcMotor.class, "frontLeft"),
-        // hardwareMap.get(DcMotor.class, "frontRight"),
-        // hardwareMap.get(DcMotor.class, "backLeft"),
-        // hardwareMap.get(DcMotor.class, "backRight")
-        // );
+        Chassis = new Chassis(
+            hardwareMap.get(DcMotor.class, "frontLeft"),
+            hardwareMap.get(DcMotor.class, "frontRight"),
+            hardwareMap.get(DcMotor.class, "backLeft"),
+            hardwareMap.get(DcMotor.class, "backRight")
+        );
 
         // Initialize the slide
         Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
@@ -62,6 +62,29 @@ public class Drive extends LinearOpMode {
                 Claw.close();
             }
             clawToggleButton.readValue();
+
+            if(Gamepad1.getLeftBumper()) {
+                Chassis.DriveSpeed = ChassisSpeed.MaxDrive;
+                Chassis.TurnSpeed = ChassisSpeed.MaxTurn;
+                Chassis.StrafeSpeed = ChassisSpeed.MaxStrafe;
+            } else if(Gamepad1.getRightBumper()) {
+                Chassis.DriveSpeed = ChassisSpeed.MidDrive;
+                Chassis.TurnSpeed = ChassisSpeed.MidTurn;
+                Chassis.StrafeSpeed = ChassisSpeed.MidStrafe;
+            } else {
+                Chassis.DriveSpeed = ChassisSpeed.MinDrive;
+                Chassis.TurnSpeed = ChassisSpeed.MinTurn;
+                Chassis.StrafeSpeed = ChassisSpeed.MinStrafe;
+            }
+
+
+            Chassis.updateControls(
+                Gamepad1.getLeftStickY(),
+                Gamepad1.getLeftStickX(),
+                Gamepad1.getRightStickX()
+            );
+
+
 
             if(gamepad2.left_y != 0) {
                 Slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
