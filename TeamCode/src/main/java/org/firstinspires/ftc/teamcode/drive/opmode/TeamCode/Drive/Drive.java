@@ -47,13 +47,14 @@ public class Drive extends LinearOpMode {
         Gamepad2 = new GamepadEx(gamepad2);
 
         ToggleButtonReader clawToggleButton = new ToggleButtonReader(
-                Gamepad2, GamepadKeys.Button.X);
+                Gamepad2, GamepadKeys.Button.X); // The button to toggle the claw, X
 
 
         waitForStart();
 
         while (opModeIsActive()) {
 
+            // Toggles the claw based of the clawToggleButton which is x
             if (clawToggleButton.getState()) {
                 // if toggle state true
                 Claw.open();
@@ -63,29 +64,33 @@ public class Drive extends LinearOpMode {
             }
             clawToggleButton.readValue();
 
-            if(Gamepad1.getLeftBumper()) {
+
+            /**
+             * Toggles the speeds of driving with bumpers
+             */
+            if(Gamepad1.getLeftBumper()) { // Left bumper is max speeds
                 Chassis.DriveSpeed = ChassisSpeed.MaxDrive;
                 Chassis.TurnSpeed = ChassisSpeed.MaxTurn;
                 Chassis.StrafeSpeed = ChassisSpeed.MaxStrafe;
-            } else if(Gamepad1.getRightBumper()) {
-                Chassis.DriveSpeed = ChassisSpeed.MidDrive;
-                Chassis.TurnSpeed = ChassisSpeed.MidTurn;
-                Chassis.StrafeSpeed = ChassisSpeed.MidStrafe;
-            } else {
+            } else if(Gamepad1.getRightBumper()) { // Right bumper is min speeds
                 Chassis.DriveSpeed = ChassisSpeed.MinDrive;
                 Chassis.TurnSpeed = ChassisSpeed.MinTurn;
                 Chassis.StrafeSpeed = ChassisSpeed.MinStrafe;
+            } else { // No bumper is mid speeds
+                Chassis.DriveSpeed = ChassisSpeed.MidDrive;
+                Chassis.TurnSpeed = ChassisSpeed.MidTurn;
+                Chassis.StrafeSpeed = ChassisSpeed.MidStrafe;
             }
 
-
+            // Drives the robot with joysticks from gamepad 1
             Chassis.updateControls(
-                Gamepad1.getLeftStickY(),
-                Gamepad1.getLeftStickX(),
-                Gamepad1.getRightStickX()
+                Gamepad1.getLeftStickY(), //drive stick
+                Gamepad1.getLeftStickX(), //strafe stick
+                Gamepad1.getRightStickX() //turn stick
             );
 
 
-
+            // Moves the slide with the right joystick on gamepad 2
             if(gamepad2.left_y != 0) {
                 Slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
                 Slide.setPower((gamepad2.left_y));

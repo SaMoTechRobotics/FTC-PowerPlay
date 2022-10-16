@@ -46,16 +46,22 @@ public class Chassis {
         motor.setPower(power);
     }
 
-    public void updateWithControls(double leftStickX, double leftStickY, double rightStickX) {
-        double frontLeftPower = +((leftStickY * ChassisSpeed.Drive) + (rightStickX * ChassisSpeed.Turn) - (leftStickX * ChassisSpeed.Strafe));
-        double frontRightPower = +((leftStickY * ChassisSpeed.Drive) + (rightStickX * ChassisSpeed.Turn) + (leftStickX * ChassisSpeed.Strafe));
-        double backLeftPower = +((leftStickY * ChassisSpeed.Drive) - (rightStickX * ChassisSpeed.Turn) + (leftStickX * ChassisSpeed.Strafe));
-        double backRightPower = +((leftStickY * ChassisSpeed.Drive) - (rightStickX * ChassisSpeed.Turn) - (leftStickX * ChassisSpeed.Strafe));
+    /**
+     * Sets the power of all the motors based of the joysticks
+     * @param driveStick The joystick for moving forward and backward, ex: left y
+     * @param strafeStick The joystick for strafing, ex: left x
+     * @param turnStick The joystick for turning, ex: right x
+    */
+    public void updateWithControls(double driveStick, double strafeStick, double turnStick) {
+        double frontLeftPower = (driveStick * ChassisSpeed.Drive) + (turnStick * ChassisSpeed.Turn) - (strafeStick * ChassisSpeed.Strafe);
+        double frontRightPower = (driveStick * ChassisSpeed.Drive) + (turnStick * ChassisSpeed.Turn) + (strafeStick * ChassisSpeed.Strafe);
+        double backLeftPower = (driveStick * ChassisSpeed.Drive) - (turnStick * ChassisSpeed.Turn) + (strafeStick * ChassisSpeed.Strafe);
+        double backRightPower = (driveStick * ChassisSpeed.Drive) - (turnStick* ChassisSpeed.Turn) - (strafeStick * ChassisSpeed.Strafe);
 
-        setPower(this.Wheels.FrontLeft, frontLeftPower);
-        setPower(this.Wheels.FrontRight, frontRightPower);
-        setPower(this.Wheels.BackLeft, backLeftPower);
-        setPower(this.Wheels.BackRight, backRightPower);
+        this.setPower(this.Wheels.FrontLeft, frontLeftPower);
+        this.setPower(this.Wheels.FrontRight, frontRightPower);
+        this.setPower(this.Wheels.BackLeft, backLeftPower);
+        this.setPower(this.Wheels.BackRight, backRightPower);
     }
 
 
