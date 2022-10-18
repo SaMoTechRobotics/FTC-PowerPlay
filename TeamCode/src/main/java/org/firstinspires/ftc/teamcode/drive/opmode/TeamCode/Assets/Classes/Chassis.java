@@ -101,5 +101,8 @@ public class Chassis {
     }
 
 
+    public void addTelemetry(telemetry telemetry) {
+    }
+
     
 }

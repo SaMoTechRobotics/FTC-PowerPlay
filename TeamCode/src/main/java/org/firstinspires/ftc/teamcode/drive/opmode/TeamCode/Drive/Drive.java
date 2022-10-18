@@ -102,6 +102,9 @@ public class Drive extends LinearOpMode {
             );
 
 
+            Chassis.addTelemetry(telemetry);
+
+
             // Moves the slide with the right joystick on gamepad 2
             // if(gamepad2.left_y != 0) {
             //     Slide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
