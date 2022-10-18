@@ -17,7 +17,7 @@ Buttons
 ---
 | Button | Description  |
 | --- | --- | --- |
-| `Y` | Unassigned |
+| `Y` | Toggles chassis braking on zero power |
 | `X` | Unassigned |
 | `A` | Unassigned |
 | `B` | Unassigned |

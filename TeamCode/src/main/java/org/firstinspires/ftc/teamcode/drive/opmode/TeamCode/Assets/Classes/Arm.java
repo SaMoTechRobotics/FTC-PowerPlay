@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 */
 public class Arm {
     
-    private Servo ArmoServo;
+    private Servo ArmServo;
     
     /**
      * Creates a new arm with 1 servo
@@ -27,7 +27,7 @@ public class Arm {
     */
     public final void setRotation(double rotation) {
         this.ArmServo.setPosition(
-            this.percentToPosition(rotation) // Converts the position to a percentage
+            this.rotationToPosition(rotation) // Converts the position to a percentage
         );
     }
     

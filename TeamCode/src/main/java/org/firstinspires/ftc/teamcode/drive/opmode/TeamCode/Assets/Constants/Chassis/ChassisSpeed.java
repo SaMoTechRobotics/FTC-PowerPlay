@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode;
+package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 
@@ -12,23 +12,23 @@ public class ChassisSpeed {
     /**
      * The speed of the robot when it is moving forward or backward
      */
-    static double MaxDrive = 1.0;
-    static double MidDrive = 0.6;
-    static double MinDrive = 0.3;
+    public static double MaxDrive = 1.0;
+    public static double MidDrive = 0.6;
+    public static double MinDrive = 0.3;
 
     /**
      * The speed of the robot when it is turning
     */
-    static double MaxTurn = 1.0;
-    static double MidTurn = 0.6;
-    static double MinTurn = 0.3;
+    public static double MaxTurn = 1.0;
+    public static double MidTurn = 0.6;
+    public static double MinTurn = 0.3;
 
     /**
      * The speed of the robot when it is strafing
     */
-    static double MaxStrafe = 1.0;
-    static double MidStrafe = 0.6;
-    static double MinStrafe = 0.3;
+    public static double MaxStrafe = 1.0;
+    public static double MidStrafe = 0.6;
+    public static double MinStrafe = 0.3;
 
     /**
      * The max and min speeds of the chassis motors
