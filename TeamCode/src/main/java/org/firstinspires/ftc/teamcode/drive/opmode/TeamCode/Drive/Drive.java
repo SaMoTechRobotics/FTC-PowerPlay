@@ -26,7 +26,7 @@ public class Drive extends LinearOpMode {
     private GamepadEx Gamepad1;
     private GamepadEx Gamepad2;
 
-    private StandardTrackingWheelLocalizer chassisLocalizer;
+    // private StandardTrackingWheelLocalizer chassisLocalizer;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -73,9 +73,9 @@ public class Drive extends LinearOpMode {
             // Retrieve your pose
             // Pose2d chassisPose = chassisLocalizer.getPoseEstimate();
 
-            telemetry.addData("x", chassisPose.getX());
-            telemetry.addData("y", chassisPose.getY());
-            telemetry.addData("heading", chassisPose.getHeading());
+            // telemetry.addData("x", chassisPose.getX());
+            // telemetry.addData("y", chassisPose.getY());
+            // telemetry.addData("heading", chassisPose.getHeading());
 
             // // Toggles the claw based of the clawToggleButton which is x
             // if (clawToggleButton.getState()) {

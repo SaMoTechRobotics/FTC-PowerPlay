@@ -104,6 +104,16 @@ public class Chassis {
 
 
     public void addTelemetry(Telemetry telemetry) {
+        telemetry.addData("Brake", this.brake);
+        telemetry.addData("DriveSpeed", this.DriveSpeed);
+        telemetry.addData("TurnSpeed", this.TurnSpeed);
+        telemetry.addData("StrafeSpeed", this.StrafeSpeed);
+        telemetry.addLine();
+        telemetry.addData("Front Left Power", this.Wheels.FrontLeft.getPower() + ": " + this.Wheels.FrontLeft.getCurrentPosition());
+        telemetry.addData("Front Right Power", this.Wheels.FrontRight.getPower() + ": " + this.Wheels.FrontRight.getCurrentPosition());
+        telemetry.addData("Back Left Power", this.Wheels.BackLeft.getPower() + ": " + this.Wheels.BackLeft.getCurrentPosition());
+        telemetry.addData("Back Right Power", this.Wheels.BackRight.getPower() + ": " + this.Wheels.BackRight.getCurrentPosition());
+        telemetry.update();
     }
 
     
