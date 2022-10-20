@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import com.acmerobotics.dashboard.config.Config;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -101,7 +103,7 @@ public class Chassis {
     }
 
 
-    public void addTelemetry(telemetry telemetry) {
+    public void addTelemetry(Telemetry telemetry) {
     }
 
     

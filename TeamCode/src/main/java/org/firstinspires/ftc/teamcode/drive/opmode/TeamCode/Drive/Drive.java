@@ -11,6 +11,10 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 
+import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+
+
 @TeleOp(name = "Drive", group = "TeleOp")
 public class Drive extends LinearOpMode {
 
@@ -36,8 +40,8 @@ public class Drive extends LinearOpMode {
             hardwareMap.get(DcMotor.class, "backRight")
         );
 
-        StandardTrackingWheelLocalizer chassisLocalizer = new StandardTrackingWheelLocalizer(hardwareMap);
-        chassisLocalizer.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
+        // StandardTrackingWheelLocalizer chassisLocalizer = new StandardTrackingWheelLocalizer(hardwareMap);
+        // chassisLocalizer.setPoseEstimate(new Pose2d(0, 0, Math.toRadians(0)));
 
 
         // Initialize the slide
@@ -64,10 +68,10 @@ public class Drive extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            chassisLocalizer.update();
+            // chassisLocalizer.update();
 
             // Retrieve your pose
-            Pose2d chassisPose = chassisLocalizer.getPoseEstimate();
+            // Pose2d chassisPose = chassisLocalizer.getPoseEstimate();
 
             telemetry.addData("x", chassisPose.getX());
             telemetry.addData("y", chassisPose.getY());
