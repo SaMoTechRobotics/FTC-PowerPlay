@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 
-@TeleOp(name = "DriveWithSlide", group = "TeleOp")
-public class DriveWithSlide extends LinearOpMode {
+@TeleOp(name = "DriveFull", group = "TeleOp")
+public class DriveFull extends LinearOpMode {
 
     private Chassis Chassis;
     private Slide Slide;
@@ -48,17 +48,16 @@ public class DriveWithSlide extends LinearOpMode {
         Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
 
         // Initialize the arm
-        // Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
+        Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
 
         // Initialize the claw
-        // Claw = new Claw(hardwareMap.get(Servo.class, "claw"));
+        Claw = new Claw(hardwareMap.get(Servo.class, "claw"));
 
         // Initialize the gamepad
         Gamepad1 = new GamepadEx(gamepad1);
         Gamepad2 = new GamepadEx(gamepad2);
 
-        // ToggleButtonReader clawToggleButton = new ToggleButtonReader(
-        //         Gamepad2, GamepadKeys.Button.X); // The button to toggle the claw, X
+        ToggleButtonReader clawToggleButton = new ToggleButtonReader(Gamepad2, GamepadKeys.Button.X); // The button to toggle the claw, X
 
         ToggleButtonReader chassisBrakeToggle = new ToggleButtonReader(
             Gamepad1, GamepadKeys.Button.Y

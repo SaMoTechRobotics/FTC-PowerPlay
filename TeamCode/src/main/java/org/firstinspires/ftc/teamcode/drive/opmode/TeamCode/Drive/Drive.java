@@ -77,7 +77,7 @@ public class Drive extends LinearOpMode {
             // telemetry.addData("y", chassisPose.getY());
             // telemetry.addData("heading", chassisPose.getHeading());
 
-            // // Toggles the claw based of the clawToggleButton which is x
+            // Toggles the claw based of the clawToggleButton which is x
             // if (clawToggleButton.getState()) {
             //     // if toggle state true
             //     Claw.open();
