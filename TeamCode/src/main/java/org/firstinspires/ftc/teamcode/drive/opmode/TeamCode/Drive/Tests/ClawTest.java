@@ -1,0 +1,60 @@
+package org.firstinspires.ftc.teamcode;
+
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
+import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
+
+@TeleOp(name = "ClawTest", group = "Tests")
+public class ClawTest extends LinearOpMode {
+
+  private Arm Arm;
+  private Claw Claw;
+
+  private GamepadEx Gamepad1;
+  private GamepadEx Gamepad2;
+
+  @Override
+  public void runOpMode() throws InterruptedException {
+    FtcDashboard dashboard = FtcDashboard.getInstance();
+
+    // Initialize the arm
+    Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
+
+    // Initialize the claw
+    Claw = new Claw(hardwareMap.get(Servo.class, "claw"));
+
+    // Initialize the gamepad
+    Gamepad1 = new GamepadEx(gamepad1);
+    Gamepad2 = new GamepadEx(gamepad2);
+
+    ToggleButtonReader clawToggleButton = new ToggleButtonReader(
+      Gamepad2,
+      GamepadKeys.Button.X
+    ); // The button to toggle the claw, X
+
+    waitForStart();
+
+    while (opModeIsActive()) {
+      if (clawToggleButton.getState()) {
+        // if toggle state true
+        Claw.open();
+      } else {
+        // if toggle state false
+        Claw.close();
+      }
+      clawToggleButton.readValue();
+
+      Arm.updateWithControls(
+        Gamepad2.getRightX(),
+        gamepad2.left_bumper,
+        gamepad2.right_bumper,
+        gamepad2.y
+      );
+    }
+  }
+}

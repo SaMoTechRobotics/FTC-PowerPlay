@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.CRServo;
 
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -25,8 +26,6 @@ public class DriveFull extends LinearOpMode {
 
     private GamepadEx Gamepad1;
     private GamepadEx Gamepad2;
-
-    // private StandardTrackingWheelLocalizer chassisLocalizer;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -66,11 +65,6 @@ public class DriveFull extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-
-            // chassisLocalizer.update();
-
-            // Retrieve your pose
-            // Pose2d chassisPose = chassisLocalizer.getPoseEstimate();
 
             // telemetry.addData("x", chassisPose.getX());
             // telemetry.addData("y", chassisPose.getY());

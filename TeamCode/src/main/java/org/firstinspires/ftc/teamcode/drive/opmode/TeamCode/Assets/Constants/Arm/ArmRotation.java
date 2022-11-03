@@ -8,8 +8,8 @@ public class ArmRotation {
     /**
      * Max and min rotations of the arm, ex: -90.0 to 90.0 degrees resulting in 180 degree range
      */
-    public static double Min = -90.0;
-    public static double Max = 90.0;
+    public static double Min = -150.0;
+    public static double Max = 150.0;
     
     /**
      * The full rotations of the arm to the left and right

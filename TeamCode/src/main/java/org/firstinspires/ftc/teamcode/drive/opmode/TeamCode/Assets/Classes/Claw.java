@@ -25,7 +25,7 @@ public class Claw {
      * Sets the position of the servo
      * @param position The position to set the servo to as percentage 0-100
     */
-    public void setPosition(double position) {
+    public final void setPosition(double position) {
         this.ClawServo.setPosition(
             this.percentToPosition(position) // Converts the position to a percentage
         );
@@ -34,14 +34,14 @@ public class Claw {
     /**
      * Opens the claw
     */
-    public void open() {
+    public final void open() {
         this.setPosition(ClawPosition.Open);
     }
 
     /**
      * Closes the claw
     */
-    public void close() {
+    public final void close() {
         this.setPosition(ClawPosition.Close);
     }
 
@@ -50,7 +50,7 @@ public class Claw {
      * @param percent The percentage to convert as an int
      * @return The servo position as a double
     */
-    private double percentToPosition(double percent) {
+    private final double percentToPosition(double percent) {
         return (double) (ClawPosition.Max - ClawPosition.Min) * percent / 100 + ClawPosition.Min;
     } 
  
