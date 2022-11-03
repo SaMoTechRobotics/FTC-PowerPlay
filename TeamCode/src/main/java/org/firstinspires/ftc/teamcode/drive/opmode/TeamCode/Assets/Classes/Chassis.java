@@ -85,6 +85,27 @@ public class Chassis {
     }
 
     /**
+     * Sets the speed of the chassis based of the gamepad1 bumpers
+     * @param high Whether or not the high speed button is pressed, gamepad1 left bumper
+     * @param low Whether or not the low speed button is pressed, gamepad1 right bumper
+     */
+    public void updateSpeed(boolean high, boolean low) {
+        if(high) { // Left bumper is max speeds
+            this.DriveSpeed = ChassisSpeed.MaxDrive;
+            this.TurnSpeed = ChassisSpeed.MaxTurn;
+            this.StrafeSpeed = ChassisSpeed.MaxStrafe;
+        } else if(low) { // Right bumper is min speeds
+            this.DriveSpeed = ChassisSpeed.MinDrive;
+            this.TurnSpeed = ChassisSpeed.MinTurn;
+            this.StrafeSpeed = ChassisSpeed.MinStrafe;
+        } else { // No bumper is mid speeds
+            this.DriveSpeed = ChassisSpeed.MidDrive;
+            this.TurnSpeed = ChassisSpeed.MidTurn;
+            this.StrafeSpeed = ChassisSpeed.MidStrafe;
+        }
+    }
+
+    /**
      * Sets the power of all the motors based of the joysticks
      * @param driveStick The joystick for moving forward and backward, ex: left y
      * @param strafeStick The joystick for strafing, ex: left x

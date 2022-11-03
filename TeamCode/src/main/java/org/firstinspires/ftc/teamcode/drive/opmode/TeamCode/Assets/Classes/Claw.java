@@ -18,7 +18,6 @@ public class Claw {
     public Claw(Servo ClawServo) {
         this.ClawServo = ClawServo;
 
-        this.ClawServo.scaleRange(ClawPosition.Min, ClawPosition.Max); // Sets the range of the servo to ClawPosition min and max, ex: 0.0 to 1.0
     }
 
     /**
@@ -46,12 +45,24 @@ public class Claw {
     }
 
     /**
+     * Toggles the claw
+     * @param open The open position of the claw
+     */
+    public final void toggleOpen(boolean open) {
+        if (open) {
+            this.open();
+        } else {
+            this.close();
+        }
+    }
+
+    /**
      * Converts a percentage to a servo position
      * @param percent The percentage to convert as an int
      * @return The servo position as a double
     */
     private final double percentToPosition(double percent) {
-        return (double) (ClawPosition.Max - ClawPosition.Min) * percent / 100 + ClawPosition.Min;
+        return (double) (percent / 100);
     } 
  
 }

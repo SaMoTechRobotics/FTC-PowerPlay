@@ -18,7 +18,7 @@ public class Arm {
    */
   public Arm(Servo ArmServo) {
     this.ArmServo = ArmServo;
-    this.ArmServo.scaleRange(ArmRotation.Min, ArmRotation.Max);
+
   }
 
   /**
