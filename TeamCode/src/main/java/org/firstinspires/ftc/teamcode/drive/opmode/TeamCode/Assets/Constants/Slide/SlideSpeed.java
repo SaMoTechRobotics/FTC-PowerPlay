@@ -7,7 +7,7 @@ import com.acmerobotics.dashboard.config.Config;
 public class SlideSpeed {
     public static double Up = 1.0;
     public static double Down = 0.4;
-    public static double Stop = 0.0;
+    public static double Stop = 0.1;
 
     public static double Max = 1.0;
     public static double Mid = 0.6;

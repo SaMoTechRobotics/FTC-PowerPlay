@@ -10,7 +10,7 @@ public class Slide {
 
   private DcMotor SlideMotor;
 
-  private static double Speed = SlideSpeed.Max;
+  private double Speed = SlideSpeed.Max;
 
   /**
    * Creates a new slide with only 1 motor
@@ -20,6 +20,14 @@ public class Slide {
    */
   public Slide(DcMotor SlideMotor) {
     this.SlideMotor = SlideMotor;
+
+    this.SlideMotor.setDirection(DcMotor.Direction.REVERSE);
+    this.SlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+  }
+
+
+  public final int getTicks() {
+    return this.SlideMotor.getCurrentPosition();
   }
 
   /**
@@ -61,6 +69,10 @@ public class Slide {
     this.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     this.setPower(speed);
+
+    while (this.SlideMotor.isBusy()) {
+      // Wait for slide to reach target
+    }
 
     this.setPower(SlideSpeed.Stop);
     this.setMode(DcMotor.RunMode.RUN_USING_ENCODER);

@@ -7,9 +7,9 @@ public class SlideHeight {
     /**
      * Heights of slide to line up with heights of different poles or ground as percentages
      */
-    public static double HighPole = 100;
-    public static double MidPole = 75;
-    public static double LowPole = 50;
+    public static double HighPole = 100; //4000
+    public static double MidPole = 70; //2800
+    public static double LowPole = 50; //2000
     public static double Ground = 0;
 
     /**
@@ -22,6 +22,6 @@ public class SlideHeight {
     /**
      * Max and min ticks of slide motor
      */
-    public static double MaxTicks = -2000.0;
+    public static double MaxTicks = 4000.0;
     public static double MinTicks = 0.0;
 }

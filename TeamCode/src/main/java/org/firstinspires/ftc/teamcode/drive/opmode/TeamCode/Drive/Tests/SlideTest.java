@@ -43,6 +43,9 @@ public class SlideTest extends LinearOpMode {
                 gamepad2.dpad_right
             );
 
+            telemetry.addData("Slide Ticks", Slide.getTicks());
+            telemetry.update();
+
 
         }
     }

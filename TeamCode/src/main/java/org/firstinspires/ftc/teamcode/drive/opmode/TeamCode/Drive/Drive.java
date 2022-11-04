@@ -49,8 +49,8 @@ public class Drive extends LinearOpMode {
 
     ToggleButtonReader clawToggleButton = new ToggleButtonReader(
         Gamepad2,
-        GamepadKeys.Button.X
-      ); // The button to toggle the claw, X
+        GamepadKeys.Button.RIGHT_BUMPER
+      ); // The button to toggle the claw
 
     waitForStart();
 
@@ -83,8 +83,8 @@ public class Drive extends LinearOpMode {
 
       Arm.updateWithControls(
         Gamepad2.getRightX(),
-        gamepad2.left_bumper,
-        gamepad2.right_bumper,
+        gamepad2.x,
+        gamepad2.b,
         gamepad2.y
       );
 
