@@ -7,15 +7,15 @@ public class SlideHeight {
     /**
      * Heights of slide to line up with heights of different poles or ground as inches
      */
-    public static double HighPole = 20; //4000
-    public static double MidPole = 18; //2800
-    public static double LowPole = 10; //2000
+    public static double HighPole = 35; //4000
+    public static double MidPole = 25; //2800
+    public static double LowPole = 20; //2000
     public static double Ground = 0;
 
     /**
      * Max and min heights of slide as percentages
      */
-    public static double MaxHeight = 20;
+    public static double MaxHeight = 40;
     public static double MinHeight = 0;
 
     /**
@@ -27,6 +27,8 @@ public class SlideHeight {
      * The safety margin to move arm to center preventing failure in robot
      */
     public static double SafetyHeight = 5;
+
+    public static double SafetyMargin = 10;
 
 
     /**

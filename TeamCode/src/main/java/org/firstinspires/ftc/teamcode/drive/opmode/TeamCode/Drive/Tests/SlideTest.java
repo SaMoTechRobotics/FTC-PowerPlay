@@ -44,6 +44,7 @@ public class SlideTest extends LinearOpMode {
             );
 
             telemetry.addData("Slide Ticks", Slide.getTicks());
+            telemetry.addData("Slide Inches", Slide.getInches());
             telemetry.update();
 
 

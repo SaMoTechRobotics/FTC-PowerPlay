@@ -31,7 +31,12 @@ public class Slide {
    * @param power The power to set the motors to, from -1.0 to 1.0
    */
   public final void setPower(double power) {
+    if(this.getTicks() < 0 && power < 0) return;
     this.SlideMotor.setPower(power);
+
+    // if(power == 0) {
+    //   this.setHeight(this.getInches(), this.Speed);
+    // }
   }
 
   /**
@@ -60,6 +65,10 @@ public class Slide {
     return this.SlideMotor.getCurrentPosition();
   }
 
+  public final double getInches() {
+    return (double) (this.getTicks() / SlideHeight.TicksPerInch) + SlideHeight.BaseHeight;
+  }
+
   /**
    * Sets the target position of the motors
    *
@@ -67,6 +76,8 @@ public class Slide {
    */
   public final void setHeight(double height, double speed) {
     int ticks = this.inchesToTicks(height);
+
+    if(ticks < 0) return;
 
     this.setTarget(ticks);
     this.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -81,10 +92,10 @@ public class Slide {
    * Holds the slide at its current position
    */
   public final void holdHeight() {
-    this.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    this.setPower(SlideSpeed.Hold);
+    // this.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    // this.setPower(SlideSpeed.Hold);
 
-    // this.setTarget(ticks);
+    // this.setTarget(this.getTicks());
     // this.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     // this.setPower(SlideSpeed.Hold);
   }
@@ -131,6 +142,6 @@ public class Slide {
    * @param height The target position as inches
    */
   private final int inchesToTicks(double height) {
-    return (int) (height * SlideHeight.TicksPerInch);
+    return (int) (height * (SlideHeight.TicksPerInch - SlideHeight.BaseHeight));
   }
 }
