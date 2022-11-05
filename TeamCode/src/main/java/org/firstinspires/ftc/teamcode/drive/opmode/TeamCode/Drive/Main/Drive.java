@@ -98,8 +98,6 @@ public class Drive extends LinearOpMode {
         gamepad2.dpad_down,
         gamepad2.dpad_right
       );
-
-      Slide.manageArm(Arm);
     }
   }
 }
