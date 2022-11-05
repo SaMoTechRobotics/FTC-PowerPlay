@@ -45,12 +45,12 @@ public class Drive extends LinearOpMode {
     ToggleButtonReader chassisBrakeToggle = new ToggleButtonReader(
       Gamepad1,
       GamepadKeys.Button.Y
-    );
+    ); // The button that toggles the chassis brake
 
     ToggleButtonReader clawToggleButton = new ToggleButtonReader(
-        Gamepad2,
-        GamepadKeys.Button.RIGHT_BUMPER
-      ); // The button to toggle the claw
+      Gamepad2,
+      GamepadKeys.Button.RIGHT_BUMPER
+    ); // The button to toggle the claw
 
     waitForStart();
 
@@ -85,7 +85,8 @@ public class Drive extends LinearOpMode {
         Gamepad2.getRightX(),
         gamepad2.x,
         gamepad2.b,
-        gamepad2.y
+        gamepad2.y,
+        Slide.safeHeight()
       );
 
       /* SLIDE */
@@ -96,8 +97,9 @@ public class Drive extends LinearOpMode {
         gamepad2.dpad_left,
         gamepad2.dpad_down,
         gamepad2.dpad_right
-    );
+      );
 
+      Slide.manageArm(Arm);
     }
   }
 }

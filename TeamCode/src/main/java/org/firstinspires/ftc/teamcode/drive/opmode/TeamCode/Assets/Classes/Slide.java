@@ -25,11 +25,6 @@ public class Slide {
     this.SlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
   }
 
-
-  public final int getTicks() {
-    return this.SlideMotor.getCurrentPosition();
-  }
-
   /**
    * Sets the power of motors
    *
@@ -58,24 +53,40 @@ public class Slide {
   }
 
   /**
+   * Gets the current position of the slide motor in ticks
+   * @return Ticks of slide motor
+   */
+  public final int getTicks() {
+    return this.SlideMotor.getCurrentPosition();
+  }
+
+  /**
    * Sets the target position of the motors
    *
    * @param height The target position as percentage
    */
   public final void setHeight(double height, double speed) {
-    int ticks = this.percentToTicks(height);
+    int ticks = this.inchesToTicks(height);
 
     this.setTarget(ticks);
     this.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     this.setPower(speed);
 
-    while (this.SlideMotor.isBusy()) {
-      // Wait for slide to reach target
-    }
+    // this.setPower(SlideSpeed.Stop);
+    // this.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+  }
 
-    this.setPower(SlideSpeed.Stop);
+  /**
+   * Holds the slide at its current position
+   */
+  public final void holdHeight() {
     this.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    this.setPower(SlideSpeed.Hold);
+
+    // this.setTarget(ticks);
+    // this.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    // this.setPower(SlideSpeed.Hold);
   }
 
   /**
@@ -93,27 +104,33 @@ public class Slide {
     boolean down,
     boolean right
   ) {
-    if (up) {
-      this.setHeight(SlideHeight.HighPole, this.Speed); // Slide set to high pole height if dpad up is pressed
-    } else if (left) {
-      this.setHeight(SlideHeight.MidPole, this.Speed); // Slide set to mid pole height if dpad left is pressed
-    } else if (down) {
-      this.setHeight(SlideHeight.LowPole, this.Speed); // Slide set to low pole height if dpad down is pressed
-    } else if (right) {
-      this.setHeight(SlideHeight.Ground, this.Speed); // Slide set to ground height if dpad right is pressed
-    } else if (power != 0) {
-      this.setPower(power); // Slide set to power if left stick y is not 0
-    } else {
-      this.setPower(SlideSpeed.Stop); // Slide set to 0 if no buttons are pressed and left stick y is 0
-    }
+    if (up) this.setHeight(SlideHeight.HighPole, this.Speed); // Slide set to high pole height if dpad up is pressed
+
+    else if (left) this.setHeight(SlideHeight.MidPole, this.Speed); // Slide set to mid pole height if dpad left is pressed
+
+    else if (down) this.setHeight(SlideHeight.LowPole, this.Speed); // Slide set to low pole height if dpad down is pressed
+
+    else if (right) this.setHeight(SlideHeight.Ground, this.Speed); // Slide set to ground height if dpad right is pressed
+
+    else if (power != 0) this.setPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
+
+    else if(!this.SlideMotor.isBusy()) this.holdHeight(); // Slide set to stop if no dpad buttons are pressed and gamepad2 left stick y is 0
   }
 
   /**
-   * Converts a percentage to ticks
-   *
-   * @param height The target position as percentage
+   * Checks if slide has cleared the safety margin for the arm to move
+   * @return True if slide has cleared the safety margin, false if not
    */
-  private final int percentToTicks(double percent) {
-    return (int) (percent / 100 * SlideHeight.MaxTicks);
+  public final boolean safeHeight() {
+    return this.getTicks() > this.inchesToTicks(SlideHeight.SafetyHeight);
+  }
+
+  /**
+   * Converts inches to ticks
+   *
+   * @param height The target position as inches
+   */
+  private final int inchesToTicks(double height) {
+    return (int) (height * SlideHeight.TicksPerInch);
   }
 }

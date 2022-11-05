@@ -112,18 +112,27 @@ public class Chassis {
      * @param turnStick The joystick for turning, ex: right x
     */
     public void updateWithControls(double driveStick, double strafeStick, double turnStick) {
+        /**
+         * The different powers of the motors based of the joysticks
+         */
         double frontLeftPower = (driveStick * this.DriveSpeed) + (turnStick * this.TurnSpeed) + (strafeStick * this.StrafeSpeed);
         double frontRightPower = (driveStick * this.DriveSpeed) - (turnStick * this.TurnSpeed) - (strafeStick * this.StrafeSpeed);
         double backLeftPower = (driveStick * this.DriveSpeed) + (turnStick * this.TurnSpeed) - (strafeStick * this.StrafeSpeed);
         double backRightPower = (driveStick * this.DriveSpeed) - (turnStick* this.TurnSpeed) + (strafeStick * this.StrafeSpeed);
 
+        /**
+         * Sets the power of the motors
+         */
         this.setPower(this.Wheels.FrontLeft, frontLeftPower);
         this.setPower(this.Wheels.FrontRight, frontRightPower);
         this.setPower(this.Wheels.BackLeft, backLeftPower);
         this.setPower(this.Wheels.BackRight, backRightPower);
     }
 
-
+    /**
+     * Adds telemetry
+     * @param telemetry
+     */
     public void addTelemetry(Telemetry telemetry) {
         telemetry.addData("Brake", this.brake);
         telemetry.addData("DriveSpeed", this.DriveSpeed);
