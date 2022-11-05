@@ -35,6 +35,18 @@ public class SlideHeight {
     public static double MaxTicks = 4000.0;
     public static double MinTicks = 0.0;
 
+    /**
+     * The ticks per revolution of the slide motor
+     */
     public static double TicksPerRev = 537.7;
-    public static double TicksPerInch = TicksPerRev / (4 * Math.PI);
+
+    /**
+     * The diameter of the pulley on the slide in inches
+     */
+    public static double RevDiameter = 1.673228;
+
+    /**
+     * The ticks per inch of the slide moving up
+     */
+    public static double TicksPerInch = TicksPerRev / (RevDiameter * Math.PI);
 }
