@@ -51,13 +51,8 @@ public class Arm {
     double speed,
     boolean left,
     boolean right,
-    boolean center,
-    boolean... safe
+    boolean center
   ) {
-    if(safe.length > 0 && !safe[0]) {
-      this.setRotation(ArmRotation.Center);
-      return;
-    }
     if (center) {
       this.setRotation(ArmRotation.Center); // Sets the rotation to the middle
     } else if (left) {

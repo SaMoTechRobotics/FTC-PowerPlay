@@ -79,16 +79,13 @@ public class Drive extends LinearOpMode {
       Claw.toggleOpen(clawToggleButton.getState());
       clawToggleButton.readValue();
 
-      if(!Slide.safeHeight()) Claw.close();
-
       /* ARM */
 
-      Arm.updateWithControls(
+      if(Slide.getInches() > SlideHeight.SafetyHeight) Arm.updateWithControls(
         Gamepad2.getRightX(),
         gamepad2.x,
         gamepad2.b,
-        gamepad2.y,
-        Slide.safeHeight()
+        gamepad2.y
       );
 
       /* SLIDE */
@@ -100,6 +97,13 @@ public class Drive extends LinearOpMode {
         gamepad2.dpad_down,
         gamepad2.dpad_right
       );
+
+      /* GENERAL */
+
+      if (Slide.getInches() < SlideHeight.SafetyMargin) { //make sure this only happens once
+        Arm.setRotation(ArmRotation.Center);
+        Claw.close();
+      }
     }
   }
 }
