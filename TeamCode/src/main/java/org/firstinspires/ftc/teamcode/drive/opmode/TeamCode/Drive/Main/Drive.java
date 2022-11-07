@@ -79,6 +79,8 @@ public class Drive extends LinearOpMode {
       Claw.toggleOpen(clawToggleButton.getState());
       clawToggleButton.readValue();
 
+      if(!Slide.safeHeight()) Claw.close();
+
       /* ARM */
 
       Arm.updateWithControls(

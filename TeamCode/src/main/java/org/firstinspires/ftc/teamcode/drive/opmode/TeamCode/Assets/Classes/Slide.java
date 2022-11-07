@@ -23,6 +23,8 @@ public class Slide {
 
     this.SlideMotor.setDirection(DcMotor.Direction.REVERSE);
     this.SlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    this.SlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    this.SlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
   }
 
   /**
@@ -126,6 +128,8 @@ public class Slide {
     else if (power != 0) this.setPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
 
     else if(!this.SlideMotor.isBusy()) this.holdHeight(); // Slide set to stop if no dpad buttons are pressed and gamepad2 left stick y is 0
+
+    if(this.getTicks() < 0) this.setPower(0);
   }
 
   /**
