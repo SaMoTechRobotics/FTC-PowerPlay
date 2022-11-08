@@ -6,6 +6,11 @@ import com.acmerobotics.dashboard.config.Config;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 /**
  * Chassis class which contains all the methods for the chassis of the robot
 */
@@ -43,6 +48,8 @@ public class Chassis {
 
     public boolean brake = false;
 
+    private SampleMecanumDrive MecanumDrive;
+
     /**
      * Creates a new chassis with 4 motors
      * @param FrontLeft
@@ -50,7 +57,7 @@ public class Chassis {
      * @param BackLeft
      * @param BackRight
     */
-    public Chassis(DcMotor FrontLeft, DcMotor FrontRight, DcMotor BackLeft, DcMotor BackRight) {
+    public Chassis(DcMotor FrontLeft, DcMotor FrontRight, DcMotor BackLeft, DcMotor BackRight, HardwareMap hardwareMap) {
         this.Wheels = new Wheels(
             FrontLeft,
             FrontRight,
@@ -60,6 +67,9 @@ public class Chassis {
 
         this.Wheels.FrontLeft.setDirection(DcMotor.Direction.REVERSE);
         this.Wheels.BackLeft.setDirection(DcMotor.Direction.REVERSE);
+
+        this.MecanumDrive = new SampleMecanumDrive(hardwareMap);
+        
     }
 
     /**
@@ -129,22 +139,11 @@ public class Chassis {
         this.setPower(this.Wheels.BackRight, backRightPower);
     }
 
-    /**
-     * Adds telemetry
-     * @param telemetry
-     */
-    public void addTelemetry(Telemetry telemetry) {
-        telemetry.addData("Brake", this.brake);
-        telemetry.addData("DriveSpeed", this.DriveSpeed);
-        telemetry.addData("TurnSpeed", this.TurnSpeed);
-        telemetry.addData("StrafeSpeed", this.StrafeSpeed);
-        telemetry.addLine();
-        telemetry.addData("Front Left Power", this.Wheels.FrontLeft.getPower() + ": " + this.Wheels.FrontLeft.getCurrentPosition());
-        telemetry.addData("Front Right Power", this.Wheels.FrontRight.getPower() + ": " + this.Wheels.FrontRight.getCurrentPosition());
-        telemetry.addData("Back Left Power", this.Wheels.BackLeft.getPower() + ": " + this.Wheels.BackLeft.getCurrentPosition());
-        telemetry.addData("Back Right Power", this.Wheels.BackRight.getPower() + ": " + this.Wheels.BackRight.getCurrentPosition());
-        telemetry.update();
+    public final void updatePosition() {
+        this.MecanumDrive.update();
     }
 
-    
+    public final Pose2d getPosition() {
+        return this.MecanumDrive.getPoseEstimate();
+    }
 }

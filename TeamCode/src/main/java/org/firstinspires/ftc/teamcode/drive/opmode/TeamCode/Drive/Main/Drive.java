@@ -29,7 +29,8 @@ public class Drive extends LinearOpMode {
         hardwareMap.get(DcMotor.class, "frontLeft"),
         hardwareMap.get(DcMotor.class, "frontRight"),
         hardwareMap.get(DcMotor.class, "backLeft"),
-        hardwareMap.get(DcMotor.class, "backRight")
+        hardwareMap.get(DcMotor.class, "backRight"),
+        hardwareMap
       );
 
     Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
@@ -74,6 +75,8 @@ public class Drive extends LinearOpMode {
         Gamepad1.getRightX() //turn stick
       );
 
+      Chassis.updatePosition();
+
       /* CLAW */
 
       Claw.toggleOpen(clawToggleButton.getState());
@@ -103,6 +106,9 @@ public class Drive extends LinearOpMode {
       if (Slide.getInches() < SlideHeight.SafetyMargin) { //make sure this only happens once
         Arm.setRotation(ArmRotation.Center);
         Claw.close();
+      }
+      if (Slide.getInches() < SlideHeight.SafetyHeight && Arm.getRotation() != ArmRotation.Center) {
+        Slide.setPower(0);
       }
     }
   }

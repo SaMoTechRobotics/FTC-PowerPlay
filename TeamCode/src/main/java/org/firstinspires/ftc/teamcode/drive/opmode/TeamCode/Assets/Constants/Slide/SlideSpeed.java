@@ -11,12 +11,6 @@ import com.acmerobotics.dashboard.config.Config;
 */
 public class SlideSpeed {
     /**
-     * The speed of the slide when going up or down
-     */
-    public static double Up = 1.0;
-    public static double Down = 0.4;
-    
-    /**
      * The max, mid, and min speeds of the slide
      */
     public static double Max = 1.0;

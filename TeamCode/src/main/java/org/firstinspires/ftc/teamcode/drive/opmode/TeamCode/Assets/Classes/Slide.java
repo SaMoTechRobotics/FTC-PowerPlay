@@ -8,9 +8,17 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  */
 public class Slide {
 
+  public static enum SlideStatus {
+    MovingToTarget,
+    ManualPower,
+    Holding,
+    Stopped,
+  }
+
   private DcMotor SlideMotor;
 
   private double Speed = SlideSpeed.Max;
+  private SlideStatus Status = SlideStatus.Stopped;
 
   /**
    * Creates a new slide with only 1 motor
@@ -25,6 +33,7 @@ public class Slide {
     this.SlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     this.SlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     this.SlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    this.Status = SlideStatus.Stopped;
   }
 
   /**
@@ -33,12 +42,8 @@ public class Slide {
    * @param power The power to set the motors to, from -1.0 to 1.0
    */
   public final void setPower(double power) {
-    if(this.getTicks() < 0 && power < 0) return;
-    this.SlideMotor.setPower(power);
-
-    // if(power == 0) {
-    //   this.setHeight(this.getInches(), this.Speed);
-    // }
+    if (this.getTicks() < 0 && power < 0) return;
+    if (this.SlideMotor.getPower() != power) this.SlideMotor.setPower(power);
   }
 
   /**
@@ -47,7 +52,7 @@ public class Slide {
    * @param mode The mode to set the motors to, from DcMotor.RunMode enum
    */
   public final void setMode(DcMotor.RunMode mode) {
-    this.SlideMotor.setMode(mode);
+    if (this.SlideMotor.getMode() != mode) this.SlideMotor.setMode(mode);
   }
 
   /**
@@ -56,7 +61,9 @@ public class Slide {
    * @param target The target position in ticks
    */
   public final void setTarget(int target) {
-    this.SlideMotor.setTargetPosition(target);
+    if (
+      this.SlideMotor.getTargetPosition() != target
+    ) this.SlideMotor.setTargetPosition(target);
   }
 
   /**
@@ -68,7 +75,10 @@ public class Slide {
   }
 
   public final double getInches() {
-    return (double) (this.getTicks() / SlideHeight.TicksPerInch) + SlideHeight.BaseHeight;
+    return (
+      (double) (this.getTicks() / SlideHeight.TicksPerInch) +
+      SlideHeight.BaseHeight
+    );
   }
 
   /**
@@ -79,27 +89,26 @@ public class Slide {
   public final void setHeight(double height, double speed) {
     int ticks = this.inchesToTicks(height);
 
-    if(ticks < 0) return;
+    if (ticks < 0) return;
 
     this.setTarget(ticks);
     this.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
     this.setPower(speed);
 
-    // this.setPower(SlideSpeed.Stop);
-    // this.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    this.Status = SlideStatus.MovingToTarget;
   }
 
   /**
    * Holds the slide at its current position
    */
   public final void holdHeight() {
-    // this.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    // this.setPower(SlideSpeed.Hold);
+    this.Status = SlideStatus.Holding;
 
-    // this.setTarget(this.getTicks());
-    // this.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    // this.setPower(SlideSpeed.Hold);
+    this.setTarget(this.getTicks());
+    this.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    this.setPower(SlideSpeed.Hold);
   }
 
   /**
@@ -117,19 +126,20 @@ public class Slide {
     boolean down,
     boolean right
   ) {
+    if (this.getTicks() == this.SlideMotor.getTargetPosition()) {
+      this.Status = SlideStatus.Holding; // sets the status to holding if the slide is at its target
+    }
+
     if (up) this.setHeight(SlideHeight.HighPole, this.Speed); // Slide set to high pole height if dpad up is pressed
-
     else if (left) this.setHeight(SlideHeight.MidPole, this.Speed); // Slide set to mid pole height if dpad left is pressed
-
     else if (down) this.setHeight(SlideHeight.LowPole, this.Speed); // Slide set to low pole height if dpad down is pressed
-
     else if (right) this.setHeight(SlideHeight.Ground, this.Speed); // Slide set to ground height if dpad right is pressed
-
     else if (power != 0) this.setPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
+    else this.holdHeight(); // Slide set to stop if no dpad buttons are pressed and gamepad2 left stick y is 0
 
-    else if(!this.SlideMotor.isBusy()) this.holdHeight(); // Slide set to stop if no dpad buttons are pressed and gamepad2 left stick y is 0
+    if (this.getTicks() < 0) this.setPower(0);
+    if (this.getInches() > SlideHeight.MaxHeight) this.setPower(0);
 
-    if(this.getTicks() < 0) this.setPower(0);
   }
 
   /**
