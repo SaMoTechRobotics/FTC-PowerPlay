@@ -26,5 +26,5 @@ public class ArmRotation {
     /**
      * The default/center/initial rotation of the arm
      */
-    public static double Center = 0.45; //0.5
+    public static double Center = 0.475; //0.5
 }

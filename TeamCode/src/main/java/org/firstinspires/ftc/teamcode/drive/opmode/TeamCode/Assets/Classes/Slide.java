@@ -81,6 +81,10 @@ public class Slide {
     );
   }
 
+  public final SlideStatus getStatus() {
+    return this.Status;
+  }
+
   /**
    * Sets the target position of the motors
    *
@@ -135,7 +139,8 @@ public class Slide {
     else if (down) this.setHeight(SlideHeight.LowPole, this.Speed); // Slide set to low pole height if dpad down is pressed
     else if (right) this.setHeight(SlideHeight.Ground, this.Speed); // Slide set to ground height if dpad right is pressed
     else if (power != 0) this.setPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
-    else this.holdHeight(); // Slide set to stop if no dpad buttons are pressed and gamepad2 left stick y is 0
+    // else if(this.Status == SlideStatus.Holding) this.holdHeight(); // Slide set to stop if no dpad buttons are pressed and gamepad2 left stick y is 0
+    else this.setPower(0);
 
     if (this.getTicks() < 0) this.setPower(0);
     if (this.getInches() > SlideHeight.MaxHeight) this.setPower(0);

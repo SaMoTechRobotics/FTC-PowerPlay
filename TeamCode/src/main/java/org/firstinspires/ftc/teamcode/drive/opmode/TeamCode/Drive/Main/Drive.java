@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+
 @TeleOp(name = "Drive", group = "Drive")
 public class Drive extends LinearOpMode {
 
@@ -77,6 +79,11 @@ public class Drive extends LinearOpMode {
 
       Chassis.updatePosition();
 
+      Pose2d ChassisPos = Chassis.getPosition();
+      telemetry.addData("Chassis X", ChassisPos.getX());
+      telemetry.addData("Chassis Y", ChassisPos.getY());
+      telemetry.addData("Chassis Heading", ChassisPos.getHeading());
+
       /* CLAW */
 
       Claw.toggleOpen(clawToggleButton.getState());
@@ -101,15 +108,22 @@ public class Drive extends LinearOpMode {
         gamepad2.dpad_right
       );
 
+      telemetry.addData("Slide Inches", Slide.getInches());
+      telemetry.addData("Slide Status", Slide.getStatus());
+
       /* GENERAL */
 
       if (Slide.getInches() < SlideHeight.SafetyMargin) { //make sure this only happens once
         Arm.setRotation(ArmRotation.Center);
-        Claw.close();
+        // if(Slide.getInches() > SlideHeight.SafetyHeight) Claw.close();
       }
       if (Slide.getInches() < SlideHeight.SafetyHeight && Arm.getRotation() != ArmRotation.Center) {
         Slide.setPower(0);
+      } else {
+        // Slide.setPower(Slide.Speed);
       }
+
+      telemetry.update();
     }
   }
 }
