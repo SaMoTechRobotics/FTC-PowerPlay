@@ -135,7 +135,7 @@ public class Slide {
    * Holds the slide at its current position
    */
   public final void holdHeight() {
-    // this.Status = SlideStatus.Holding;
+    this.Status = SlideStatus.Holding;
 
     // this.setTarget(this.getTicks());
     // this.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -158,23 +158,23 @@ public class Slide {
     boolean down,
     boolean right
   ) {
-    if (this.getTicks() == this.SlideMotor.getTargetPosition()) {
-      this.Status = SlideStatus.Holding; // sets the status to holding if the slide is at its target
-    }
 
     if (up) this.setHeight(SlideHeight.HighPole, this.Speed); // Slide set to high pole height if dpad up is pressed
     else if (left) this.setHeight(SlideHeight.MidPole, this.Speed); // Slide set to mid pole height if dpad left is pressed
     else if (down) this.setHeight(SlideHeight.LowPole, this.Speed); // Slide set to low pole height if dpad down is pressed
     else if (right) this.setHeight(SlideHeight.Ground, this.Speed); // Slide set to ground height if dpad right is pressed
     else if (power != 0) this.manualPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
-    // else if(this.Status == SlideStatus.Holding) this.holdHeight(); // Slide set to stop if no dpad buttons are pressed and gamepad2 left stick y is 0
-    // else if(!this.SlideMotor.isBusy());
-
-    
+    else if(this.atTargetPosition()) this.holdHeight(); // Slide set to hold height if no dpad buttons are pressed and the slide is not moving
 
     if (this.getTicks() < 0) this.setPower(0);
     if (this.getInches() > SlideHeight.MaxHeight) this.setPower(0);
+  }
 
+  /**
+   * @return boolean based of if slide is at target position, will always return false if the slide is manually moving
+   */
+  public final boolean atTargetPosition() {
+    return this.Status != SlideStatus.ManualPower ? this.getTicks() == this.SlideMotor.getTargetPosition() : false;
   }
 
   /**
