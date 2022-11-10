@@ -12,6 +12,7 @@ public class Slide {
     MovingToTarget,
     ManualPower,
     Holding,
+    Paused,
     Stopped,
   }
 
@@ -19,6 +20,9 @@ public class Slide {
 
   private double Speed = SlideSpeed.Max;
   private SlideStatus Status = SlideStatus.Stopped;
+
+  public boolean isPaused = false;
+  private double LastSpeed = 0;
 
   /**
    * Creates a new slide with only 1 motor
@@ -34,6 +38,17 @@ public class Slide {
     this.SlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     this.SlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     this.Status = SlideStatus.Stopped;
+  }
+
+  public final void pause() {
+    this.isPaused = true;
+    this.LastSpeed = this.SlideMotor.getPower();
+    this.setPower(0);
+  }
+
+  public final void resume() {
+    this.isPaused = false;
+    this.setPower(LastSpeed);
   }
 
   /**
@@ -154,6 +169,8 @@ public class Slide {
     else if (power != 0) this.manualPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
     // else if(this.Status == SlideStatus.Holding) this.holdHeight(); // Slide set to stop if no dpad buttons are pressed and gamepad2 left stick y is 0
     // else if(!this.SlideMotor.isBusy());
+
+    
 
     if (this.getTicks() < 0) this.setPower(0);
     if (this.getInches() > SlideHeight.MaxHeight) this.setPower(0);
