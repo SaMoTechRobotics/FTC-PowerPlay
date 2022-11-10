@@ -42,7 +42,6 @@ public class Slide {
    * @param power The power to set the motors to, from -1.0 to 1.0
    */
   public final void setPower(double power) {
-    if ((this.getTicks() < 0 && power < 0) || (this.getTicks() > this.inchesToTicks(SlideHeight.MaxHeight) && power > 0)) return;
     if (this.SlideMotor.getPower() != power) this.SlideMotor.setPower(power);
   }
 
@@ -81,8 +80,22 @@ public class Slide {
     );
   }
 
+  /**
+   * @return returns the status of the slide
+   */
   public final SlideStatus getStatus() {
     return this.Status;
+  }
+
+    /**
+   * Sets the power of the slide motor based off the power from the joystick
+   * @param power power from joystick, ex: -1.0 to 1.1
+   */
+  public final void manualPower(double power) {
+    if ((this.getTicks() < 0 && power < 0) || (this.getTicks() > this.inchesToTicks(SlideHeight.MaxHeight) && power > 0)) return;
+    this.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
+    this.SlideMotor.setPower(power);
+    this.Status = SlideStatus.ManualPower;
   }
 
   /**
@@ -93,7 +106,7 @@ public class Slide {
   public final void setHeight(double height, double speed) {
     int ticks = this.inchesToTicks(height);
 
-    if (ticks < 0) return;
+    if (ticks < 0 || ticks > this.inchesToTicks(SlideHeight.MaxHeight)) return;
 
     this.setTarget(ticks);
     this.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -138,7 +151,7 @@ public class Slide {
     else if (left) this.setHeight(SlideHeight.MidPole, this.Speed); // Slide set to mid pole height if dpad left is pressed
     else if (down) this.setHeight(SlideHeight.LowPole, this.Speed); // Slide set to low pole height if dpad down is pressed
     else if (right) this.setHeight(SlideHeight.Ground, this.Speed); // Slide set to ground height if dpad right is pressed
-    else if (power != 0) this.setPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
+    else if (power != 0) this.manualPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
     // else if(this.Status == SlideStatus.Holding) this.holdHeight(); // Slide set to stop if no dpad buttons are pressed and gamepad2 left stick y is 0
     // else if(!this.SlideMotor.isBusy());
 
