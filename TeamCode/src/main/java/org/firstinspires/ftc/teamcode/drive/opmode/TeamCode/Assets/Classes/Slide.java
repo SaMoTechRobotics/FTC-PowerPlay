@@ -108,7 +108,7 @@ public class Slide {
    */
   public final void manualPower(double power) {
     if ((this.getTicks() < 0 && power < 0) || (this.getTicks() > this.inchesToTicks(SlideHeight.MaxHeight) && power > 0)) return;
-    this.setMode(DcMotor.RunMode.RUN_WITH_ENCODER);
+    this.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     this.SlideMotor.setPower(power);
     this.Status = SlideStatus.ManualPower;
   }
