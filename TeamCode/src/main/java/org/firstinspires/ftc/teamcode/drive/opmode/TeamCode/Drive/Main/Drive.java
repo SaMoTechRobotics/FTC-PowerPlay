@@ -113,14 +113,28 @@ public class Drive extends LinearOpMode {
 
       /* GENERAL */
 
-      if (Slide.getInches() < SlideHeight.SafetyMargin) { //make sure this only happens once
+      // if (Slide.getInches() < SlideHeight.SafetyMargin) { //make sure this only happens once
+      //   Arm.setRotation(ArmRotation.Center);
+      //   // if(Slide.getInches() > SlideHeight.SafetyHeight) Claw.close();
+      // }
+      // if (Slide.getInches() < SlideHeight.SafetyHeight && Arm.getRotation() != ArmRotation.Center) {
+      //   Slide.setPower(0);
+      // } else {
+      //   // Slide.setPower(Slide.Speed);
+      // }
+
+      // if(Slide.getInches() < SlideHeight.SafetyHeight && previousSlideHeight >= SlideHeight.SafetyHeight) {
+      //   Arm.setRotation(ArmRotation.Center);
+      //   // Claw.close();
+      // }
+
+      if(Slide.getInches() < SlideHeight.SafetyMargin) {
         Arm.setRotation(ArmRotation.Center);
-        // if(Slide.getInches() > SlideHeight.SafetyHeight) Claw.close();
       }
-      if (Slide.getInches() < SlideHeight.SafetyHeight && Arm.getRotation() != ArmRotation.Center) {
-        Slide.setPower(0);
+      if(Slide.getInches() < SlideHeight.SafetyHeight && Arm.getRotation() != ArmRotation.Center) {
+        Slide.pause();
       } else {
-        // Slide.setPower(Slide.Speed);
+        if(Slide.isPaused) Slide.resume();
       }
 
       telemetry.update();
