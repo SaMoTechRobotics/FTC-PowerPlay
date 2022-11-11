@@ -20,6 +20,10 @@ public class Claw {
 
     }
 
+    public final double getPosition() {
+        return this.ClawServo.getPosition();
+    }
+
     /**
      * Sets the position of the servo
      * @param position The position to set the servo to as percentage 0-100

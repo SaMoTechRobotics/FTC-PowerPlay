@@ -20,11 +20,11 @@ public class ArmRotation {
     /**
      * The half rotations of the arm to the left and right where arm is still within robot boundries
      */
-    public static double Left = 0.8; //0.8
-    public static double Right = 0.1; //0.1
+    public static double Left = 0.855; //0.8
+    public static double Right = 0.195; //0.2
 
     /**
      * The default/center/initial rotation of the arm
      */
-    public static double Center = 0.475; //0.5
+    public static double Center = 0.515; //0.5
 }

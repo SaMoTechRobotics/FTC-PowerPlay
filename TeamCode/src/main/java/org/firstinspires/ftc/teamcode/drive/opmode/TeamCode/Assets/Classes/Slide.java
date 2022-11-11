@@ -19,6 +19,7 @@ public class Slide {
   private DcMotor SlideMotor;
 
   private double Speed = SlideSpeed.Max;
+  private double ManualSpeed = SlideSpeed.Min;
   private SlideStatus Status = SlideStatus.Stopped;
 
   public boolean isPaused = false;
@@ -34,9 +35,9 @@ public class Slide {
     this.SlideMotor = SlideMotor;
 
     this.SlideMotor.setDirection(DcMotor.Direction.REVERSE);
-    this.SlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    // this.SlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     this.SlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    this.SlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    this.SlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
     this.Status = SlideStatus.Stopped;
   }
 
@@ -49,6 +50,12 @@ public class Slide {
   public final void resume() {
     this.isPaused = false;
     this.setPower(LastSpeed);
+  }
+
+  public final void stop() {
+    this.Status = SlideStatus.Stopped;
+    this.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    this.setPower(0);
   }
 
   /**
@@ -102,14 +109,17 @@ public class Slide {
     return this.Status;
   }
 
-    /**
+  /**
    * Sets the power of the slide motor based off the power from the joystick
    * @param power power from joystick, ex: -1.0 to 1.1
    */
   public final void manualPower(double power) {
-    if ((this.getTicks() < 0 && power < 0) || (this.getTicks() > this.inchesToTicks(SlideHeight.MaxHeight) && power > 0)) return;
+    if (
+      (this.getTicks() < 0 && power < 0) ||
+      (this.getTicks() > this.inchesToTicks(SlideHeight.MaxHeight) && power > 0)
+    ) return;
     this.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-    this.SlideMotor.setPower(power);
+    this.SlideMotor.setPower(power * this.ManualSpeed);
     this.Status = SlideStatus.ManualPower;
   }
 
@@ -121,7 +131,7 @@ public class Slide {
   public final void setHeight(double height, double speed) {
     int ticks = this.inchesToTicks(height);
 
-    if (ticks < 0 || ticks > this.inchesToTicks(SlideHeight.MaxHeight)) return;
+    if (ticks < 0 || height > SlideHeight.MaxHeight) return;
 
     this.setTarget(ticks);
     this.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -135,12 +145,17 @@ public class Slide {
    * Holds the slide at its current position
    */
   public final void holdHeight() {
+    if (this.Status == SlideStatus.Holding) return;
+    if (this.getTicks() < SlideHeight.GroundMargin) {
+      return;
+    }
+
+    this.setTarget(this.getTicks());
+    this.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    this.setPower(SlideSpeed.Hold);
+
     this.Status = SlideStatus.Holding;
-
-    // this.setTarget(this.getTicks());
-    // this.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-    // this.setPower(SlideSpeed.Hold);
   }
 
   /**
@@ -158,23 +173,38 @@ public class Slide {
     boolean down,
     boolean right
   ) {
-
     if (up) this.setHeight(SlideHeight.HighPole, this.Speed); // Slide set to high pole height if dpad up is pressed
     else if (left) this.setHeight(SlideHeight.MidPole, this.Speed); // Slide set to mid pole height if dpad left is pressed
     else if (down) this.setHeight(SlideHeight.LowPole, this.Speed); // Slide set to low pole height if dpad down is pressed
     else if (right) this.setHeight(SlideHeight.Ground, this.Speed); // Slide set to ground height if dpad right is pressed
     else if (power != 0) this.manualPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
-    else if(this.atTargetPosition()) this.holdHeight(); // Slide set to hold height if no dpad buttons are pressed and the slide is not moving
+    else if (
+      this.Status != SlideStatus.Stopped &&
+      (this.Status == SlideStatus.ManualPower || this.atTargetPosition())
+    ) this.holdHeight(); // Slide set to hold height if no dpad buttons are pressed and the slide is not moving
 
+    if (this.getTicks() < SlideHeight.GroundMargin) {
+      this.stop();
+    }
     if (this.getTicks() < 0) this.setPower(0);
-    if (this.getInches() > SlideHeight.MaxHeight) this.setPower(0);
+    // if (this.getInches() > SlideHeight.MaxHeight) this.setPower(0);
+  }
+
+  public final void updateSpeed(boolean fast) {
+    if (fast) {
+      this.ManualSpeed = SlideSpeed.Max;
+    } else {
+      this.ManualSpeed = SlideSpeed.Min;
+    }
   }
 
   /**
    * @return boolean based of if slide is at target position, will always return false if the slide is manually moving
    */
   public final boolean atTargetPosition() {
-    return this.Status != SlideStatus.ManualPower ? this.getTicks() == this.SlideMotor.getTargetPosition() : false;
+    return this.Status != SlideStatus.ManualPower
+      ? this.getTicks() == this.SlideMotor.getTargetPosition()
+      : false;
   }
 
   /**

@@ -14,7 +14,7 @@ public class SlideSpeed {
      * The max, mid, and min speeds of the slide
      */
     public static double Max = 1.0;
-    public static double Mid = 0.6;
+    public static double Mid = 0.5;
     public static double Min = 0.3;
 
     /**

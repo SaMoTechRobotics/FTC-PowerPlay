@@ -4,6 +4,8 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
+import com.arcrobotics.ftclib.gamepad.ButtonReader;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -55,6 +57,7 @@ public class Drive extends LinearOpMode {
       GamepadKeys.Button.RIGHT_BUMPER
     ); // The button to toggle the claw
 
+
     waitForStart();
 
     while (opModeIsActive()) {
@@ -80,6 +83,7 @@ public class Drive extends LinearOpMode {
       Chassis.updatePosition();
 
       Pose2d ChassisPos = Chassis.getPosition();
+      telemetry.addData("","");
       telemetry.addData("Chassis X", ChassisPos.getX());
       telemetry.addData("Chassis Y", ChassisPos.getY());
       telemetry.addData("Chassis Heading", ChassisPos.getHeading());
@@ -88,6 +92,9 @@ public class Drive extends LinearOpMode {
 
       Claw.toggleOpen(clawToggleButton.getState());
       clawToggleButton.readValue();
+
+      telemetry.addData("","");
+      telemetry.addData("Claw Position", Claw.getPosition());
 
       /* ARM */
 
@@ -98,17 +105,26 @@ public class Drive extends LinearOpMode {
         gamepad2.y
       );
 
+      telemetry.addData("","");
+      telemetry.addData("Arm Position", Claw.getPosition());
+
       /* SLIDE */
 
       Slide.updateWithControls(
         Gamepad2.getLeftY(),
-        gamepad2.dpad_up,
-        gamepad2.dpad_left,
-        gamepad2.dpad_down,
-        gamepad2.dpad_right
+        Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_UP),
+        Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_LEFT),
+        Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
+        Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)
       );
 
+      Slide.updateSpeed(
+        Gamepad2.getButton(GamepadKeys.Button.LEFT_BUMPER)
+      );
+
+      telemetry.addData("","");
       telemetry.addData("Slide Inches", Slide.getInches());
+      telemetry.addData("Slide Ticks", Slide.getTicks());
       telemetry.addData("Slide Status", Slide.getStatus());
 
       /* GENERAL */
@@ -137,6 +153,8 @@ public class Drive extends LinearOpMode {
         if(Slide.isPaused) Slide.resume();
       }
 
+      Gamepad1.readButtons();
+      Gamepad2.readButtons();
       telemetry.update();
     }
   }
