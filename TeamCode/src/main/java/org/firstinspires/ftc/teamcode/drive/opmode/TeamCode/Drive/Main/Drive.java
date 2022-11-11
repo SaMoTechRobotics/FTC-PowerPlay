@@ -42,6 +42,7 @@ public class Drive extends LinearOpMode {
     Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
 
     Claw = new Claw(hardwareMap.get(Servo.class, "claw"));
+    Claw.close();
 
     // Initialize the gamepad
     Gamepad1 = new GamepadEx(gamepad1);
@@ -115,7 +116,9 @@ public class Drive extends LinearOpMode {
         Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_UP),
         Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_LEFT),
         Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
-        Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT)
+        Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT),
+        Arm,
+        Claw
       );
 
       Slide.updateSpeed(

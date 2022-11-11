@@ -68,7 +68,7 @@ public class Chassis {
         this.Wheels.FrontLeft.setDirection(DcMotor.Direction.REVERSE);
         this.Wheels.BackLeft.setDirection(DcMotor.Direction.REVERSE);
 
-        this.MecanumDrive = new SampleMecanumDrive(hardwareMap, true);
+        // this.MecanumDrive = new SampleMecanumDrive(hardwareMap, true);
     }
 
     /**
@@ -139,7 +139,7 @@ public class Chassis {
     }
 
     public final void updatePosition() {
-        this.MecanumDrive.update();
+        // this.MecanumDrive.update();
     }
 
     public final Pose2d getPosition() {

@@ -20,8 +20,8 @@ public class ClawPosition {
     /**
      * The open and close positions of the claw
      */
-    public static double Open = 90;
-    public static double Close = 40;
+    public static double Open = 20;
+    public static double Close = 50;
 
     
     

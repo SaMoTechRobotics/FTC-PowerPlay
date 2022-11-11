@@ -171,12 +171,18 @@ public class Slide {
     boolean up,
     boolean left,
     boolean down,
-    boolean right
+    boolean right,
+    Arm arm,
+    Claw claw
   ) {
     if (up) this.setHeight(SlideHeight.HighPole, this.Speed); // Slide set to high pole height if dpad up is pressed
     else if (left) this.setHeight(SlideHeight.MidPole, this.Speed); // Slide set to mid pole height if dpad left is pressed
     else if (down) this.setHeight(SlideHeight.LowPole, this.Speed); // Slide set to low pole height if dpad down is pressed
-    else if (right) this.setHeight(SlideHeight.Ground, this.Speed); // Slide set to ground height if dpad right is pressed
+    else if (right) {
+      this.setHeight(SlideHeight.Ground, this.Speed); // Slide set to ground height if dpad right is pressed
+      arm.setRotation(ArmRotation.Center);
+      claw.close();
+    }
     else if (power != 0) this.manualPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
     else if (this.getTicks() < SlideHeight.GroundMargin) {
       this.stop();

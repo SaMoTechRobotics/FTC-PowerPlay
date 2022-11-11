@@ -35,13 +35,13 @@ public class SlideTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            Slide.updateWithControls(
-                Gamepad2.getLeftY(),
-                gamepad2.dpad_up,
-                gamepad2.dpad_left,
-                gamepad2.dpad_down,
-                gamepad2.dpad_right
-            );
+            // Slide.updateWithControls(
+            //     Gamepad2.getLeftY(),
+            //     gamepad2.dpad_up,
+            //     gamepad2.dpad_left,
+            //     gamepad2.dpad_down,
+            //     gamepad2.dpad_right
+            // );
 
             telemetry.addData("Slide Ticks", Slide.getTicks());
             telemetry.addData("Slide Inches", Slide.getInches());
