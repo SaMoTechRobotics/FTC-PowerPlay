@@ -178,14 +178,14 @@ public class Slide {
     else if (down) this.setHeight(SlideHeight.LowPole, this.Speed); // Slide set to low pole height if dpad down is pressed
     else if (right) this.setHeight(SlideHeight.Ground, this.Speed); // Slide set to ground height if dpad right is pressed
     else if (power != 0) this.manualPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
+    else if (this.getTicks() < SlideHeight.GroundMargin) {
+      this.stop();
+    }
     else if (
       this.Status != SlideStatus.Stopped &&
       (this.Status == SlideStatus.ManualPower || this.atTargetPosition())
     ) this.holdHeight(); // Slide set to hold height if no dpad buttons are pressed and the slide is not moving
 
-    if (this.getTicks() < SlideHeight.GroundMargin) {
-      this.stop();
-    }
     if (this.getTicks() < 0) this.setPower(0);
     // if (this.getInches() > SlideHeight.MaxHeight) this.setPower(0);
   }
