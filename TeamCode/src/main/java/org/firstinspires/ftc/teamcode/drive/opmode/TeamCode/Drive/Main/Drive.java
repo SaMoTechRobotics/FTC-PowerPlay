@@ -101,7 +101,8 @@ public class Drive extends LinearOpMode {
       // if(Slide.getTicks() < SlideHeight.GroundMargin && Claw.detectedCone()) Claw.close();
 
       telemetry.addData("", "");
-      telemetry.addData("Claw Open", Claw.isOpen());
+      telemetry.addData("CLAW OPEN", Claw.isOpen() ? "YES!!!!!!" : "NO!!!!!!!");
+      telemetry.addData("", "");
       telemetry.addData("Claw Position", Claw.getPosition());
       telemetry.addData("Claw Sensor Detected Cone", Claw.detectedCone());
       telemetry.addData("Claw Sensor Distance", Claw.getSensorDistance());
@@ -113,7 +114,7 @@ public class Drive extends LinearOpMode {
         gamepad2.x,
         gamepad2.b,
         gamepad2.y
-      );
+      ); else Arm.setRotation(ArmRotation.Center);
 
       telemetry.addData("", "");
       telemetry.addData("Arm Position", Arm.getRotation());

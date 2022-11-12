@@ -13,21 +13,21 @@ public class ChassisSpeed {
      * The speed of the robot when it is moving forward or backward
      */
     public static double MaxDrive = 1.0;
-    public static double MidDrive = 0.6;
+    public static double MidDrive = 0.5;
     public static double MinDrive = 0.3;
 
     /**
      * The speed of the robot when it is turning
     */
     public static double MaxTurn = 1.0;
-    public static double MidTurn = 0.6;
+    public static double MidTurn = 0.5;
     public static double MinTurn = 0.3;
 
     /**
      * The speed of the robot when it is strafing
     */
     public static double MaxStrafe = 1.0;
-    public static double MidStrafe = 0.6;
+    public static double MidStrafe = 0.5;
     public static double MinStrafe = 0.3;
 
     /**
