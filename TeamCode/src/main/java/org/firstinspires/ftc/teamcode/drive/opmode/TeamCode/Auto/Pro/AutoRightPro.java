@@ -19,6 +19,7 @@ public class AutoRightPro extends LinearOpMode {
 
   public static double strafe1 = 56.0;
   public static double back2 = 8.0;
+  public static double forward3 = 8.0;
 
   @Override
   public void runOpMode() throws InterruptedException {
@@ -66,20 +67,30 @@ public class AutoRightPro extends LinearOpMode {
 
     sleep(1000);
 
-    Slide.setHeight(SlideHeight.HighPole - 5, SlideSpeed.Mid);
+    Slide.setHeight(SlideHeight.HighPole - 10, SlideSpeed.Mid);
 
-    sleep(2000);
+    sleep(3000);
 
     Claw.open();
 
+    sleep(1000);
+
     Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Mid);
 
-    sleep(2000);
+    sleep(3000);
 
     Arm.setRotation(ArmRotation.Center);
     Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
     Claw.close();
+    
+    Trajectory forwardTraj = drive
+    .trajectoryBuilder(backTraj.end())
+    .forward(back2)
+    .build();
 
-    sleep(10000);
+    drive.followTrajectory(forwardTraj);
+
+    sleep(8000);
+
   }
 }

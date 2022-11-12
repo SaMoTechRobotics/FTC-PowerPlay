@@ -66,20 +66,30 @@ public class AutoLeftPro extends LinearOpMode {
 
     sleep(1000);
 
-    Slide.setHeight(SlideHeight.HighPole - 5, SlideSpeed.Mid);
+    Slide.setHeight(SlideHeight.HighPole - 10, SlideSpeed.Mid);
 
-    sleep(2000);
+    sleep(3000);
 
     Claw.open();
 
+    sleep(1000);
+
     Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Mid);
 
-    sleep(2000);
+    sleep(3000);
 
     Arm.setRotation(ArmRotation.Center);
     Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
     Claw.close();
 
-    sleep(10000);
+    Trajectory forwardTraj = drive
+    .trajectoryBuilder(backTraj.end())
+    .forward(back2)
+    .build();
+
+    drive.followTrajectory(forwardTraj);
+
+    sleep(8000);
+
   }
 }

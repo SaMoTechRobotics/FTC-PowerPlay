@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 @Disabled
 public class FollowerPIDTuner extends LinearOpMode {
 
-  public static double DISTANCE = 48; // in
+  public static double DISTANCE = 32; // in
 
   @Override
   public void runOpMode() throws InterruptedException {

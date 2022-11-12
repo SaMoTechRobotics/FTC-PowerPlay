@@ -182,20 +182,18 @@ public class Slide {
       this.setHeight(SlideHeight.Ground, this.Speed); // Slide set to ground height if dpad right is pressed
       arm.setRotation(ArmRotation.Center);
       claw.close();
-    }
-    else if (power != 0) this.manualPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
+    } else if (power != 0) this.manualPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
     else if (this.getTicks() < SlideHeight.GroundMargin) {
-      if(this.Status != SlideStatus.Stopped) {
+      if (this.Status != SlideStatus.Stopped) {
         this.stop();
-        claw.open();
+        if (!claw.detectedCone()) claw.open();
       }
-    }
-    else if (
+    } else if (
       this.Status != SlideStatus.Stopped &&
       (this.Status == SlideStatus.ManualPower || this.atTargetPosition())
     ) this.holdHeight(); // Slide set to hold height if no dpad buttons are pressed and the slide is not moving
 
-    if (this.getTicks() < 0) this.setPower(0);
+    if (this.getTicks() < 0 && this.SlideMotor.getPower() < 0) this.setPower(0);
     // if (this.getInches() > SlideHeight.MaxHeight) this.setPower(0);
   }
 
