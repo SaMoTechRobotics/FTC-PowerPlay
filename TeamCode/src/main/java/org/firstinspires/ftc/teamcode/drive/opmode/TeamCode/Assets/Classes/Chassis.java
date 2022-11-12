@@ -139,7 +139,7 @@ public class Chassis {
     }
 
     public final void updatePosition() {
-        // this.MecanumDrive.update();
+        this.MecanumDrive.update();
     }
 
     public final Pose2d getPosition() {

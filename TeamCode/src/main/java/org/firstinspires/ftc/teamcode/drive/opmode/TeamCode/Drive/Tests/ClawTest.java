@@ -6,8 +6,9 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "ClawTest", group = "Tests")
 public class ClawTest extends LinearOpMode {
@@ -26,7 +27,11 @@ public class ClawTest extends LinearOpMode {
     Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
 
     // Initialize the claw
-    Claw = new Claw(hardwareMap.get(Servo.class, "claw"));
+    Claw =
+      new Claw(
+        hardwareMap.get(Servo.class, "claw"),
+        hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
+      );
 
     // Initialize the gamepad
     Gamepad1 = new GamepadEx(gamepad1);

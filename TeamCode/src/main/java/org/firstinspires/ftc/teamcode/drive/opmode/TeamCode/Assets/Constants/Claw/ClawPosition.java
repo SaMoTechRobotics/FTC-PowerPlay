@@ -23,6 +23,7 @@ public class ClawPosition {
     public static double Open = 20;
     public static double Close = 50;
 
+    public static double ConeDistance = 4.0;
     
     
 }

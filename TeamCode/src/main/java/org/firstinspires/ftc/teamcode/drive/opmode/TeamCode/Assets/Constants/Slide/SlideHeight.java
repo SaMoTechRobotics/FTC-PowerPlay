@@ -27,7 +27,7 @@ public class SlideHeight {
   /**
    * The base offset height, where slide is mounted relative to ground
    */
-  public static double BaseHeight = 4;
+  public static double BaseHeight = 0;
 
   /**
    * The minimum height for the arm to be allowed to rotate

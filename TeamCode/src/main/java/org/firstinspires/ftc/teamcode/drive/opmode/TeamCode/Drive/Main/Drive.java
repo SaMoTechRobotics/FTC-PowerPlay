@@ -1,17 +1,16 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
-import com.arcrobotics.ftclib.gamepad.ButtonReader;
-
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-
-import com.acmerobotics.roadrunner.geometry.Pose2d;
 
 @TeleOp(name = "Drive", group = "Drive")
 public class Drive extends LinearOpMode {
@@ -40,8 +39,13 @@ public class Drive extends LinearOpMode {
     Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
 
     Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
+    Arm.setRotation(ArmRotation.Center);
 
-    Claw = new Claw(hardwareMap.get(Servo.class, "claw"));
+    Claw =
+      new Claw(
+        hardwareMap.get(Servo.class, "claw"),
+        hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
+      );
     Claw.close();
 
     // Initialize the gamepad
@@ -57,7 +61,6 @@ public class Drive extends LinearOpMode {
       Gamepad2,
       GamepadKeys.Button.RIGHT_BUMPER
     ); // The button to toggle the claw
-
 
     waitForStart();
 
@@ -81,33 +84,39 @@ public class Drive extends LinearOpMode {
         Gamepad1.getRightX() //turn stick
       );
 
-      Chassis.updatePosition();
+      // Chassis.updatePosition();
 
-      Pose2d ChassisPos = Chassis.getPosition();
-      telemetry.addData("","");
-      telemetry.addData("Chassis X", ChassisPos.getX());
-      telemetry.addData("Chassis Y", ChassisPos.getY());
-      telemetry.addData("Chassis Heading", ChassisPos.getHeading());
+      // Pose2d ChassisPos = Chassis.getPosition();
+      // telemetry.addData("","");
+      // telemetry.addData("Chassis X", ChassisPos.getX());
+      // telemetry.addData("Chassis Y", ChassisPos.getY());
+      // telemetry.addData("Chassis Heading", ChassisPos.getHeading());
 
       /* CLAW */
 
-      Claw.toggleOpen(clawToggleButton.getState());
-      clawToggleButton.readValue();
+      if(Slide.getTicks() < SlideHeight.GroundMargin && Claw.justDetectedCone()) {
+        Claw.close();
+      }
+      if(Gamepad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) Claw.toggleOpen(clawToggleButton.getState());
+      // if(Slide.getTicks() < SlideHeight.GroundMargin && Claw.detectedCone()) Claw.close();
 
-      telemetry.addData("","");
+      telemetry.addData("", "");
+      telemetry.addData("Claw Open", Claw.isOpen());
       telemetry.addData("Claw Position", Claw.getPosition());
+      telemetry.addData("Claw Sensor Detected Cone", Claw.detectedCone());
+      telemetry.addData("Claw Sensor Distance", Claw.getSensorDistance());
 
       /* ARM */
 
-      if(Slide.getInches() > SlideHeight.SafetyHeight) Arm.updateWithControls(
+      if (Slide.getInches() > SlideHeight.SafetyHeight) Arm.updateWithControls(
         Gamepad2.getRightX(),
         gamepad2.x,
         gamepad2.b,
         gamepad2.y
       );
 
-      telemetry.addData("","");
-      telemetry.addData("Arm Position", Claw.getPosition());
+      telemetry.addData("", "");
+      telemetry.addData("Arm Position", Arm.getRotation());
 
       /* SLIDE */
 
@@ -121,11 +130,9 @@ public class Drive extends LinearOpMode {
         Claw
       );
 
-      Slide.updateSpeed(
-        Gamepad2.getButton(GamepadKeys.Button.LEFT_BUMPER)
-      );
+      Slide.updateSpeed(Gamepad2.getButton(GamepadKeys.Button.LEFT_BUMPER));
 
-      telemetry.addData("","");
+      telemetry.addData("", "");
       telemetry.addData("Slide Inches", Slide.getInches());
       telemetry.addData("Slide Ticks", Slide.getTicks());
       telemetry.addData("Slide Status", Slide.getStatus());
@@ -147,13 +154,16 @@ public class Drive extends LinearOpMode {
       //   // Claw.close();
       // }
 
-      if(Slide.getInches() < SlideHeight.SafetyMargin) {
+      if (Slide.getInches() < SlideHeight.SafetyMargin) {
         Arm.setRotation(ArmRotation.Center);
       }
-      if(Slide.getInches() < SlideHeight.SafetyHeight && Arm.getRotation() != ArmRotation.Center) {
+      if (
+        Slide.getInches() < SlideHeight.SafetyHeight &&
+        Arm.getRotation() != ArmRotation.Center
+      ) {
         Slide.pause();
       } else {
-        if(Slide.isPaused) Slide.resume();
+        if (Slide.isPaused) Slide.resume();
       }
 
       Gamepad1.readButtons();

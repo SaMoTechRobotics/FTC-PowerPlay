@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.config.Config;
 
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
  * Claw class which contains all the methods for the claw of the robot
@@ -10,14 +12,18 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Claw {
     
     private Servo ClawServo;
+    private DistanceSensor ClawDistanceSensor;
+
+    private boolean open = false;
+    private boolean detectedCone = false;
     
     /**
      * Creates a new claw with 1 servo
      * @param ClawServo The servo that will be used for the claw
     */
-    public Claw(Servo ClawServo) {
+    public Claw(Servo ClawServo, DistanceSensor ClawDistanceSensor) {
         this.ClawServo = ClawServo;
-
+        this.ClawDistanceSensor = ClawDistanceSensor;
     }
 
     public final double getPosition() {
@@ -34,10 +40,15 @@ public class Claw {
         );
     }
 
+    public final boolean isOpen() {
+        return this.open;
+    }
+
     /**
      * Opens the claw
     */
     public final void open() {
+        this.open = true;
         this.setPosition(ClawPosition.Open);
     }
 
@@ -45,6 +56,7 @@ public class Claw {
      * Closes the claw
     */
     public final void close() {
+        this.open = false;
         this.setPosition(ClawPosition.Close);
     }
 
@@ -53,11 +65,30 @@ public class Claw {
      * @param open The open position of the claw
      */
     public final void toggleOpen(boolean open) {
-        if (open) {
+        this.open = !this.open;
+        if (this.open) {
             this.open();
         } else {
             this.close();
         }
+    }
+
+    public final double getSensorDistance() {
+        return this.ClawDistanceSensor.getDistance(DistanceUnit.INCH);
+    }
+
+    public final boolean detectedCone() {
+        return this.getSensorDistance() < ClawPosition.ConeDistance;
+    }
+
+    public final boolean justDetectedCone() {
+        if (this.detectedCone() && !this.detectedCone) {
+            this.detectedCone = true;
+            return true;
+        } else if(!this.detectedCone()) {
+            this.detectedCone = false;
+        }
+        return false;
     }
 
     /**
