@@ -185,7 +185,10 @@ public class Slide {
     }
     else if (power != 0) this.manualPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
     else if (this.getTicks() < SlideHeight.GroundMargin) {
-      this.stop();
+      if(this.Status != SlideStatus.Stopped) {
+        this.stop();
+        claw.open();
+      }
     }
     else if (
       this.Status != SlideStatus.Stopped &&

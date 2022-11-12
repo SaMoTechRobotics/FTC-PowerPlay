@@ -73,7 +73,7 @@ public class Drive extends LinearOpMode {
 
       // Updates the chassis speed based on gamepad1 bumpers
       Chassis.updateSpeed(
-        Gamepad1.getButton(GamepadKeys.Button.LEFT_BUMPER),
+        Slide.getInches() < SlideHeight.MidPole ? Gamepad1.getButton(GamepadKeys.Button.LEFT_BUMPER) : false,
         Gamepad1.getButton(GamepadKeys.Button.RIGHT_BUMPER)
       );
 
