@@ -5,16 +5,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.VoltageSensor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-
-import java.util.Objects;
-
 /**
  * This routine is designed to calculate the maximum velocity your bot can achieve under load. It
  * will also calculate the effective kF value for your velocity PID.
@@ -23,60 +13,90 @@ import java.util.Objects;
  * <p>
  * Further fine tuning of kF may be desired.
  */
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import java.util.Objects;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+
 @Config
 @Autonomous(group = "drive")
+@Disabled
 public class MaxVelocityTuner extends LinearOpMode {
-    public static double RUNTIME = 2.0;
 
-    private ElapsedTime timer;
-    private double maxVelocity = 0.0;
+  public static double RUNTIME = 2.0;
 
-    private VoltageSensor batteryVoltageSensor;
+  private ElapsedTime timer;
+  private double maxVelocity = 0.0;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+  private VoltageSensor batteryVoltageSensor;
 
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+  @Override
+  public void runOpMode() throws InterruptedException {
+    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
+    drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+    batteryVoltageSensor = hardwareMap.voltageSensor.iterator().next();
 
-        telemetry.addLine("Your bot will go at full speed for " + RUNTIME + " seconds.");
-        telemetry.addLine("Please ensure you have enough space cleared.");
-        telemetry.addLine("");
-        telemetry.addLine("Press start when ready.");
-        telemetry.update();
+    telemetry =
+      new MultipleTelemetry(
+        telemetry,
+        FtcDashboard.getInstance().getTelemetry()
+      );
 
-        waitForStart();
+    telemetry.addLine(
+      "Your bot will go at full speed for " + RUNTIME + " seconds."
+    );
+    telemetry.addLine("Please ensure you have enough space cleared.");
+    telemetry.addLine("");
+    telemetry.addLine("Press start when ready.");
+    telemetry.update();
 
-        telemetry.clearAll();
-        telemetry.update();
+    waitForStart();
 
-        drive.setDrivePower(new Pose2d(1, 0, 0));
-        timer = new ElapsedTime();
+    telemetry.clearAll();
+    telemetry.update();
 
-        while (!isStopRequested() && timer.seconds() < RUNTIME) {
-            drive.updatePoseEstimate();
+    drive.setDrivePower(new Pose2d(1, 0, 0));
+    timer = new ElapsedTime();
 
-            Pose2d poseVelo = Objects.requireNonNull(drive.getPoseVelocity(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");
+    while (!isStopRequested() && timer.seconds() < RUNTIME) {
+      drive.updatePoseEstimate();
 
-            maxVelocity = Math.max(poseVelo.vec().norm(), maxVelocity);
-        }
+      Pose2d poseVelo = Objects.requireNonNull(
+        drive.getPoseVelocity(),
+        "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer."
+      );
 
-        drive.setDrivePower(new Pose2d());
-
-        double effectiveKf = DriveConstants.getMotorVelocityF(veloInchesToTicks(maxVelocity));
-
-        telemetry.addData("Max Velocity", maxVelocity);
-        telemetry.addData("Voltage Compensated kF", effectiveKf * batteryVoltageSensor.getVoltage() / 12);
-        telemetry.update();
-
-        while (!isStopRequested() && opModeIsActive()) idle();
+      maxVelocity = Math.max(poseVelo.vec().norm(), maxVelocity);
     }
 
-    private double veloInchesToTicks(double inchesPerSec) {
-        return inchesPerSec / (2 * Math.PI * DriveConstants.WHEEL_RADIUS) / DriveConstants.GEAR_RATIO * DriveConstants.TICKS_PER_REV;
-    }
+    drive.setDrivePower(new Pose2d());
+
+    double effectiveKf = DriveConstants.getMotorVelocityF(
+      veloInchesToTicks(maxVelocity)
+    );
+
+    telemetry.addData("Max Velocity", maxVelocity);
+    telemetry.addData(
+      "Voltage Compensated kF",
+      effectiveKf * batteryVoltageSensor.getVoltage() / 12
+    );
+    telemetry.update();
+
+    while (!isStopRequested() && opModeIsActive()) idle();
+  }
+
+  private double veloInchesToTicks(double inchesPerSec) {
+    return (
+      inchesPerSec /
+      (2 * Math.PI * DriveConstants.WHEEL_RADIUS) /
+      DriveConstants.GEAR_RATIO *
+      DriveConstants.TICKS_PER_REV
+    );
+  }
 }

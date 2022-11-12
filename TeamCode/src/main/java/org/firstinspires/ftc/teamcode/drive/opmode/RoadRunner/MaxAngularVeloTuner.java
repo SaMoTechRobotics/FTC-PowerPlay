@@ -5,14 +5,6 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-
-import java.util.Objects;
-
 /**
  * This routine is designed to calculate the maximum angular velocity your bot can achieve under load.
  * <p>
@@ -20,51 +12,71 @@ import java.util.Objects;
  * <p>
  * Further fine tuning of MAX_ANG_VEL may be desired.
  */
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import java.util.Objects;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 @Config
 @Autonomous(group = "drive")
+@Disabled
 public class MaxAngularVeloTuner extends LinearOpMode {
-    public static double RUNTIME = 4.0;
 
-    private ElapsedTime timer;
-    private double maxAngVelocity = 0.0;
+  public static double RUNTIME = 4.0;
 
-    @Override
-    public void runOpMode() throws InterruptedException {
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+  private ElapsedTime timer;
+  private double maxAngVelocity = 0.0;
 
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+  @Override
+  public void runOpMode() throws InterruptedException {
+    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+    drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        telemetry.addLine("Your bot will turn at full speed for " + RUNTIME + " seconds.");
-        telemetry.addLine("Please ensure you have enough space cleared.");
-        telemetry.addLine("");
-        telemetry.addLine("Press start when ready.");
-        telemetry.update();
+    telemetry =
+      new MultipleTelemetry(
+        telemetry,
+        FtcDashboard.getInstance().getTelemetry()
+      );
 
-        waitForStart();
+    telemetry.addLine(
+      "Your bot will turn at full speed for " + RUNTIME + " seconds."
+    );
+    telemetry.addLine("Please ensure you have enough space cleared.");
+    telemetry.addLine("");
+    telemetry.addLine("Press start when ready.");
+    telemetry.update();
 
-        telemetry.clearAll();
-        telemetry.update();
+    waitForStart();
 
-        drive.setDrivePower(new Pose2d(0, 0, 1));
-        timer = new ElapsedTime();
+    telemetry.clearAll();
+    telemetry.update();
 
-        while (!isStopRequested() && timer.seconds() < RUNTIME) {
-            drive.updatePoseEstimate();
+    drive.setDrivePower(new Pose2d(0, 0, 1));
+    timer = new ElapsedTime();
 
-            Pose2d poseVelo = Objects.requireNonNull(drive.getPoseVelocity(), "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer.");
+    while (!isStopRequested() && timer.seconds() < RUNTIME) {
+      drive.updatePoseEstimate();
 
-            maxAngVelocity = Math.max(poseVelo.getHeading(), maxAngVelocity);
-        }
+      Pose2d poseVelo = Objects.requireNonNull(
+        drive.getPoseVelocity(),
+        "poseVelocity() must not be null. Ensure that the getWheelVelocities() method has been overridden in your localizer."
+      );
 
-        drive.setDrivePower(new Pose2d());
-
-        telemetry.addData("Max Angular Velocity (rad)", maxAngVelocity);
-        telemetry.addData("Max Angular Velocity (deg)", Math.toDegrees(maxAngVelocity));
-        telemetry.update();
-
-        while (!isStopRequested()) idle();
+      maxAngVelocity = Math.max(poseVelo.getHeading(), maxAngVelocity);
     }
+
+    drive.setDrivePower(new Pose2d());
+
+    telemetry.addData("Max Angular Velocity (rad)", maxAngVelocity);
+    telemetry.addData(
+      "Max Angular Velocity (deg)",
+      Math.toDegrees(maxAngVelocity)
+    );
+    telemetry.update();
+
+    while (!isStopRequested()) idle();
+  }
 }
