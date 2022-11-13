@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Drive", group = "Drive")
@@ -48,6 +49,8 @@ public class Drive extends LinearOpMode {
       );
     Claw.close();
 
+    ColorSensor ColorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+
     // Initialize the gamepad
     Gamepad1 = new GamepadEx(gamepad1);
     Gamepad2 = new GamepadEx(gamepad2);
@@ -64,7 +67,17 @@ public class Drive extends LinearOpMode {
 
     waitForStart();
 
+    ColorSensor.enableLed(true);
+
     while (opModeIsActive()) {
+
+      telemetry.addData("Color Sensor", "");
+      telemetry.addData("Red", ColorSensor.red());
+      telemetry.addData("Green", ColorSensor.green());
+      telemetry.addData("Blue", ColorSensor.blue());
+      telemetry.addData("Alpha", ColorSensor.alpha());
+      telemetry.addData("ARGB", ColorSensor.argb());
+
       /* CHASSIS */
 
       // Toggles the chassis brakes
