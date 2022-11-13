@@ -153,7 +153,7 @@ public class AutoChassis {
   /**
    * The speed of the chassis when running an auto movement
    */
-  private double RunSpeed = ChassisSpeed.MidDrive;
+  private double RunSpeed = ChassisConstants.LinearVelocity;
 
   /**
    * The background task that will run when chassis is moving
@@ -183,7 +183,7 @@ public class AutoChassis {
    * Resets the chassis after it has finished moving
    */
   private final void _reset() {
-    this.RunSpeed = ChassisSpeed.MidDrive;
+    this.RunSpeed = ChassisConstants.LinearVelocity;
     this.BackgroundTask = null;
   }
 

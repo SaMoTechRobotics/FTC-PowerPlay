@@ -43,5 +43,9 @@ public final class ChassisConstants {
   /**
    * The ticks per inch of the motor
    */
-  public static final double TicksPerInch = TicksPerRev * GearRatio / WheelCircumference;
+  public static final double TicksPerInch =
+    TicksPerRev * GearRatio / WheelCircumference;
+
+  public static double LinearVelocity = 0.3;
+  public static double AngularVelocity = 0.3;
 }

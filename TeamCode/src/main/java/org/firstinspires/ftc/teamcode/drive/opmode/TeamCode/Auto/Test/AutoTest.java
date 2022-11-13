@@ -23,7 +23,15 @@ public class AutoTest extends LinearOpMode {
         telemetry.addData("Position", Chassis.getPosition().getX());
         telemetry.update();
       })
-      .setSpeed(2.0)
+      .run();
+
+    Chassis
+      .turnRight(90.0)
+      .run();
+
+    Chassis
+      .strafeRight(10.0)
+      .setSpeed(0.1)
       .run();
   }
 }
