@@ -1,5 +1,9 @@
 version = 1
 
+exclude_patterns = [
+  "**/!(TeamCode/src/main/java/org/firstinspires/ftc/teamcode/drive/opmode/TeamCode)/*"
+]
+
 [[analyzers]]
 name = "java"
 enabled = true
