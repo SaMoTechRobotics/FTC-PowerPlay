@@ -94,10 +94,11 @@ public class Drive extends LinearOpMode {
 
       /* CLAW */
 
-      if(Slide.getTicks() < SlideHeight.GroundMargin && Claw.justDetectedCone()) {
-        Claw.close();
-      }
+      // if(Gamepad2.getButton(GamepadKeys.Button.A) && Slide.getTicks() < SlideHeight.GroundMargin && Claw.detectedCone()) {
+      //   Claw.close();
+      // } else {
       if(Gamepad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) Claw.toggleOpen(clawToggleButton.getState());
+      // }
       // if(Slide.getTicks() < SlideHeight.GroundMargin && Claw.detectedCone()) Claw.close();
 
       telemetry.addData("", "");
