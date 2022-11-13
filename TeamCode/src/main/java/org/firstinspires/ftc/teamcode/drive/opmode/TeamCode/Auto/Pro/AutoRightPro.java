@@ -37,7 +37,7 @@ public class AutoRightPro extends LinearOpMode {
     );
     Claw.close();
 
-    Pose2d startPose = StartPose.RightPose;
+    Pose2d startPose = new Pose2d(-60, -48, Math.toRadians(0));
 
     drive.setPoseEstimate(startPose);
 

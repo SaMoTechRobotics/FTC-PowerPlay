@@ -7,7 +7,7 @@ import com.acmerobotics.dashboard.config.Config;
  * This class contains all the constants for the chassis
  * All measurements are in inches
  */
-public class ChassisConstants {
+public final class ChassisConstants {
 
   /**
    * The full dimensions of the robot measured from outside to outside
@@ -43,6 +43,5 @@ public class ChassisConstants {
   /**
    * The ticks per inch of the motor
    */
-  public static final double TicksPerInch =
-    TicksPerRev * GearRatio / WheelCircumference;
+  public static final double TicksPerInch = TicksPerRev * GearRatio / WheelCircumference;
 }

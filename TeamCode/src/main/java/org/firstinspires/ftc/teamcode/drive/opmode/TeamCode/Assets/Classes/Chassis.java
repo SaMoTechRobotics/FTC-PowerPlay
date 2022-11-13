@@ -127,7 +127,8 @@ public class Chassis {
         double frontLeftPower = (driveStick * this.DriveSpeed) + (turnStick * this.TurnSpeed) + (strafeStick * this.StrafeSpeed);
         double frontRightPower = (driveStick * this.DriveSpeed) - (turnStick * this.TurnSpeed) - (strafeStick * this.StrafeSpeed);
         double backLeftPower = (driveStick * this.DriveSpeed) + (turnStick * this.TurnSpeed) - (strafeStick * this.StrafeSpeed);
-        double backRightPower = (driveStick * this.DriveSpeed) - (turnStick* this.TurnSpeed) + (strafeStick * this.StrafeSpeed);
+        double backRightPower = (driveStick * this.DriveSpeed) - (turnStick * this.TurnSpeed)
+                + (strafeStick * this.StrafeSpeed);
 
         /**
          * Sets the power of the motors

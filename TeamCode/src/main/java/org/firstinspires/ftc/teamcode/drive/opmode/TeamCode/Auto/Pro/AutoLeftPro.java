@@ -36,7 +36,7 @@ public class AutoLeftPro extends LinearOpMode {
     );
     Claw.close();
 
-    Pose2d startPose = StartPose.LeftPose;
+    Pose2d startPose = new Pose2d(-60, -48, Math.toRadians(0));
 
     drive.setPoseEstimate(startPose);
 
