@@ -46,16 +46,26 @@ public final class ChassisConstants {
   public static final double WheelCircumference = WheelDiameter * Math.PI;
 
   /**
+   * Multiplier to fine tune the linear ticks per inch travled
+   */
+  public static double LinearMultiplier = 1.0;
+
+  /**
    * The ticks per inch of movement
    */
   public static final double TicksPerInch =
-    TicksPerRev * GearRatio / WheelCircumference;
+    (TicksPerRev * GearRatio / WheelCircumference) * LinearMultiplier;
 
-    /**
-     * The ticks per degree of movement rotation
-     */
-    public static final double TicksPerDegree = TicksPerInch * (TrackWidth / 2) * Math.PI / 180;
-      ;
+  /**
+   * Multiplier to fine tune the angular ticks per degree rotated
+   */
+  public static double AngularMultiplier = 1.0;
+
+  /**
+   * The ticks per degree of movement rotation
+   */
+  public static double TicksPerDegree =
+    (TicksPerInch * (TrackWidth / 2) * Math.PI / 180) * AngularMultiplier;
 
   public static double LinearVelocity = 0.3;
   public static double AngularVelocity = 0.3;

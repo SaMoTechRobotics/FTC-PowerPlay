@@ -551,11 +551,72 @@ public class AutoChassis {
    *
    */
 
+  private final class LastPosition {
+
+    public double FrontLeft;
+    public double FrontRight;
+    public double BackLeft;
+    public double BackRight;
+
+    public LastPosition() {
+      this.reset();
+    }
+
+    public void reset() {
+      this.FrontLeft = 0;
+      this.FrontRight = 0;
+      this.BackLeft = 0;
+      this.BackRight = 0;
+    }
+  }
+
+  private LastPosition LastPosition = new LastPosition();
+
+  /**
+   * Updates the position of the chassis based on the distance traveled since the last encoder update
+   */
+  private final void _updatePosition() {
+    double frontLeft = this.Wheels.FrontLeft.getCurrentPosition();
+    double frontRight = this.Wheels.FrontRight.getCurrentPosition();
+    double backLeft = this.Wheels.BackLeft.getCurrentPosition();
+    double backRight = this.Wheels.BackRight.getCurrentPosition();
+
+    double frontLeftDelta = frontLeft - this.LastPosition.FrontLeft;
+    double frontRightDelta = frontRight - this.LastPosition.FrontRight;
+    double backLeftDelta = backLeft - this.LastPosition.BackLeft;
+    double backRightDelta = backRight - this.LastPosition.BackRight;
+
+    double frontLeftDistance =
+      frontLeftDelta * ChassisConstants.TICKS_TO_INCHES;
+    double frontRightDistance =
+      frontRightDelta * ChassisConstants.TICKS_TO_INCHES;
+    double backLeftDistance = backLeftDelta * ChassisConstants.TICKS_TO_INCHES;
+    double backRightDistance =
+      backRightDelta * ChassisConstants.TICKS_TO_INCHES;
+
+    double frontDistance = (frontLeftDistance + frontRightDistance) / 2;
+    double backDistance = (backLeftDistance + backRightDistance) / 2;
+    double leftDistance = (frontLeftDistance + backLeftDistance) / 2;
+    double rightDistance = (frontRightDistance + backRightDistance) / 2;
+
+    double xDistance = (frontDistance + backDistance) / 2;
+    double yDistance = (leftDistance + rightDistance) / 2;
+
+    this.Position.X += xDistance;
+    this.Position.Y += yDistance;
+
+    this.LastPosition.FrontLeft = frontLeft;
+    this.LastPosition.FrontRight = frontRight;
+    this.LastPosition.BackLeft = backLeft;
+    this.LastPosition.BackRight = backRight;
+  }
+
   /**
    * Updates the position of the chassis and other background tasks
    */
   public final void update() {
-    // Field.drawRobot(this.Position);
-  }
+    this._updatePosition();
 
+    Field.drawRobot(this.Position);
+  }
 }
