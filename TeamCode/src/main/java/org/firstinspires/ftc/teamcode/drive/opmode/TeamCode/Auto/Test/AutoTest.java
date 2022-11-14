@@ -25,13 +25,10 @@ public class AutoTest extends LinearOpMode {
       })
       .run();
 
-    Chassis
-      .turnRight(90.0)
-      .run();
+    Chassis.turnRight(90.0).run();
 
-    Chassis
-      .strafeRight(10.0)
-      .setSpeed(0.1)
-      .run();
+    Chassis.strafeRight(10.0).setSpeed(0.1).run();
+
+    Chassis.forwardUntil(0.1, () -> true).runUntil();
   }
 }

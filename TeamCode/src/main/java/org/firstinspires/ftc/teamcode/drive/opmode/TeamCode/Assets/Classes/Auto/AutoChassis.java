@@ -12,8 +12,15 @@ public class AutoChassis {
   /**
    * Interface for background task
    */
-  interface Callback {
+  interface BackgroundTask {
     void call();
+  }
+
+  /**
+   * Interface for Until Condition
+   */
+  interface UntilCondition {
+    boolean call();
   }
 
   /**
@@ -106,9 +113,9 @@ public class AutoChassis {
   public final void update() {}
 
   /**
-   * Stops the chassis, emergencies only
+   * Stops the chassis
    */
-  public final void stop() {
+  private final void _stop() {
     for (DcMotor motor : this.Wheels.getMotors()) {
       motor.setPower(0);
     }
@@ -158,7 +165,12 @@ public class AutoChassis {
   /**
    * The background task that will run when chassis is moving
    */
-  private Callback BackgroundTask = null;
+  private BackgroundTask BackgroundTask = null;
+
+  /**
+   * The condition that will be checked when chassis is moving
+   */
+  private UntilCondition UntilCondition = null;
 
   /* All Movement Methods */
 
@@ -187,7 +199,7 @@ public class AutoChassis {
     this.BackgroundTask = null;
   }
 
-  public final AutoChassis runBackgroundTask(Callback task) {
+  public final AutoChassis runBackgroundTask(BackgroundTask task) {
     this.BackgroundTask = task;
 
     return this;
@@ -211,6 +223,22 @@ public class AutoChassis {
     this._runMotors();
 
     this._idle();
+
+    this._stop();
+
+    this._reset();
+  }
+
+  public final void runUntil() {
+    this._runMotors();
+
+    while (!this.UntilCondition.call()) {
+      this.update();
+      if (this.BackgroundTask != null) {
+        this.BackgroundTask.call();
+      }
+    }
+    this._stop();
 
     this._reset();
   }
@@ -301,6 +329,13 @@ public class AutoChassis {
    */
   public final AutoChassis turnRight(double distance) {
     this._moveDistance(distance, -distance, distance, -distance);
+
+    return this;
+  }
+
+  public final AutoChassis forwardUntil(double speed, UntilCondition condition) {
+    this.setSpeed(speed);
+    this.UntilCondition = condition;
 
     return this;
   }
