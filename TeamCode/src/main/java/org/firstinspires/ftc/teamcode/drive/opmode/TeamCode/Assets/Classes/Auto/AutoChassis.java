@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 /**
  * Chassis class which contains all the methods for the chassis of the robot during autonomous
  */
+@Config
 public class AutoChassis {
 
   /**

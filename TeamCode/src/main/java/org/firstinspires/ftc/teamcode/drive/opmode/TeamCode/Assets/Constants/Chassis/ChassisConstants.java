@@ -16,6 +16,11 @@ public final class ChassisConstants {
   public static double FullLength = 15.0;
 
   /**
+   * The dimensions of the robot measured from the center of each wheel to the other
+   */
+  public static double TrackWidth = 11.0;
+
+  /**
    * Wheel diameter in inches
    */
   public static double WheelDiameter = 4.0;
@@ -41,10 +46,16 @@ public final class ChassisConstants {
   public static final double WheelCircumference = WheelDiameter * Math.PI;
 
   /**
-   * The ticks per inch of the motor
+   * The ticks per inch of movement
    */
   public static final double TicksPerInch =
     TicksPerRev * GearRatio / WheelCircumference;
+
+    /**
+     * The ticks per degree of movement rotation
+     */
+    public static final double TicksPerDegree = TicksPerInch * (TrackWidth / 2) * Math.PI / 180;
+      ;
 
   public static double LinearVelocity = 0.3;
   public static double AngularVelocity = 0.3;
