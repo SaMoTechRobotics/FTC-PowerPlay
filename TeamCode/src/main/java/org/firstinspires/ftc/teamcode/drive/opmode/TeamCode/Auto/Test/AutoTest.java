@@ -23,6 +23,6 @@ public class AutoTest extends LinearOpMode {
 
     if (isStopRequested()) return;
 
-    
+
   }
 }
