@@ -45,10 +45,28 @@ public class DashboardUtil {
     }
 
     public static void drawRobot(Canvas canvas, Pose2d pose) {
-        canvas.strokeCircle(pose.getX(), pose.getY(), ROBOT_RADIUS);
-        Vector2d v = pose.headingVec().times(ROBOT_RADIUS);
-        double x1 = pose.getX() + v.getX() / 2, y1 = pose.getY() + v.getY() / 2;
-        double x2 = pose.getX() + v.getX(), y2 = pose.getY() + v.getY();
-        canvas.strokeLine(x1, y1, x2, y2);
+        // canvas.strokeCircle(pose.getX(), pose.getY(), ROBOT_RADIUS);
+        // Vector2d v = pose.headingVec().times(ROBOT_RADIUS);
+        // double x1 = pose.getX() + v.getX() / 2, y1 = pose.getY() + v.getY() / 2;
+        // double x2 = pose.getX() + v.getX(), y2 = pose.getY() + v.getY();
+        // canvas.strokeLine(x1, y1, x2, y2);
+        //draw robot as a rectangle instead of a circle with rotation
+        //use a polygon to draw the robot
+        double x = pose.getX();
+        double y = pose.getY();
+        double heading = pose.getHeading();
+        double halfWidth = ChassisConstants.FullWidth / 2;
+        double halfLength = ChassisConstants.FullLength / 2;
+        double[] xPoints = new double[4];
+        double[] yPoints = new double[4];
+        xPoints[0] = x + halfLength * Math.cos(heading) - halfWidth * Math.sin(heading);
+        yPoints[0] = y + halfLength * Math.sin(heading) + halfWidth * Math.cos(heading);
+        xPoints[1] = x + halfLength * Math.cos(heading) + halfWidth * Math.sin(heading);
+        yPoints[1] = y + halfLength * Math.sin(heading) - halfWidth * Math.cos(heading);
+        xPoints[2] = x - halfLength * Math.cos(heading) + halfWidth * Math.sin(heading);
+        yPoints[2] = y - halfLength * Math.sin(heading) - halfWidth * Math.cos(heading);
+        xPoints[3] = x - halfLength * Math.cos(heading) - halfWidth * Math.sin(heading);
+        yPoints[3] = y - halfLength * Math.sin(heading) + halfWidth * Math.cos(heading);
+        canvas.strokePolygon(xPoints, yPoints);
     }
 }

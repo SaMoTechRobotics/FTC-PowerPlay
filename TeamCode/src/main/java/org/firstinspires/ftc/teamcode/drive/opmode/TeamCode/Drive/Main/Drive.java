@@ -8,9 +8,9 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Drive", group = "Drive")
@@ -28,14 +28,7 @@ public class Drive extends LinearOpMode {
   public void runOpMode() throws InterruptedException {
     FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    Chassis =
-      new Chassis(
-        hardwareMap.get(DcMotor.class, "frontLeft"),
-        hardwareMap.get(DcMotor.class, "frontRight"),
-        hardwareMap.get(DcMotor.class, "backLeft"),
-        hardwareMap.get(DcMotor.class, "backRight"),
-        hardwareMap
-      );
+    Chassis = new Chassis(hardwareMap);
 
     Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
 
@@ -70,7 +63,6 @@ public class Drive extends LinearOpMode {
     ColorSensor.enableLed(true);
 
     while (opModeIsActive()) {
-
       telemetry.addData("Color Sensor", "");
       telemetry.addData("Red", ColorSensor.red());
       telemetry.addData("Green", ColorSensor.green());
@@ -86,7 +78,9 @@ public class Drive extends LinearOpMode {
 
       // Updates the chassis speed based on gamepad1 bumpers
       Chassis.updateSpeed(
-        Slide.getInches() < SlideHeight.MidPole ? Gamepad1.getButton(GamepadKeys.Button.LEFT_BUMPER) : false,
+        Slide.getInches() < SlideHeight.MidPole
+          ? Gamepad1.getButton(GamepadKeys.Button.LEFT_BUMPER)
+          : false,
         Gamepad1.getButton(GamepadKeys.Button.RIGHT_BUMPER)
       );
 
@@ -110,7 +104,9 @@ public class Drive extends LinearOpMode {
       // if(Gamepad2.getButton(GamepadKeys.Button.A) && Slide.getTicks() < SlideHeight.GroundMargin && Claw.detectedCone()) {
       //   Claw.close();
       // } else {
-      if(Gamepad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) Claw.toggleOpen(clawToggleButton.getState());
+      if (
+        Gamepad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)
+      ) Claw.toggleOpen(clawToggleButton.getState());
       // }
       // if(Slide.getTicks() < SlideHeight.GroundMargin && Claw.detectedCone()) Claw.close();
 

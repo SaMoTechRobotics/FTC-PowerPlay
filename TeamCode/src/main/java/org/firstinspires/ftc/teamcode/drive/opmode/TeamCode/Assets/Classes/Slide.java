@@ -124,9 +124,9 @@ public class Slide {
   }
 
   /**
-   * Sets the target position of the motors
+   * Moves the slide to the target height
    *
-   * @param height The target position as percentage
+   * @param height The target height in inches
    */
   public final void setHeight(double height, double speed) {
     int ticks = this.inchesToTicks(height);
@@ -139,6 +139,27 @@ public class Slide {
     this.setPower(speed);
 
     this.Status = SlideStatus.MovingToTarget;
+  }
+
+  /**
+   * Moves the slide to the target height asynchronously
+   * @param height The target height in inches
+   */
+  public final void setHeightAsync(double height, double speed) {
+    int ticks = this.inchesToTicks(height);
+
+    if (ticks < 0 || height > SlideHeight.MaxHeight) return;
+
+    this.setTarget(ticks);
+    this.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+    this.setPower(speed);
+
+    this.Status = SlideStatus.MovingToTarget;
+
+    while (this.SlideMotor.isBusy()) {
+      // wait for slide to finish
+    }
   }
 
   /**
