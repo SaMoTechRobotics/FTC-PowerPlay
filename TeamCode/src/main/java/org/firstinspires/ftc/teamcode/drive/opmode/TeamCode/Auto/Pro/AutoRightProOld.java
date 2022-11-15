@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDriveCancelable;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
@@ -25,7 +25,7 @@ public class AutoRightPro extends LinearOpMode {
   public void runOpMode() throws InterruptedException {
     FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    SampleMecanumDriveCancelable drive = new SampleMecanumDriveCancelable(hardwareMap);
+    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
     Slide Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
 
