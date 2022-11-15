@@ -3,32 +3,26 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 @Autonomous(name = "AutoTest", group = "Test")
 public class AutoTest extends LinearOpMode {
+
+    public static double speed = 0.1;
+
+    public static double detectAmount = 3.0;
+    public static double placeDistance = 1.5;
 
   @Override
   public void runOpMode() throws InterruptedException {
     FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    AutoChassis Chassis = new AutoChassis(hardwareMap);
+    DistanceSensor sensor = hardwareMap.get(DistanceSensor.class, "clawDistanceSensor");
 
     waitForStart();
 
     if (isStopRequested()) return;
 
-    Chassis
-      .forward(20.0)
-      .runBackgroundTask(() -> {
-        telemetry.addData("Position", Chassis.getPosition().getX());
-        telemetry.update();
-      })
-      .run();
-
-    Chassis.turnRight(90.0).run();
-
-    Chassis.strafeRight(10.0).setSpeed(0.1).run();
-
-    Chassis.forwardUntil(0.1, () -> true).runUntil();
+    
   }
 }

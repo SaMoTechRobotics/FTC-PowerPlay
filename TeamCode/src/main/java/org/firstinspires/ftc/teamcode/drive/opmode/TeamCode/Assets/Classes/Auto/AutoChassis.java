@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+// package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -587,12 +587,12 @@ public class AutoChassis {
     double backRightDelta = backRight - this.LastPosition.BackRight;
 
     double frontLeftDistance =
-      frontLeftDelta * ChassisConstants.TICKS_TO_INCHES;
+      frontLeftDelta * ChassisConstants.TicksPerInch;
     double frontRightDistance =
-      frontRightDelta * ChassisConstants.TICKS_TO_INCHES;
-    double backLeftDistance = backLeftDelta * ChassisConstants.TICKS_TO_INCHES;
+      frontRightDelta * ChassisConstants.TicksPerInch;
+    double backLeftDistance = backLeftDelta * ChassisConstants.TicksPerInch;
     double backRightDistance =
-      backRightDelta * ChassisConstants.TICKS_TO_INCHES;
+      backRightDelta * ChassisConstants.TicksPerInch;
 
     double frontDistance = (frontLeftDistance + frontRightDistance) / 2;
     double backDistance = (backLeftDistance + backRightDistance) / 2;
@@ -602,8 +602,9 @@ public class AutoChassis {
     double xDistance = (frontDistance + backDistance) / 2;
     double yDistance = (leftDistance + rightDistance) / 2;
 
-    this.Position.X += xDistance;
-    this.Position.Y += yDistance;
+    this.Position.setX(this.Position.getX() + xDistance);
+    this.Position.setY(this.Position.getY() + xDistance);
+
 
     this.LastPosition.FrontLeft = frontLeft;
     this.LastPosition.FrontRight = frontRight;
@@ -617,6 +618,6 @@ public class AutoChassis {
   public final void update() {
     this._updatePosition();
 
-    Field.drawRobot(this.Position);
+    Field.drawChassis(this.Position);
   }
 }
