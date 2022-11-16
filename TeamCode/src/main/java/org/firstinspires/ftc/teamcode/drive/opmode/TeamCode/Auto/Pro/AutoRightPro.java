@@ -17,80 +17,80 @@ import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 @Autonomous(name = "AutoRightPro", group = "AutoPro")
 public class AutoRightPro extends LinearOpMode {
 
-  public static double strafe1 = 56.0;
-  public static double back2 = 8.0;
-  public static double forward3 = 8.0;
+    public static double strafe1 = 56.0;
+    public static double back2 = 8.0;
+    public static double forward3 = 8.0;
 
-  @Override
-  public void runOpMode() throws InterruptedException {
-    FtcDashboard dashboard = FtcDashboard.getInstance();
+    @Override
+    public void runOpMode() throws InterruptedException {
+        FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    SampleMecanumDriveCancelable drive = new SampleMecanumDriveCancelable(hardwareMap);
+        SampleMecanumDriveCancelable drive = new SampleMecanumDriveCancelable(hardwareMap);
 
-    Slide Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
+        Slide Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
 
-    Arm Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
+        Arm Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
 
-    Claw Claw = new Claw(
-      hardwareMap.get(Servo.class, "claw"),
-      hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
-    );
-    Claw.close();
+        Claw Claw = new Claw(
+            hardwareMap.get(Servo.class, "claw"),
+            hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
+        );
+        Claw.close();
 
-    Pose2d startPose = new Pose2d(-60, -48, Math.toRadians(0));
+        Pose2d startPose = new Pose2d(-60, -48, Math.toRadians(0));
 
-    drive.setPoseEstimate(startPose);
+        drive.setPoseEstimate(startPose);
 
-    waitForStart();
+        waitForStart();
 
-    if (isStopRequested()) return;
+        if (isStopRequested()) return;
 
-    Trajectory strafeLeftTraj = drive
-      .trajectoryBuilder(startPose)
-      .strafeLeft(strafe1)
-      .build();
+        Trajectory strafeLeftTraj = drive
+            .trajectoryBuilder(startPose)
+            .strafeLeft(strafe1)
+            .build();
 
-    drive.followTrajectory(strafeLeftTraj);
+        drive.followTrajectory(strafeLeftTraj);
 
-    Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
+        Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
 
-    sleep(2000);
+        sleep(2000);
 
-    Trajectory backTraj = drive
-      .trajectoryBuilder(strafeLeftTraj.end())
-      .back(back2)
-      .build();
+        Trajectory backTraj = drive
+            .trajectoryBuilder(strafeLeftTraj.end())
+            .back(back2)
+            .build();
 
-    drive.followTrajectory(backTraj);
+        drive.followTrajectory(backTraj);
 
-    Arm.setRotation(ArmRotation.Left);
+        Arm.setRotation(ArmRotation.Left);
 
-    sleep(1000);
+        sleep(1000);
 
-    Slide.setHeight(SlideHeight.HighPole - 10, SlideSpeed.Mid);
+        Slide.setHeight(SlideHeight.HighPole - 10, SlideSpeed.Mid);
 
-    sleep(3000);
+        sleep(3000);
 
-    Claw.open();
+        Claw.open();
 
-    sleep(1000);
+        sleep(1000);
 
-    Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Mid);
+        Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Mid);
 
-    sleep(3000);
+        sleep(3000);
 
-    Arm.setRotation(ArmRotation.Center);
-    Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
-    Claw.close();
-    
-    Trajectory forwardTraj = drive
-    .trajectoryBuilder(backTraj.end())
-    .forward(back2)
-    .build();
+        Arm.setRotation(ArmRotation.Center);
+        Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
+        Claw.close();
 
-    drive.followTrajectory(forwardTraj);
+        Trajectory forwardTraj = drive
+            .trajectoryBuilder(backTraj.end())
+            .forward(back2)
+            .build();
 
-    sleep(8000);
+        drive.followTrajectory(forwardTraj);
 
-  }
+        sleep(8000);
+
+    }
 }
