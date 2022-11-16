@@ -14,8 +14,8 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
-@Autonomous(name = "AutoLeftPro", group = "AutoPro")
-public class AutoLeftPro extends LinearOpMode {
+@Autonomous(name = "AutoLeftProOld", group = "AutoPro")
+public class AutoLeftProOld extends LinearOpMode {
 
   public static double strafe1 = 56.0;
   public static double back2 = 8.0;
