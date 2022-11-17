@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.ChassisSpeed;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDriveCancelable;
 
 /**
@@ -60,10 +61,7 @@ public class Chassis {
 
   /**
    * Creates a new chassis with 4 motors
-   * @param FrontLeft
-   * @param FrontRight
-   * @param BackLeft
-   * @param BackRight
+   * @param hardwareMap The hardware map of the robot
    */
   public Chassis(HardwareMap hardwareMap) {
     this.Wheels =
@@ -161,9 +159,6 @@ public class Chassis {
       (turnStick * this.TurnSpeed) +
       (strafeStick * this.StrafeSpeed);
 
-    /**
-     * Sets the power of the motors
-     */
     this.setPower(this.Wheels.FrontLeft, frontLeftPower);
     this.setPower(this.Wheels.FrontRight, frontRightPower);
     this.setPower(this.Wheels.BackLeft, backLeftPower);

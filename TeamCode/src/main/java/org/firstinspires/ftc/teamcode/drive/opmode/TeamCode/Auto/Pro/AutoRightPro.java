@@ -1,17 +1,22 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Auto.Pro;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDriveCancelable;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideSpeed;
 
 @Config
 @Autonomous(name = "AutoRightPro", group = "AutoPro")
@@ -32,8 +37,8 @@ public class AutoRightPro extends LinearOpMode {
         Arm Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
 
         Claw Claw = new Claw(
-            hardwareMap.get(Servo.class, "claw"),
-            hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
+                hardwareMap.get(Servo.class, "claw"),
+                hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
         );
         Claw.close();
 
@@ -46,9 +51,9 @@ public class AutoRightPro extends LinearOpMode {
         if (isStopRequested()) return;
 
         Trajectory strafeLeftTraj = drive
-            .trajectoryBuilder(startPose)
-            .strafeLeft(strafe1)
-            .build();
+                .trajectoryBuilder(startPose)
+                .strafeLeft(strafe1)
+                .build();
 
         drive.followTrajectory(strafeLeftTraj);
 
@@ -57,9 +62,9 @@ public class AutoRightPro extends LinearOpMode {
         sleep(2000);
 
         Trajectory backTraj = drive
-            .trajectoryBuilder(strafeLeftTraj.end())
-            .back(back2)
-            .build();
+                .trajectoryBuilder(strafeLeftTraj.end())
+                .back(back2)
+                .build();
 
         drive.followTrajectory(backTraj);
 
@@ -84,9 +89,9 @@ public class AutoRightPro extends LinearOpMode {
         Claw.close();
 
         Trajectory forwardTraj = drive
-            .trajectoryBuilder(backTraj.end())
-            .forward(back2)
-            .build();
+                .trajectoryBuilder(backTraj.end())
+                .forward(back2)
+                .build();
 
         drive.followTrajectory(forwardTraj);
 

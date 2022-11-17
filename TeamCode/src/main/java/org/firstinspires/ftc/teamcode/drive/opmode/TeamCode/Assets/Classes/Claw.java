@@ -1,22 +1,23 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes;
 
 import com.acmerobotics.dashboard.config.Config;
 
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Claw.ClawPosition;
 
 /**
  * Claw class which contains all the methods for the claw of the robot
 */
 public class Claw {
-    
+
     private Servo ClawServo;
     private DistanceSensor ClawDistanceSensor;
 
     private boolean open = false;
     private boolean detectedCone = false;
-    
+
     /**
      * Creates a new claw with 1 servo
      * @param ClawServo The servo that will be used for the claw
@@ -98,6 +99,6 @@ public class Claw {
     */
     private final double percentToPosition(double percent) {
         return (double) (percent / 100);
-    } 
- 
+    }
+
 }
