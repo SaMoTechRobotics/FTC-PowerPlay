@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.util;
 
 import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.path.Path;
+
 import org.firstinspires.ftc.teamcode.ChassisConstants;
 
 import java.util.List;
@@ -13,8 +13,6 @@ import java.util.List;
  */
 public class DashboardUtil {
     private static final double DEFAULT_RESOLUTION = 2.0; // distance units; presumed inches
-    private static final double ROBOT_RADIUS = 9; // in
-
 
     public static void drawPoseHistory(Canvas canvas, List<Pose2d> poseHistory) {
         double[] xPoints = new double[poseHistory.size()];
@@ -69,5 +67,12 @@ public class DashboardUtil {
         xPoints[3] = x - halfLength * Math.cos(heading) - halfWidth * Math.sin(heading);
         yPoints[3] = y - halfLength * Math.sin(heading) + halfWidth * Math.cos(heading);
         canvas.strokePolygon(xPoints, yPoints);
+    }
+
+    public static void drawArm(Pose2d pivot, double rotation, boolean clawOpen) {
+        // draw arm as a line at angle from pivot point with claw at end of arm as 2 lines at angle either open or closed
+        //use a line to draw the arm
+        //use 2 lines to draw the claw
+
     }
 }
