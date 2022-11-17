@@ -1,8 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Drive.Tests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.arcrobotics.ftclib.gamepad.ButtonReader;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
@@ -12,6 +10,13 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Chassis;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
 
 @TeleOp(name = "Drive", group = "Drive")
 public class Drive extends LinearOpMode {
@@ -62,7 +67,7 @@ public class Drive extends LinearOpMode {
 
         ColorSensor.enableLed(true);
 
-        while (opModeIsActive()) {''
+        while (opModeIsActive()) {
             telemetry.addData("Color Sensor", "");
             telemetry.addData("Red", ColorSensor.red());
             telemetry.addData("Green", ColorSensor.green());
@@ -78,9 +83,7 @@ public class Drive extends LinearOpMode {
 
             // Updates the chassis speed based on gamepad1 bumpers
             Chassis.updateSpeed(
-                    Slide.getInches() < SlideHeight.MidPole
-                            ? Gamepad1.getButton(GamepadKeys.Button.LEFT_BUMPER)
-                            : false,
+                    Slide.getInches() < SlideHeight.MidPole && Gamepad1.getButton(GamepadKeys.Button.LEFT_BUMPER),
                     Gamepad1.getButton(GamepadKeys.Button.RIGHT_BUMPER)
             );
 
@@ -124,7 +127,8 @@ public class Drive extends LinearOpMode {
                     gamepad2.x,
                     gamepad2.b,
                     gamepad2.y
-            ); else Arm.setRotation(ArmRotation.Center);
+            );
+            else Arm.setRotation(ArmRotation.Center);
 
             telemetry.addData("", "");
             telemetry.addData("Arm Position", Arm.getRotation());
