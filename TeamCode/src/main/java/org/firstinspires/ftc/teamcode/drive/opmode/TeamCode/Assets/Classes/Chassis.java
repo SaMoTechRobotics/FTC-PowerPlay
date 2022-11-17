@@ -113,7 +113,7 @@ public class Chassis {
             double strafeStick,
             double turnStick
     ) {
-        /**
+        /*
          * The different powers of the motors based of the joysticks
          */
         double frontLeftPower =
@@ -187,8 +187,7 @@ public class Chassis {
     /**
      * The motors of the chassis
      */
-    public class Wheels {
-
+    private static class Wheels {
         public DcMotor FrontLeft;
         public DcMotor FrontRight;
         public DcMotor BackLeft;

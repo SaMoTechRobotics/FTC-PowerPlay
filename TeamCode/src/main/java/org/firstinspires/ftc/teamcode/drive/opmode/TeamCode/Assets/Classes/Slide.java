@@ -91,7 +91,7 @@ public class Slide {
 
     public final double getInches() {
         return (
-                (double) (this.getTicks() / SlideHeight.TicksPerInch) +
+                (this.getTicks() / SlideHeight.TicksPerInch) +
                         SlideHeight.BaseHeight
         );
     }

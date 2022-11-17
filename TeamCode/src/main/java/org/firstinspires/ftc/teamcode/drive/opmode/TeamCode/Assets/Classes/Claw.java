@@ -1,27 +1,27 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes;
 
-import com.acmerobotics.dashboard.config.Config;
-
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
+import com.qualcomm.robotcore.hardware.Servo;
+
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Claw.ClawPosition;
 
 /**
  * Claw class which contains all the methods for the claw of the robot
-*/
+ */
 public class Claw {
 
-    private Servo ClawServo;
-    private DistanceSensor ClawDistanceSensor;
+    private final Servo ClawServo;
+    private final DistanceSensor ClawDistanceSensor;
 
     private boolean open = false;
     private boolean detectedCone = false;
 
     /**
      * Creates a new claw with 1 servo
+     *
      * @param ClawServo The servo that will be used for the claw
-    */
+     */
     public Claw(Servo ClawServo, DistanceSensor ClawDistanceSensor) {
         this.ClawServo = ClawServo;
         this.ClawDistanceSensor = ClawDistanceSensor;
@@ -33,11 +33,12 @@ public class Claw {
 
     /**
      * Sets the position of the servo
+     *
      * @param position The position to set the servo to as percentage 0-100
-    */
+     */
     public final void setPosition(double position) {
         this.ClawServo.setPosition(
-            this.percentToPosition(position) // Converts the position to a percentage
+                this.percentToPosition(position) // Converts the position to a percentage
         );
     }
 
@@ -47,7 +48,7 @@ public class Claw {
 
     /**
      * Opens the claw
-    */
+     */
     public final void open() {
         this.open = true;
         this.setPosition(ClawPosition.Open);
@@ -55,7 +56,7 @@ public class Claw {
 
     /**
      * Closes the claw
-    */
+     */
     public final void close() {
         this.open = false;
         this.setPosition(ClawPosition.Close);
@@ -63,6 +64,7 @@ public class Claw {
 
     /**
      * Toggles the claw
+     *
      * @param open The open position of the claw
      */
     public final void toggleOpen(boolean open) {
@@ -86,7 +88,7 @@ public class Claw {
         if (this.detectedCone() && !this.detectedCone) {
             this.detectedCone = true;
             return true;
-        } else if(!this.detectedCone()) {
+        } else if (!this.detectedCone()) {
             this.detectedCone = false;
         }
         return false;
@@ -94,11 +96,12 @@ public class Claw {
 
     /**
      * Converts a percentage to a servo position
+     *
      * @param percent The percentage to convert as an int
      * @return The servo position as a double
-    */
+     */
     private final double percentToPosition(double percent) {
-        return (double) (percent / 100);
+        return percent / 100;
     }
 
 }
