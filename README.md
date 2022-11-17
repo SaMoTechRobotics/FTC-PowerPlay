@@ -30,10 +30,12 @@ As a community based team representing Santa Monica, we need our sponsors suppor
     <img alt="special sponsor appwrite" src="https://cdn11.bigcommerce.com/s-eem7ijc77k/stencil/af49f910-ade4-013a-b026-32a478cd4269/e/940880a0-6c0d-0136-7313-41f31bb2e297/img/goBILDA.svg" width="300">
   </p>
 
----
+## Documentation
+
+To see the documentation of our code, go to our [docs](https://github.com/SaMoTechRobotics/FTC-PowerPlay/wiki).
+
 ## Stay In Touch
 
-- [Twitter](https://twitter.com/)
 - [Instagram](https://www.instagram.com/samotechrobotics/)
 
 ### Contact
