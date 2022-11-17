@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.ChassisSpeed;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDriveCancelable;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorDistances;
 
 /**
@@ -16,48 +17,13 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sen
  */
 public class Chassis {
 
-    /**
-     * The motors of the chassis
-     */
-    public class Wheels {
-
-        public DcMotor FrontLeft;
-        public DcMotor FrontRight;
-        public DcMotor BackLeft;
-        public DcMotor BackRight;
-
-        /**
-         * Constructor for the wheels
-         *
-         * @param frontLeft  The front left motor
-         * @param frontRight The front right motor
-         * @param backLeft   The back left motor
-         * @param backRight  The back right motor
-         */
-        public Wheels(
-                DcMotor frontLeft,
-                DcMotor frontRight,
-                DcMotor backLeft,
-                DcMotor backRight
-        ) {
-            this.FrontLeft = frontLeft;
-            this.FrontRight = frontRight;
-            this.BackLeft = backLeft;
-            this.BackRight = backRight;
-        }
-    }
-
     public Wheels Wheels;
-
     public DistanceSensor LeftSensor;
     public DistanceSensor RightSensor;
-
     public double DriveSpeed = ChassisSpeed.MidDrive;
     public double TurnSpeed = ChassisSpeed.MidTurn;
     public double StrafeSpeed = ChassisSpeed.MidStrafe;
-
     public boolean brake = false;
-
     public SampleMecanumDriveCancelable MecanumDrive;
 
     /**
@@ -83,6 +49,7 @@ public class Chassis {
         this.Wheels.BackLeft.setDirection(DcMotor.Direction.REVERSE);
 
         this.MecanumDrive = new SampleMecanumDriveCancelable(hardwareMap);
+        this.MecanumDrive.setPoseEstimate(PoseStorage.currentPose);
         this.MecanumDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
@@ -172,13 +139,6 @@ public class Chassis {
         this.setPower(this.Wheels.BackRight, backRightPower);
     }
 
-    public static enum PoleAlign {
-        Left,
-        Right,
-        Forward,
-        Backward,
-    }
-
     /**
      * Drives until distance sensor detects the pole
      *
@@ -215,5 +175,43 @@ public class Chassis {
 
     public final Pose2d getPosition() {
         return this.MecanumDrive.getPoseEstimate();
+    }
+
+    public enum PoleAlign {
+        Left,
+        Right,
+        Forward,
+        Backward,
+    }
+
+    /**
+     * The motors of the chassis
+     */
+    public class Wheels {
+
+        public DcMotor FrontLeft;
+        public DcMotor FrontRight;
+        public DcMotor BackLeft;
+        public DcMotor BackRight;
+
+        /**
+         * Constructor for the wheels
+         *
+         * @param frontLeft  The front left motor
+         * @param frontRight The front right motor
+         * @param backLeft   The back left motor
+         * @param backRight  The back right motor
+         */
+        public Wheels(
+                DcMotor frontLeft,
+                DcMotor frontRight,
+                DcMotor backLeft,
+                DcMotor backRight
+        ) {
+            this.FrontLeft = frontLeft;
+            this.FrontRight = frontRight;
+            this.BackLeft = backLeft;
+            this.BackRight = backRight;
+        }
     }
 }
