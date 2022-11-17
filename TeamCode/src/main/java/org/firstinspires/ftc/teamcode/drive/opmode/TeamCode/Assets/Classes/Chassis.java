@@ -83,6 +83,7 @@ public class Chassis {
         this.Wheels.BackLeft.setDirection(DcMotor.Direction.REVERSE);
 
         this.MecanumDrive = new SampleMecanumDriveCancelable(hardwareMap);
+        this.MecanumDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     /**
