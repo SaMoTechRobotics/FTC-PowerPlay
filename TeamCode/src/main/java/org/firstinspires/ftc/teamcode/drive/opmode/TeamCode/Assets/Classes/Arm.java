@@ -1,7 +1,9 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
 
 /**
  * Arm class which contains all the methods for the arm of the robot
@@ -22,7 +24,7 @@ public class Arm {
   /**
    * Sets the position of the servo
    *
-   * @param position The position to set the servo to as rotation in degrees
+   * @param rotation The position to set the servo to as rotation in degrees
    */
   public final void setRotation(double rotation) {
     if (this.ArmServo.getPosition() != this.rotationToPosition(rotation)) {
@@ -75,7 +77,7 @@ public class Arm {
   /**
    * Converts a rotation to a servo position
    *
-   * @param percent The rotation to convert to servo position
+   * @param rotation The rotation to convert to servo position
    * @return The servo position from rotation
    */
   private final double rotationToPosition(double rotation) {

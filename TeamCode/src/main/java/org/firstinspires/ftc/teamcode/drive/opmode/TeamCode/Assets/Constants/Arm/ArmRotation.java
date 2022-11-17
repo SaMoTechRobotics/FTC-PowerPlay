@@ -1,16 +1,16 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm;
 
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class ArmRotation {
-    
+
     /**
      * Max and min rotations of the arm, ex: -90.0 to 90.0 degrees resulting in 180 degree range
      */
     public static double Min = 0.0;
     public static double Max = 1.0;
-    
+
     /**
      * The full rotations of the arm to the left and right
      */

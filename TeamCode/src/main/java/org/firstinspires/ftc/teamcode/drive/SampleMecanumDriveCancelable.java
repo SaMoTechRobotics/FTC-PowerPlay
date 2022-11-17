@@ -29,7 +29,6 @@ import com.acmerobotics.roadrunner.trajectory.constraints.ProfileAccelerationCon
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryAccelerationConstraint;
 import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.BNO055IMUUtil;
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -43,6 +42,8 @@ import java.util.List;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunnerCancelable;
+import org.firstinspires.ftc.teamcode.util.AxisDirection;
+import org.firstinspires.ftc.teamcode.util.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 
 /*
@@ -131,7 +132,7 @@ public class SampleMecanumDriveCancelable extends MecanumDrive {
     // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
     // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
-    BNO055IMUUtil.remapZAxis(imu, AxisDirection.X);
+    BNO055IMUUtil.remapZAxis(imu, AxisDirection.POS_X);
 
     leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
     leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");

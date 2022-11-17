@@ -32,7 +32,7 @@ public class ClawTest extends LinearOpMode {
         Claw =
                 new Claw(
                         hardwareMap.get(Servo.class, "claw"),
-                        hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
+                        hardwareMap.get(DistanceSensor.class, "leftDistanceSensor")
                 );
 
         // Initialize the gamepad

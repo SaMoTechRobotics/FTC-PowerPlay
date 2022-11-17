@@ -1,41 +1,39 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Auto.Basic;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 
 @Config
 @Autonomous(name = "AutoForward", group = "Auto")
 public class AutoForward extends LinearOpMode {
 
-  public static double forward1 = 42.0;
+    public static double forward1 = 42.0;
 
-  @Override
-  public void runOpMode() throws InterruptedException {
-    FtcDashboard dashboard = FtcDashboard.getInstance();
+    @Override
+    public void runOpMode() throws InterruptedException {
+        FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-    Pose2d startPose = new Pose2d(-60, -48, Math.toRadians(0));
+        Pose2d startPose = new Pose2d(-60, -48, Math.toRadians(0));
 
-    drive.setPoseEstimate(startPose);
+        drive.setPoseEstimate(startPose);
 
-    waitForStart();
+        waitForStart();
 
-    if (isStopRequested()) return;
+        if (isStopRequested()) return;
 
-    Trajectory forwardTraj = drive
-      .trajectoryBuilder(startPose)
-      .forward(forward1)
-      .build();
+        Trajectory forwardTraj = drive
+                .trajectoryBuilder(startPose)
+                .forward(forward1)
+                .build();
 
-    drive.followTrajectory(forwardTraj);
-  }
+        drive.followTrajectory(forwardTraj);
+    }
 }

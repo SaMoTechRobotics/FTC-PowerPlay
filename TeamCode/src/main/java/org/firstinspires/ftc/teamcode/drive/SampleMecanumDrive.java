@@ -42,6 +42,8 @@ import java.util.List;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunner;
+import org.firstinspires.ftc.teamcode.util.AxisDirection;
+import org.firstinspires.ftc.teamcode.util.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 
 /*
@@ -129,7 +131,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
     // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
-    BNO055IMUUtil.remapZAxis(imu, AxisDirection.X);
+    BNO055IMUUtil.remapZAxis(imu, AxisDirection.POS_X);
 
     leftFront = hardwareMap.get(DcMotorEx.class, "frontLeft");
     leftRear = hardwareMap.get(DcMotorEx.class, "backLeft");

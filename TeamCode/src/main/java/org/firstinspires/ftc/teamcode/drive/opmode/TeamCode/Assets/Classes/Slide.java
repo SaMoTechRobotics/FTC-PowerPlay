@@ -153,7 +153,7 @@ public class Slide {
 
         this.Status = SlideStatus.MovingToTarget;
 
-        while (this.SlideMotor.isBusy()) {
+        while (this.getTicks() < this.SlideMotor.getTargetPosition()) {
             // wait for slide to finish
         }
     }
