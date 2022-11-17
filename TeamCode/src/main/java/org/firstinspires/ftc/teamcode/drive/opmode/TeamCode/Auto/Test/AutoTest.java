@@ -103,6 +103,11 @@ public class AutoTest extends LinearOpMode {
                 )
         );
 
+        /**
+         *
+         * use `drive.setWeightDrivePower()` to make robot move here
+         *
+         */
 
         Arm.setRotation(ArmRotation.Left);
 
