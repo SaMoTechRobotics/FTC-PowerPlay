@@ -84,26 +84,16 @@ public class DashboardUtil {
         xPoints[1] = x + armLength * Math.cos(heading + rotation);
         yPoints[1] = y + armLength * Math.sin(heading + rotation);
         canvas.strokePolygon(xPoints, yPoints);
-        //draw claw as a rectangle at the end of the arm
-        double halfWidth = 2;
-        double halfLength = 2;
-        double[] xPoints2 = new double[4];
-        double[] yPoints2 = new double[4];
-        xPoints2[0] = xPoints[1] + halfLength * Math.cos(heading + rotation) - halfWidth * Math.sin(heading + rotation);
-        yPoints2[0] = yPoints[1] + halfLength * Math.sin(heading + rotation) + halfWidth * Math.cos(heading + rotation);
-        xPoints2[1] = xPoints[1] + halfLength * Math.cos(heading + rotation) + halfWidth * Math.sin(heading + rotation);
-        yPoints2[1] = yPoints[1] + halfLength * Math.sin(heading + rotation) - halfWidth * Math.cos(heading + rotation);
-        xPoints2[2] = xPoints[1] - halfLength * Math.cos(heading + rotation) + halfWidth * Math.sin(heading + rotation);
-        yPoints2[2] = yPoints[1] - halfLength * Math.sin(heading + rotation) - halfWidth * Math.cos(heading + rotation);
-        xPoints2[3] = xPoints[1] - halfLength * Math.cos(heading + rotation) - halfWidth * Math.sin(heading + rotation);
-        yPoints2[3] = yPoints[1] - halfLength * Math.sin(heading + rotation) + halfWidth * Math.cos(heading + rotation);
-//        canvas.strokePolygon(xPoints2, yPoints2);
-        if (clawOpen) {
-            canvas.strokePolygon(xPoints2, yPoints2);
-        } else {
-            canvas.fillPolygon(xPoints2, yPoints2);
-        }
-
+        //draw claw as 2 lines at an angle of either open: 90 degrees, or closed: 20 degrees
+        double clawAngle = clawOpen ? Math.PI / 2 : Math.PI / 9;
+        double clawLength = 5;
+        double[] xPointsClaw = new double[2];
+        double[] yPointsClaw = new double[2];
+        xPointsClaw[0] = xPoints[1];
+        yPointsClaw[0] = yPoints[1];
+        xPointsClaw[1] = xPointsClaw[0] + clawLength * Math.cos(heading + rotation + clawAngle);
+        yPointsClaw[1] = yPointsClaw[0] + clawLength * Math.sin(heading + rotation + clawAngle);
+        canvas.strokePolygon(xPointsClaw, yPointsClaw);
 
     }
 }
