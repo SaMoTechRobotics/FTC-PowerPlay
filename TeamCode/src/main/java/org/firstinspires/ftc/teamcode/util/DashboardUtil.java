@@ -69,10 +69,41 @@ public class DashboardUtil {
         canvas.strokePolygon(xPoints, yPoints);
     }
 
-    public static void drawArm(Pose2d pivot, double rotation, boolean clawOpen) {
-        // draw arm as a line at angle from pivot point with claw at end of arm as 2 lines at angle either open or closed
-        //use a line to draw the arm
-        //use 2 lines to draw the claw
+    public static void drawArm(Canvas canvas, Pose2d pivot, double rotation, boolean clawOpen) {
+        //draw arm as line from pivot to end of arm, arm length is 10, with rotation
+        //draw claw as a rectangle at the end of the arm
+        //use a polygon to draw the arm
+        double x = pivot.getX();
+        double y = pivot.getY();
+        double heading = pivot.getHeading();
+        double armLength = 10;
+        double[] xPoints = new double[2];
+        double[] yPoints = new double[2];
+        xPoints[0] = x;
+        yPoints[0] = y;
+        xPoints[1] = x + armLength * Math.cos(heading + rotation);
+        yPoints[1] = y + armLength * Math.sin(heading + rotation);
+        canvas.strokePolygon(xPoints, yPoints);
+        //draw claw as a rectangle at the end of the arm
+        double halfWidth = 2;
+        double halfLength = 2;
+        double[] xPoints2 = new double[4];
+        double[] yPoints2 = new double[4];
+        xPoints2[0] = xPoints[1] + halfLength * Math.cos(heading + rotation) - halfWidth * Math.sin(heading + rotation);
+        yPoints2[0] = yPoints[1] + halfLength * Math.sin(heading + rotation) + halfWidth * Math.cos(heading + rotation);
+        xPoints2[1] = xPoints[1] + halfLength * Math.cos(heading + rotation) + halfWidth * Math.sin(heading + rotation);
+        yPoints2[1] = yPoints[1] + halfLength * Math.sin(heading + rotation) - halfWidth * Math.cos(heading + rotation);
+        xPoints2[2] = xPoints[1] - halfLength * Math.cos(heading + rotation) + halfWidth * Math.sin(heading + rotation);
+        yPoints2[2] = yPoints[1] - halfLength * Math.sin(heading + rotation) - halfWidth * Math.cos(heading + rotation);
+        xPoints2[3] = xPoints[1] - halfLength * Math.cos(heading + rotation) - halfWidth * Math.sin(heading + rotation);
+        yPoints2[3] = yPoints[1] - halfLength * Math.sin(heading + rotation) + halfWidth * Math.cos(heading + rotation);
+//        canvas.strokePolygon(xPoints2, yPoints2);
+        if (clawOpen) {
+            canvas.strokePolygon(xPoints2, yPoints2);
+        } else {
+            canvas.fillPolygon(xPoints2, yPoints2);
+        }
+
 
     }
 }

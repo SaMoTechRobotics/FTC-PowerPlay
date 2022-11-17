@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
@@ -87,8 +88,6 @@ public class Drive extends LinearOpMode {
                     Gamepad1.getRightX() //turn stick
             );
 
-            Chassis.updatePosition();
-
             // Pose2d ChassisPos = Chassis.getPosition();
             // telemetry.addData("","");
             // telemetry.addData("Chassis X", ChassisPos.getX());
@@ -129,6 +128,7 @@ public class Drive extends LinearOpMode {
             /* DRAW ARM AND CLAW */
 
             DashboardUtil.drawArm(
+                    new TelemetryPacket().fieldOverlay(),
                     Chassis.getPosition(),
                     Arm.getRotation(),
                     Claw.isOpen()
@@ -184,6 +184,7 @@ public class Drive extends LinearOpMode {
 
             Gamepad1.readButtons();
             Gamepad2.readButtons();
+            Chassis.updatePosition();
             telemetry.update();
         }
     }
