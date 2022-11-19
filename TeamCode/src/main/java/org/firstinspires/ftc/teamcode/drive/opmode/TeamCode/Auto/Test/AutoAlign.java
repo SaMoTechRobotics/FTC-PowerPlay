@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
@@ -63,50 +62,53 @@ public class AutoAlign extends LinearOpMode {
         sleep(2000);
 
 
-        while (sensor.getDistance(DistanceUnit.INCH) > detectAmount && opModeIsActive()) {
-            drive.setWeightedDrivePower(
-                    new Pose2d(
-                            -speed,
-                            0,
-                            0
-                    )
-            );
-            drive.update();
-            telemetry.addData("Distance", sensor.getDistance(DistanceUnit.INCH));
-            telemetry.update();
-        }
-
-        drive.setWeightedDrivePower(
-                new Pose2d(
-                        0,
-                        0,
-                        0
-                )
-        );
+//        while (sensor.getDistance(DistanceUnit.INCH) > detectAmount && opModeIsActive()) {
+//            drive.setWeightedDrivePower(
+//                    new Pose2d(
+//                            -speed,
+//                            0,
+//                            0
+//                    )
+//            );
+//            drive.update();
+//            telemetry.addData("Distance", sensor.getDistance(DistanceUnit.INCH));
+//            telemetry.update();
+//        }
+//
+//        drive.setWeightedDrivePower(
+//                new Pose2d(
+//                        0,
+//                        0,
+//                        0
+//                )
+//        );
+        drive.alignWithPole(sensor, detectAmount, opModeIsActive());
 
         Arm.setRotation(ArmRotation.Left);
 
+        drive.alignPlaceDistance(sensor, placeDistance, opModeIsActive());
 
-        while (sensor.getDistance(DistanceUnit.INCH) > placeDistance + placeMargin && opModeIsActive()) {
-            drive.setWeightedDrivePower(
-                    new Pose2d(
-                            0,
-                            sensor.getDistance(DistanceUnit.INCH) > placeDistance ? speed : -speed,
-                            0
-                    )
-            );
-            drive.update();
-            telemetry.addData("Distance", sensor.getDistance(DistanceUnit.INCH));
-            telemetry.update();
-        }
 
-        drive.setWeightedDrivePower(
-                new Pose2d(
-                        0,
-                        0,
-                        0
-                )
-        );
+//        while (sensor.getDistance(DistanceUnit.INCH) > placeDistance && opModeIsActive()) {
+//            drive.setWeightedDrivePower(
+//                    new Pose2d(
+//                            0,
+//                            speed,
+//                            0
+//                    )
+//            );
+//            drive.update();
+//            telemetry.addData("Distance", sensor.getDistance(DistanceUnit.INCH));
+//            telemetry.update();
+//        }
+//
+//        drive.setWeightedDrivePower(
+//                new Pose2d(
+//                        0,
+//                        0,
+//                        0
+//                )
+//        );
 
         sleep(2000);
 

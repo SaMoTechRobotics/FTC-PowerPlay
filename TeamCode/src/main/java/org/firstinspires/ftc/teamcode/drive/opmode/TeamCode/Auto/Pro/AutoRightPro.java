@@ -10,11 +10,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDriveCancelable;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.ChassisConstants;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorDistances;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideSpeed;
 
@@ -30,7 +32,7 @@ public class AutoRightPro extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         FtcDashboard dashboard = FtcDashboard.getInstance();
 
-        SampleMecanumDriveCancelable drive = new SampleMecanumDriveCancelable(hardwareMap);
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Slide Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
 
@@ -41,6 +43,8 @@ public class AutoRightPro extends LinearOpMode {
                 hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
         );
         Claw.close();
+
+        DistanceSensor leftSensor = hardwareMap.get(DistanceSensor.class, "leftDistanceSensor");
 
         Pose2d startPose = new Pose2d(-60, -48, Math.toRadians(0));
 
@@ -66,9 +70,12 @@ public class AutoRightPro extends LinearOpMode {
                 .back(back2)
                 .build();
 
-        drive.followTrajectory(backTraj);
+//        drive.followTrajectory(backTraj);
+        drive.alignWithPole(leftSensor, SensorDistances.detectAmount, opModeIsActive());
 
         Arm.setRotation(ArmRotation.Left);
+
+        drive.alignPlaceDistance(leftSensor, SensorDistances.placeDistance, opModeIsActive());
 
         sleep(1000);
 
@@ -84,18 +91,20 @@ public class AutoRightPro extends LinearOpMode {
 
         sleep(3000);
 
+        drive.alignPlaceDistance(leftSensor, SensorDistances.centerDistance, opModeIsActive());
+
         Arm.setRotation(ArmRotation.Center);
         Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
         Claw.close();
 
         Trajectory forwardTraj = drive
                 .trajectoryBuilder(backTraj.end())
-                .forward(back2)
+                .forward(ChassisConstants.HalfTileWidth * 3)
                 .build();
 
         drive.followTrajectory(forwardTraj);
 
-        sleep(8000);
+        sleep(2000);
 
     }
 }
