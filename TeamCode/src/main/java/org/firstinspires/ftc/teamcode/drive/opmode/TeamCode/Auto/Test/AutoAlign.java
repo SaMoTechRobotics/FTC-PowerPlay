@@ -22,14 +22,12 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 @Autonomous(name = "AutoAlign", group = "Test")
 public class AutoAlign extends LinearOpMode {
 
-    public static double speed = 0.3;
+    public static double speed = 0.2;
 
-    public static double detectAmount = 12.0;
-    public static double placeDistance = 5.0;
+    public static double detectAmount = 14.0;
+    public static double placeDistance = 3;
 
-//    public static double correctAmount = 1.0;
-
-    public static double moveDistance = 40.0;
+    public static double placeMargin = 0.25;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -68,7 +66,7 @@ public class AutoAlign extends LinearOpMode {
         while (sensor.getDistance(DistanceUnit.INCH) > detectAmount && opModeIsActive()) {
             drive.setWeightedDrivePower(
                     new Pose2d(
-                            speed,
+                            -speed,
                             0,
                             0
                     )
@@ -89,11 +87,11 @@ public class AutoAlign extends LinearOpMode {
         Arm.setRotation(ArmRotation.Left);
 
 
-        while (sensor.getDistance(DistanceUnit.INCH) > placeDistance && opModeIsActive()) {
+        while (sensor.getDistance(DistanceUnit.INCH) > placeDistance + placeMargin && opModeIsActive()) {
             drive.setWeightedDrivePower(
                     new Pose2d(
                             0,
-                            speed,
+                            sensor.getDistance(DistanceUnit.INCH) > placeDistance ? speed : -speed,
                             0
                     )
             );

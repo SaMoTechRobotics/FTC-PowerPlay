@@ -1,6 +1,6 @@
-package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Drive.Tests;
+package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Drive.Main;
 
-import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
@@ -17,41 +17,33 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
+import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 
 @TeleOp(name = "Drive", group = "Drive")
 public class Drive extends LinearOpMode {
 
-    private Chassis Chassis;
-    private Slide Slide;
-    private Arm Arm;
-    private Claw Claw;
-
-    private GamepadEx Gamepad1;
-    private GamepadEx Gamepad2;
-
     @Override
     public void runOpMode() throws InterruptedException {
-        FtcDashboard dashboard = FtcDashboard.getInstance();
 
-        Chassis = new Chassis(hardwareMap);
+        Chassis Chassis = new Chassis(hardwareMap);
 
-        Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
+        Slide Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
 
-        Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
+        Arm Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
         Arm.setRotation(ArmRotation.Center);
 
-        Claw =
+        Claw Claw =
                 new Claw(
                         hardwareMap.get(Servo.class, "claw"),
-                        hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
+                        hardwareMap.get(DistanceSensor.class, "leftDistanceSensor")
                 );
         Claw.close();
 
         ColorSensor ColorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
 
         // Initialize the gamepad
-        Gamepad1 = new GamepadEx(gamepad1);
-        Gamepad2 = new GamepadEx(gamepad2);
+        GamepadEx Gamepad1 = new GamepadEx(gamepad1);
+        GamepadEx Gamepad2 = new GamepadEx(gamepad2);
 
         ToggleButtonReader chassisBrakeToggle = new ToggleButtonReader(
                 Gamepad1,
@@ -89,12 +81,10 @@ public class Drive extends LinearOpMode {
 
             // Drives the robot with joysticks from gamepad 1
             Chassis.updateWithControls(
-                    Gamepad1.getLeftY(), //drive stick
-                    Gamepad1.getLeftX(), //strafe stick
+                    -Gamepad1.getLeftY(), //drive stick
+                    -Gamepad1.getLeftX(), //strafe stick
                     Gamepad1.getRightX() //turn stick
             );
-
-            // Chassis.updatePosition();
 
             // Pose2d ChassisPos = Chassis.getPosition();
             // telemetry.addData("","");
@@ -132,6 +122,15 @@ public class Drive extends LinearOpMode {
 
             telemetry.addData("", "");
             telemetry.addData("Arm Position", Arm.getRotation());
+
+            /* DRAW ARM AND CLAW */
+
+            DashboardUtil.drawArm(
+                    new TelemetryPacket().fieldOverlay(),
+                    Chassis.getPosition(),
+                    Arm.getRotation(),
+                    Claw.isOpen()
+            );
 
             /* SLIDE */
 
@@ -183,6 +182,7 @@ public class Drive extends LinearOpMode {
 
             Gamepad1.readButtons();
             Gamepad2.readButtons();
+            Chassis.updatePosition();
             telemetry.update();
         }
     }
