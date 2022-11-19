@@ -114,8 +114,8 @@ public class Drive extends LinearOpMode {
 
             if (Slide.getInches() > SlideHeight.SafetyHeight) Arm.updateWithControls(
                     Gamepad2.getRightX(),
-                    gamepad2.x,
                     gamepad2.b,
+                    gamepad2.x,
                     gamepad2.y
             );
             else Arm.setRotation(ArmRotation.Center);

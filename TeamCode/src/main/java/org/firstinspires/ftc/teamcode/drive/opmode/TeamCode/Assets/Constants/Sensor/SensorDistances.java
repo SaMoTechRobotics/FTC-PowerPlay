@@ -5,8 +5,10 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class SensorDistances {
 
-  public static double detectAmount = 14.0;
-  public static double placeDistance = 3.0;
+    public static double DetectAmount = 8.0;
+    public static double PlaceDistance = 4.0;
 
-  public static double centerDistance = 10.0;
+    public static double PlaceMargin = 0.1;
+
+    public static double CenterDistance = 4;
 }

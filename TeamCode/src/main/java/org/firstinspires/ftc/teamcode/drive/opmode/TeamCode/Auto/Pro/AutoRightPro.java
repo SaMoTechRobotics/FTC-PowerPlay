@@ -24,9 +24,10 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 @Autonomous(name = "AutoRightPro", group = "AutoPro")
 public class AutoRightPro extends LinearOpMode {
 
-    public static double strafe1 = 56.0;
-    public static double back2 = 8.0;
-    public static double forward3 = 8.0;
+    public static double strafe1 = 54.0;
+    public static double back2 = 4.0;
+
+    public static int ConesToScore = 5;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -37,10 +38,11 @@ public class AutoRightPro extends LinearOpMode {
         Slide Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
 
         Arm Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
+        Arm.setRotation(ArmRotation.Center);
 
         Claw Claw = new Claw(
                 hardwareMap.get(Servo.class, "claw"),
-                hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
+                hardwareMap.get(DistanceSensor.class, "leftDistanceSensor")
         );
         Claw.close();
 
@@ -54,6 +56,8 @@ public class AutoRightPro extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+        Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
+
         Trajectory strafeLeftTraj = drive
                 .trajectoryBuilder(startPose)
                 .strafeLeft(strafe1)
@@ -61,50 +65,88 @@ public class AutoRightPro extends LinearOpMode {
 
         drive.followTrajectory(strafeLeftTraj);
 
-        Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
+//        sleep(2000);
 
-        sleep(2000);
-
-        Trajectory backTraj = drive
-                .trajectoryBuilder(strafeLeftTraj.end())
-                .back(back2)
-                .build();
+//        Trajectory backTraj = drive
+//                .trajectoryBuilder(strafeLeftTraj.end())
+//                .back(back2)
+//                .build();
 
 //        drive.followTrajectory(backTraj);
-        drive.alignWithPole(leftSensor, SensorDistances.detectAmount, opModeIsActive());
+        int count = 0;
+        while (opModeIsActive() && count < ConesToScore) {
+            drive.alignWithPole(leftSensor, SensorDistances.DetectAmount, opModeIsActive());
 
-        Arm.setRotation(ArmRotation.Left);
+            Arm.setRotation(ArmRotation.Left);
 
-        drive.alignPlaceDistance(leftSensor, SensorDistances.placeDistance, opModeIsActive());
+            drive.alignPlaceDistance(leftSensor, SensorDistances.PlaceDistance, SensorDistances.PlaceMargin, opModeIsActive());
 
-        sleep(1000);
+            sleep(500);
 
-        Slide.setHeight(SlideHeight.HighPole - 10, SlideSpeed.Mid);
+            Slide.setHeight(SlideHeight.HighPole - 10, SlideSpeed.Mid);
 
-        sleep(3000);
+            sleep(1000);
 
-        Claw.open();
+            Claw.open();
 
-        sleep(1000);
+            sleep(1000);
 
-        Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Mid);
+            Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Mid);
 
-        sleep(3000);
+            sleep(1000);
 
-        drive.alignPlaceDistance(leftSensor, SensorDistances.centerDistance, opModeIsActive());
+            drive.alignPlaceDistance(leftSensor, SensorDistances.CenterDistance, SensorDistances.PlaceMargin, opModeIsActive());
 
-        Arm.setRotation(ArmRotation.Center);
-        Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
-        Claw.close();
+            Arm.setRotation(ArmRotation.Center);
+            Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (4 - count)), SlideSpeed.Max);
+            Claw.close();
 
-        Trajectory forwardTraj = drive
-                .trajectoryBuilder(backTraj.end())
-                .forward(ChassisConstants.HalfTileWidth * 3)
-                .build();
+            count++;
 
-        drive.followTrajectory(forwardTraj);
+            if (count == ConesToScore) {
+                Trajectory forwardTraj = drive
+                        .trajectoryBuilder(drive.getPoseEstimate())
+                        .forward(ChassisConstants.HalfTileWidth)
+                        .build();
 
-        sleep(2000);
+                drive.followTrajectory(forwardTraj);
+
+                break;
+            }
+            Trajectory forwardTraj = drive
+                    .trajectoryBuilder(drive.getPoseEstimate())
+                    .forward(ChassisConstants.HalfTileWidth * 2)
+                    .build();
+
+            drive.followTrajectory(forwardTraj);
+
+            sleep(1000);
+
+            Claw.open();
+
+            Trajectory pickupTraj = drive
+                    .trajectoryBuilder(forwardTraj.end())
+                    .forward(ChassisConstants.HalfTileWidth)
+                    .build();
+
+            drive.followTrajectory(pickupTraj);
+
+            Claw.close();
+
+            sleep(1000);
+
+            Claw.close();
+
+            Slide.setHeight(SlideHeight.MaxHeight, SlideSpeed.Max);
+
+            Trajectory backTraj = drive
+                    .trajectoryBuilder(pickupTraj.end())
+                    .back(ChassisConstants.HalfTileWidth * 2)
+                    .build();
+
+            drive.followTrajectory(backTraj);
+        }
+
 
     }
 }

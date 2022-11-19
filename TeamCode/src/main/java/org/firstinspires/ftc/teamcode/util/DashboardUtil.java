@@ -4,7 +4,7 @@ import com.acmerobotics.dashboard.canvas.Canvas;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.path.Path;
 
-import org.firstinspires.ftc.teamcode.ChassisConstants;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.ChassisConstants;
 
 import java.util.List;
 

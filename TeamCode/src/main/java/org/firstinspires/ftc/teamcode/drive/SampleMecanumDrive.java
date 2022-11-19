@@ -343,7 +343,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         while (sensor.getDistance(DistanceUnit.INCH) > align && active) {
             this.setWeightedDrivePower(
                     new Pose2d(
-                            -ChassisSpeed.alignSpeed,
+                            -ChassisSpeed.AlignSpeed,
                             0,
                             0
                     )
@@ -359,12 +359,12 @@ public class SampleMecanumDrive extends MecanumDrive {
         );
     }
 
-    public void alignPlaceDistance(DistanceSensor sensor, double place, boolean active) {
-        while (sensor.getDistance(DistanceUnit.INCH) > place && active) {
+    public void alignPlaceDistance(DistanceSensor sensor, double place, double margin, boolean active) {
+        while ((sensor.getDistance(DistanceUnit.INCH) > place + margin || sensor.getDistance(DistanceUnit.INCH) < place - margin) && active) {
             this.setWeightedDrivePower(
                     new Pose2d(
                             0,
-                            ChassisSpeed.placeSpeed,
+                            sensor.getDistance(DistanceUnit.INCH) > place ? ChassisSpeed.PlaceSpeed : -ChassisSpeed.PlaceSpeed,
                             0
                     )
             );

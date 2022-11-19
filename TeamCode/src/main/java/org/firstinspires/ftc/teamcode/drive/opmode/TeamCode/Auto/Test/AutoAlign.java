@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorDistances;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideSpeed;
 
@@ -82,11 +83,11 @@ public class AutoAlign extends LinearOpMode {
 //                        0
 //                )
 //        );
-        drive.alignWithPole(sensor, detectAmount, opModeIsActive());
+        drive.alignWithPole(sensor, SensorDistances.DetectAmount, opModeIsActive());
 
         Arm.setRotation(ArmRotation.Left);
 
-        drive.alignPlaceDistance(sensor, placeDistance, opModeIsActive());
+        drive.alignPlaceDistance(sensor, SensorDistances.PlaceDistance, SensorDistances.PlaceMargin, opModeIsActive());
 
 
 //        while (sensor.getDistance(DistanceUnit.INCH) > placeDistance && opModeIsActive()) {
@@ -110,15 +111,21 @@ public class AutoAlign extends LinearOpMode {
 //                )
 //        );
 
-        sleep(2000);
+        Slide.setHeight(SlideHeight.HighPole - SlideHeight.PlaceMargin, SlideSpeed.Max);
+
+        sleep(1000);
 
         Claw.open();
 
-        sleep(2000);
+        sleep(1000);
+
+        Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
 
         Arm.setRotation(ArmRotation.Center);
 
         sleep(1000);
+
+        drive.alignPlaceDistance(sensor, SensorDistances.CenterDistance, SensorDistances.PlaceMargin, opModeIsActive());
 
 
     }

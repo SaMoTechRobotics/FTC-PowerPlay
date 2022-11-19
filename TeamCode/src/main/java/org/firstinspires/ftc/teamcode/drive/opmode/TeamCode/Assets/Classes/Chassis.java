@@ -1,16 +1,13 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.ChassisSpeed;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDriveCancelable;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.PoseStorage;
-import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorDistances;
 
 /**
  * Chassis class which contains all the methods for the chassis of the robot
@@ -146,27 +143,7 @@ public class Chassis {
      * @param alignY The y axis to align to, either left or right
      */
     public final void alignToPole(PoleAlign alignX, PoleAlign alignY) {
-        Trajectory alignXTrajectory = alignX == PoleAlign.Forward
-                ? this.MecanumDrive.trajectoryBuilder(this.getPosition()).forward(20.0).build()
-                : this.MecanumDrive.trajectoryBuilder(this.getPosition()).back(20.0).build();
-        this.MecanumDrive.followTrajectoryAsync(alignXTrajectory);
-        while (
-                this.LeftSensor.getDistance(DistanceUnit.INCH) >
-                        SensorDistances.AlignMargin
-        ) {
-        }
-        this.MecanumDrive.breakFollowing();
 
-        Trajectory alignYTrajectory = alignY == PoleAlign.Left
-                ? this.MecanumDrive.trajectoryBuilder(this.getPosition()).strafeLeft(20.0).build()
-                : this.MecanumDrive.trajectoryBuilder(this.getPosition()).strafeRight(20.0).build();
-        this.MecanumDrive.followTrajectoryAsync(alignYTrajectory);
-        while (
-                this.RightSensor.getDistance(DistanceUnit.INCH) >
-                        SensorDistances.DistanceMargin
-        ) {
-        }
-        this.MecanumDrive.breakFollowing();
     }
 
     public final void updatePosition() {
