@@ -8,7 +8,7 @@ public class SensorDistances {
     public static double DetectAmount = 8.0;
     public static double PlaceDistance = 4.0;
 
-    public static double PlaceMargin = 0.1;
+    public static double PlaceMargin = 0.25;
 
     public static double CenterDistance = 4;
 }

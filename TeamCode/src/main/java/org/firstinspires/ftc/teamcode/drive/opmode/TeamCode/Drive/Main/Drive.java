@@ -79,12 +79,23 @@ public class Drive extends LinearOpMode {
                     Gamepad1.getButton(GamepadKeys.Button.RIGHT_BUMPER)
             );
 
-            // Drives the robot with joysticks from gamepad 1
+            //enable rotation if right trigger is down
+            boolean rotationEnabled = Gamepad1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5;
+
+            // Drives the robot with joysticks from gamepad 1, format of each joystick being one direction
+//            Chassis.updateWithControls(
+//                    -Gamepad1.getLeftY(), //drive stick
+//                    !rotationEnabled ? -Gamepad1.getRightX() : 0, //strafe stick
+//                    rotationEnabled ? Gamepad1.getRightX() : 0 //turn stick
+//            );
+
+            // Drives the robot with joysticks from gamepad 1, normal format
             Chassis.updateWithControls(
-                    -Gamepad1.getLeftY(), //drive stick
-                    -Gamepad1.getLeftX(), //strafe stick
+                    Math.abs(-Gamepad1.getLeftY()) > 0.1 ? -Gamepad1.getLeftY() : 0, //drive stick
+                    Math.abs(-Gamepad1.getLeftX()) > 0.1 ? -Gamepad1.getLeftX() : 0, //strafe stick
                     Gamepad1.getRightX() //turn stick
             );
+
 
             // Pose2d ChassisPos = Chassis.getPosition();
             // telemetry.addData("","");

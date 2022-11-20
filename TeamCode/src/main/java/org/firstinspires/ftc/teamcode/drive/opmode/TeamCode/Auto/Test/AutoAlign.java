@@ -23,15 +23,16 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 public class AutoAlign extends LinearOpMode {
 
     public static double speed = 0.2;
-
-    public static double detectAmount = 14.0;
-    public static double placeDistance = 3;
-
-    public static double placeMargin = 0.25;
+//
+//    public static double detectAmount = 14.0;
+//    public static double placeDistance = 3;
+//
+//    public static double placeMargin = 0.25;
 
     @Override
     public void runOpMode() throws InterruptedException {
         FtcDashboard dashboard = FtcDashboard.getInstance();
+
 
         DistanceSensor sensor = hardwareMap.get(DistanceSensor.class, "leftDistanceSensor");
 
