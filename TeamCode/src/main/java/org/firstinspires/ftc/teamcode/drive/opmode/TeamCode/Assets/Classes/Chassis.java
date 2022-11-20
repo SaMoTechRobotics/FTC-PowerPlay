@@ -1,12 +1,13 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.ChassisSpeed;
-import org.firstinspires.ftc.teamcode.drive.SampleMecanumDriveCancelable;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.PoseStorage;
 
 /**
@@ -21,7 +22,14 @@ public class Chassis {
     public double TurnSpeed = ChassisSpeed.MidTurn;
     public double StrafeSpeed = ChassisSpeed.MidStrafe;
     public boolean brake = false;
-    public SampleMecanumDriveCancelable MecanumDrive;
+    public SampleMecanumDrive MecanumDrive;
+
+    public static enum ChassisMode {
+        Manual,
+        AutoPlace,
+    }
+
+    public ChassisMode Mode = ChassisMode.Manual;
 
     /**
      * Creates a new chassis with 4 motors
@@ -45,7 +53,7 @@ public class Chassis {
         this.Wheels.FrontLeft.setDirection(DcMotor.Direction.REVERSE);
         this.Wheels.BackLeft.setDirection(DcMotor.Direction.REVERSE);
 
-        this.MecanumDrive = new SampleMecanumDriveCancelable(hardwareMap);
+        this.MecanumDrive = new SampleMecanumDrive(hardwareMap);
         this.MecanumDrive.setPoseEstimate(PoseStorage.currentPose);
         this.MecanumDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -108,42 +116,60 @@ public class Chassis {
     public void updateWithControls(
             double driveStick,
             double strafeStick,
-            double turnStick
+            double turnStick,
+            boolean align,
+            Arm arm,
+            Claw claw
     ) {
-        /*
-         * The different powers of the motors based of the joysticks
-         */
-        double frontLeftPower =
-                (driveStick * this.DriveSpeed) +
-                        (turnStick * this.TurnSpeed) +
-                        (strafeStick * this.StrafeSpeed);
-        double frontRightPower =
-                (driveStick * this.DriveSpeed) -
-                        (turnStick * this.TurnSpeed) -
-                        (strafeStick * this.StrafeSpeed);
-        double backLeftPower =
-                (driveStick * this.DriveSpeed) +
-                        (turnStick * this.TurnSpeed) -
-                        (strafeStick * this.StrafeSpeed);
-        double backRightPower =
-                (driveStick * this.DriveSpeed) -
-                        (turnStick * this.TurnSpeed) +
-                        (strafeStick * this.StrafeSpeed);
+        if (align) this.Mode = ChassisMode.AutoPlace;
+        else if (driveStick != 0 || strafeStick != 0 || turnStick != 0)
+            this.Mode = ChassisMode.Manual;
+        if (this.Mode == ChassisMode.Manual) {
+            this.MecanumDrive.breakFollowing();
+            /*
+             * The different powers of the motors based of the joysticks
+             */
+            double frontLeftPower =
+                    (driveStick * this.DriveSpeed) +
+                            (turnStick * this.TurnSpeed) +
+                            (strafeStick * this.StrafeSpeed);
+            double frontRightPower =
+                    (driveStick * this.DriveSpeed) -
+                            (turnStick * this.TurnSpeed) -
+                            (strafeStick * this.StrafeSpeed);
+            double backLeftPower =
+                    (driveStick * this.DriveSpeed) +
+                            (turnStick * this.TurnSpeed) -
+                            (strafeStick * this.StrafeSpeed);
+            double backRightPower =
+                    (driveStick * this.DriveSpeed) -
+                            (turnStick * this.TurnSpeed) +
+                            (strafeStick * this.StrafeSpeed);
 
-        this.setPower(this.Wheels.FrontLeft, frontLeftPower);
-        this.setPower(this.Wheels.FrontRight, frontRightPower);
-        this.setPower(this.Wheels.BackLeft, backLeftPower);
-        this.setPower(this.Wheels.BackRight, backRightPower);
+            this.setPower(this.Wheels.FrontLeft, frontLeftPower);
+            this.setPower(this.Wheels.FrontRight, frontRightPower);
+            this.setPower(this.Wheels.BackLeft, backLeftPower);
+            this.setPower(this.Wheels.BackRight, backRightPower);
+        } else if (this.Mode == ChassisMode.AutoPlace) {
+            if (align) this.autoPlace(arm, claw);
+        } else {
+            this.Mode = ChassisMode.Manual;
+            this.setPower(this.Wheels.FrontLeft, 0);
+            this.setPower(this.Wheels.FrontRight, 0);
+            this.setPower(this.Wheels.BackLeft, 0);
+            this.setPower(this.Wheels.BackRight, 0);
+        }
     }
 
     /**
      * Drives until distance sensor detects the pole
-     *
-     * @param alignX The x axis to align to, either forward or backward
-     * @param alignY The y axis to align to, either left or right
      */
-    public final void alignToPole(PoleAlign alignX, PoleAlign alignY) {
-
+    public final void autoPlace(Arm arm, Claw claw) {
+        this.MecanumDrive.followTrajectoryAsync(
+                this.MecanumDrive.trajectoryBuilder(this.MecanumDrive.getPoseEstimate())
+                        .strafeTo(new Vector2d(0, 0))
+                        .build()
+        );
     }
 
     public final void updatePosition() {

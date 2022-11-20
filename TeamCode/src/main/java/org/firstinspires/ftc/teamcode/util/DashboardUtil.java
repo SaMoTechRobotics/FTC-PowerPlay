@@ -70,9 +70,6 @@ public class DashboardUtil {
     }
 
     public static void drawArm(Canvas canvas, Pose2d pivot, double rotation, boolean clawOpen) {
-        //draw arm as line from pivot to end of arm, arm length is 10, with rotation
-        //draw claw as a rectangle at the end of the arm
-        //use a polygon to draw the arm
         double x = pivot.getX();
         double y = pivot.getY();
         double heading = pivot.getHeading();
@@ -83,6 +80,7 @@ public class DashboardUtil {
         yPoints[0] = y;
         xPoints[1] = x + armLength * Math.cos(heading + rotation);
         yPoints[1] = y + armLength * Math.sin(heading + rotation);
+        canvas.setStroke("green");
         canvas.strokePolygon(xPoints, yPoints);
         //draw claw as 2 lines at an angle of either open: 90 degrees, or closed: 20 degrees
         double clawAngle = clawOpen ? Math.PI / 2 : Math.PI / 9;
@@ -93,7 +91,7 @@ public class DashboardUtil {
         yPointsClaw[0] = yPoints[1];
         xPointsClaw[1] = xPointsClaw[0] + clawLength * Math.cos(heading + rotation + clawAngle);
         yPointsClaw[1] = yPointsClaw[0] + clawLength * Math.sin(heading + rotation + clawAngle);
+        canvas.setStroke("red");
         canvas.strokePolygon(xPointsClaw, yPointsClaw);
-
     }
 }

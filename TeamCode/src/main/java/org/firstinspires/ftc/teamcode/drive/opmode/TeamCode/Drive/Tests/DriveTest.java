@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Drive.Tests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
@@ -44,13 +44,13 @@ public class DriveTest extends LinearOpMode {
                     Gamepad1.getButton(GamepadKeys.Button.LEFT_BUMPER),
                     Gamepad1.getButton(GamepadKeys.Button.RIGHT_BUMPER)
             );
-
-            // Drives the robot with joysticks from gamepad 1
-            Chassis.updateWithControls(
-                    Gamepad1.getLeftY(), //drive stick
-                    Gamepad1.getLeftX(), //strafe stick
-                    Gamepad1.getRightX() //turn stick
-            );
+//
+//            // Drives the robot with joysticks from gamepad 1
+//            Chassis.updateWithControls(
+//                    Gamepad1.getLeftY(), //drive stick
+//                    Gamepad1.getLeftX(), //strafe stick
+//                    Gamepad1.getRightX() //turn stick
+//            );
         }
     }
 }

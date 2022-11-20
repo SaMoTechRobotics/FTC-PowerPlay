@@ -16,6 +16,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Chass
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorColors;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 
@@ -66,6 +67,7 @@ public class Drive extends LinearOpMode {
             telemetry.addData("Blue", ColorSensor.blue());
             telemetry.addData("Alpha", ColorSensor.alpha());
             telemetry.addData("ARGB", ColorSensor.argb());
+            telemetry.addData("Detected Color", SensorColors.detectColor(ColorSensor.red(), ColorSensor.green(), ColorSensor.blue()));
 
             /* CHASSIS */
 
@@ -93,9 +95,11 @@ public class Drive extends LinearOpMode {
             Chassis.updateWithControls(
                     Math.abs(-Gamepad1.getLeftY()) > 0.1 ? -Gamepad1.getLeftY() : 0, //drive stick
                     Math.abs(-Gamepad1.getLeftX()) > 0.1 ? -Gamepad1.getLeftX() : 0, //strafe stick
-                    Gamepad1.getRightX() //turn stick
+                    Gamepad1.getRightX(), //turn stick
+                    Gamepad1.wasJustPressed(GamepadKeys.Button.A), //auto place
+                    Arm,
+                    Claw
             );
-
 
             // Pose2d ChassisPos = Chassis.getPosition();
             // telemetry.addData("","");
@@ -136,12 +140,14 @@ public class Drive extends LinearOpMode {
 
             /* DRAW ARM AND CLAW */
 
+            TelemetryPacket telemetryTest = new TelemetryPacket();
             DashboardUtil.drawArm(
-                    new TelemetryPacket().fieldOverlay(),
+                    telemetryTest.fieldOverlay(),
                     Chassis.getPosition(),
                     Arm.getRotation(),
                     Claw.isOpen()
             );
+//            FtcDashboard.getInstance().sendTelemetryPacket(telemetryTest);
 
             /* SLIDE */
 
