@@ -394,7 +394,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
     }
 
-    public void alignWithPole(DistanceSensor sensor, double align, boolean active) {
+    public void alignWithPoleAsync(DistanceSensor sensor, double align, boolean active) {
         while (sensor.getDistance(DistanceUnit.INCH) > align && active) {
             this.setWeightedDrivePower(
                     new Pose2d(
@@ -414,7 +414,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         );
     }
 
-    public void alignPlaceDistance(DistanceSensor sensor, double place, double margin, boolean active) {
+    public void alignPlaceDistanceAsync(DistanceSensor sensor, double place, double margin, boolean active) {
         while ((sensor.getDistance(DistanceUnit.INCH) > place + margin || sensor.getDistance(DistanceUnit.INCH) < place - margin) && active) {
             this.setWeightedDrivePower(
                     new Pose2d(
@@ -430,6 +430,22 @@ public class SampleMecanumDrive extends MecanumDrive {
                         0,
                         0,
                         0
+                )
+        );
+    }
+
+    /**
+     * Pivots around point based on radius
+     *
+     * @param speed  speed of pivot
+     * @param radius radius of pivot
+     */
+    public void pivot(double speed, double radius) {
+        this.setWeightedDrivePower(
+                new Pose2d( //sets the power to drive forward and turn
+                        speed,
+                        0,
+                        speed / radius
                 )
         );
     }

@@ -84,11 +84,11 @@ public class AutoAlign extends LinearOpMode {
 //                        0
 //                )
 //        );
-        drive.alignWithPole(sensor, SensorDistances.DetectAmount, opModeIsActive());
+        drive.alignWithPoleAsync(sensor, SensorDistances.DetectAmount, opModeIsActive());
 
         Arm.setRotation(ArmRotation.Left);
 
-        drive.alignPlaceDistance(sensor, SensorDistances.PlaceDistance, SensorDistances.PlaceMargin, opModeIsActive());
+        drive.alignPlaceDistanceAsync(sensor, SensorDistances.PlaceDistance, SensorDistances.PlaceMargin, opModeIsActive());
 
 
 //        while (sensor.getDistance(DistanceUnit.INCH) > placeDistance && opModeIsActive()) {
@@ -126,7 +126,7 @@ public class AutoAlign extends LinearOpMode {
 
         sleep(1000);
 
-        drive.alignPlaceDistance(sensor, SensorDistances.CenterDistance, SensorDistances.PlaceMargin, opModeIsActive());
+        drive.alignPlaceDistanceAsync(sensor, SensorDistances.CenterDistance, SensorDistances.PlaceMargin, opModeIsActive());
 
 
     }

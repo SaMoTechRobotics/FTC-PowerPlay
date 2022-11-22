@@ -75,11 +75,11 @@ public class AutoRightPro extends LinearOpMode {
 //        drive.followTrajectory(backTraj);
         int count = 0;
         while (opModeIsActive() && count < ConesToScore) {
-            drive.alignWithPole(leftSensor, SensorDistances.DetectAmount, opModeIsActive());
+            drive.alignWithPoleAsync(leftSensor, SensorDistances.DetectAmount, opModeIsActive());
 
             Arm.setRotation(ArmRotation.Left);
 
-            drive.alignPlaceDistance(leftSensor, SensorDistances.PlaceDistance, SensorDistances.PlaceMargin, opModeIsActive());
+            drive.alignPlaceDistanceAsync(leftSensor, SensorDistances.PlaceDistance, SensorDistances.PlaceMargin, opModeIsActive());
 
             sleep(500);
 
@@ -95,7 +95,7 @@ public class AutoRightPro extends LinearOpMode {
 
             sleep(1000);
 
-            drive.alignPlaceDistance(leftSensor, SensorDistances.CenterDistance, SensorDistances.PlaceMargin, opModeIsActive());
+            drive.alignPlaceDistanceAsync(leftSensor, SensorDistances.CenterDistance, SensorDistances.PlaceMargin, opModeIsActive());
 
             Arm.setRotation(ArmRotation.Center);
             Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (4 - count)), SlideSpeed.Max);
