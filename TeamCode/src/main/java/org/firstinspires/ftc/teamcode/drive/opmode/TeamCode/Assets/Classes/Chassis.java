@@ -123,11 +123,12 @@ public class Chassis {
             Arm arm,
             Claw claw
     ) {
-        if (align) this.Mode = ChassisMode.AutoPlace;
-        else if (driveStick != 0 || strafeStick != 0 || turnStick != 0)
+        if (align)
+            this.Mode = ChassisMode.AutoPlace; // If align button is pressed, set mode to auto place
+        else if (driveStick != 0 || strafeStick != 0 || turnStick != 0) // If any of the sticks are not 0, set mode to manual
             this.Mode = ChassisMode.Manual;
         if (this.Mode == ChassisMode.Manual) {
-            this.MecanumDrive.breakFollowing();
+            this.MecanumDrive.breakFollowing(); // If in manual mode, end current autonomous movement
             /*
              * The different powers of the motors based of the joysticks
              */
@@ -148,13 +149,16 @@ public class Chassis {
                             (turnStick * this.TurnSpeed) +
                             (strafeStick * this.StrafeSpeed);
 
+            /*
+             * Sets the power of all the motors for manual drive
+             */
             this.setPower(this.Wheels.FrontLeft, frontLeftPower);
             this.setPower(this.Wheels.FrontRight, frontRightPower);
             this.setPower(this.Wheels.BackLeft, backLeftPower);
             this.setPower(this.Wheels.BackRight, backRightPower);
-        } else if (this.Mode == ChassisMode.AutoPlace) {
+        } else if (this.Mode == ChassisMode.AutoPlace) { // If in auto place mode, update autonomous movement
             this.autoPlace(arm, claw, PoleAlign.Backward, PoleAlign.Left);
-        } else {
+        } else { // If something goes wrong, set mode to manual and stop all movement
             this.Mode = ChassisMode.Manual;
             this.setPower(this.Wheels.FrontLeft, 0);
             this.setPower(this.Wheels.FrontRight, 0);
@@ -164,7 +168,12 @@ public class Chassis {
     }
 
     /**
-     * Drives until distance sensor detects the pole
+     * Auto places the cone to the pole, aligns robot and handles autonomous actions
+     *
+     * @param arm         The arm to use
+     * @param claw        The claw to use
+     * @param alignDrive  The direction to drive to align with the pole
+     * @param alignStrafe The direction to strafe to align with the pole
      */
     public final void autoPlace(Arm arm, Claw claw, PoleAlign alignDrive, PoleAlign alignStrafe) {
 //        this.MecanumDrive.followTrajectoryAsync(
@@ -197,24 +206,38 @@ public class Chassis {
         }
     }
 
+    /**
+     * Updates the position of the chassis and updates the RR instance of chassis that handles autonomous
+     */
     public final void updatePosition() {
         this.MecanumDrive.update();
     }
 
+    /**
+     * Returns the current position of the chassis
+     *
+     * @return The current position of the chassis
+     */
     public final Pose2d getPosition() {
         return this.MecanumDrive.getPoseEstimate();
     }
 
+    /**
+     * Enum for the current mode of the chassis
+     */
     public enum ChassisMode {
-        Manual,
-        AutoPlace,
+        Manual, //Manual control, takes input from the joysticks
+        AutoPlace, //Autonomous control, does current autonomous path or action, can be interrupted by manual control
     }
 
+    /**
+     * Enum for the parameters of the chassis aligning with pole
+     */
     public enum PoleAlign {
-        Left,
-        Right,
-        Forward,
-        Backward,
+        Left, //Align with the left sensor
+        Right, //Align with the right sensor
+        Forward, //Drive forward to align
+        Backward,  //Drive backward to align
     }
 
     /**
