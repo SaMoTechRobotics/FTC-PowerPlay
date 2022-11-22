@@ -49,7 +49,7 @@ public class SensorColors {
      * @return the parking position as an int, either 1, 2, or 3 (0 if error)
      */
     public static int getParkingPosition(Color color) {
-        switch (color) {
+        switch (color) { //Switches the color to match which parking spot it corresponds to
             case Red:
                 return 1;
             case Green:
