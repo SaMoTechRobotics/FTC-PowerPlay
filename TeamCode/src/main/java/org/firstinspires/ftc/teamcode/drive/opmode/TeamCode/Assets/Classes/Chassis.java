@@ -16,13 +16,20 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sen
  */
 public class Chassis {
 
+
     public Wheels Wheels;
+
+
     public DistanceSensor LeftSensor;
     public DistanceSensor RightSensor;
     public double DriveSpeed = ChassisSpeed.MidDrive;
     public double TurnSpeed = ChassisSpeed.MidTurn;
     public double StrafeSpeed = ChassisSpeed.MidStrafe;
     public boolean brake = false;
+
+    /**
+     * The stored autonomous class to control robot with RR
+     */
     public SampleMecanumDrive MecanumDrive;
     public ChassisMode Mode = ChassisMode.Manual;
 
