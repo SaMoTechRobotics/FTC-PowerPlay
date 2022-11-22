@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.ChassisSpeed;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.PoseStorage;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorDistances;
 
 /**
  * Chassis class which contains all the methods for the chassis of the robot
@@ -23,12 +24,6 @@ public class Chassis {
     public double StrafeSpeed = ChassisSpeed.MidStrafe;
     public boolean brake = false;
     public SampleMecanumDrive MecanumDrive;
-
-    public static enum ChassisMode {
-        Manual,
-        AutoPlace,
-    }
-
     public ChassisMode Mode = ChassisMode.Manual;
 
     /**
@@ -151,7 +146,7 @@ public class Chassis {
             this.setPower(this.Wheels.BackLeft, backLeftPower);
             this.setPower(this.Wheels.BackRight, backRightPower);
         } else if (this.Mode == ChassisMode.AutoPlace) {
-            if (align) this.autoPlace(arm, claw);
+            this.autoPlace(arm, claw, PoleAlign.Backward, PoleAlign.Left);
         } else {
             this.Mode = ChassisMode.Manual;
             this.setPower(this.Wheels.FrontLeft, 0);
@@ -164,12 +159,35 @@ public class Chassis {
     /**
      * Drives until distance sensor detects the pole
      */
-    public final void autoPlace(Arm arm, Claw claw) {
-        this.MecanumDrive.followTrajectoryAsync(
-                this.MecanumDrive.trajectoryBuilder(this.MecanumDrive.getPoseEstimate())
-                        .strafeTo(new Vector2d(0, 0))
-                        .build()
-        );
+    public final void autoPlace(Arm arm, Claw claw, PoleAlign alignDrive, PoleAlign alignStrafe) {
+//        this.MecanumDrive.followTrajectoryAsync(
+//                this.MecanumDrive.trajectoryBuilder(this.MecanumDrive.getPoseEstimate())
+//                        .strafeTo(new Vector2d(0, 0))
+//                        .build()
+//        );
+
+        double sensorDistance = alignStrafe == PoleAlign.Left ? this.LeftSensor.getDistance(DistanceUnit.INCH) : this.RightSensor.getDistance(DistanceUnit.INCH);
+
+        if (sensorDistance > SensorDistances.DetectAmount) {
+            this.MecanumDrive.setWeightedDrivePower(
+                    new Pose2d(
+                            alignDrive == PoleAlign.Forward ? -ChassisSpeed.AlignSpeed : ChassisSpeed.AlignSpeed,
+                            0,
+                            0
+                    )
+            );
+        } else if (sensorDistance > SensorDistances.PlaceDistance + SensorDistances.PlaceMargin || sensorDistance < SensorDistances.PlaceDistance - SensorDistances.PlaceMargin) {
+            this.MecanumDrive.setWeightedDrivePower(
+                    new Pose2d(
+                            0,
+                            sensorDistance > SensorDistances.PlaceDistance ? ChassisSpeed.AlignSpeed : -ChassisSpeed.AlignSpeed,
+                            0
+                    )
+            );
+        } else {
+            this.MecanumDrive.setWeightedDrivePower(new Pose2d(0, 0, 0));
+            this.Mode = ChassisMode.Manual;
+        }
     }
 
     public final void updatePosition() {
@@ -178,6 +196,11 @@ public class Chassis {
 
     public final Pose2d getPosition() {
         return this.MecanumDrive.getPoseEstimate();
+    }
+
+    public enum ChassisMode {
+        Manual,
+        AutoPlace,
     }
 
     public enum PoleAlign {

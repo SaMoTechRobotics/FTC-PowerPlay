@@ -1,6 +1,16 @@
 package org.firstinspires.ftc.teamcode.drive;
 
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.*;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_ACCEL;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_VEL;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MOTOR_VELO_PID;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.TRACK_WIDTH;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.encoderTicksToInches;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kA;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kStatic;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
 
 import androidx.annotation.NonNull;
 
@@ -49,21 +59,6 @@ import java.util.List;
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
 
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(
-            4,
-            0,
-            0
-    ); //kP = 4
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(2, 0, 0); //kP = 2
-
-    public static double LATERAL_MULTIPLIER = 1.148005162241888; //1.148005162241888
-
-    public static double VX_WEIGHT = 1;
-    public static double VY_WEIGHT = 1;
-    public static double OMEGA_WEIGHT = 1;
-
-    private TrajectorySequenceRunnerCancelable trajectorySequenceRunner;
-
     private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(
             MAX_VEL,
             MAX_ANG_VEL,
@@ -72,14 +67,27 @@ public class SampleMecanumDrive extends MecanumDrive {
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(
             MAX_ACCEL
     );
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(
+            4,
+            0,
+            0
+    ); //kP = 4
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(2, 0, 0); //kP = 2
+    public static double LATERAL_MULTIPLIER = 1.148005162241888; //1.148005162241888
+    public static double VX_WEIGHT = 1;
+    public static double VY_WEIGHT = 1;
+    public static double OMEGA_WEIGHT = 1;
+    private final TrajectorySequenceRunnerCancelable trajectorySequenceRunner;
+    private final TrajectoryFollower follower;
 
-    private TrajectoryFollower follower;
+    private final DcMotorEx leftFront;
+    private final DcMotorEx leftRear;
+    private final DcMotorEx rightRear;
+    private final DcMotorEx rightFront;
+    private final List<DcMotorEx> motors;
 
-    private DcMotorEx leftFront, leftRear, rightRear, rightFront;
-    private List<DcMotorEx> motors;
-
-    private BNO055IMU imu;
-    private VoltageSensor batteryVoltageSensor;
+    private final BNO055IMU imu;
+    private final VoltageSensor batteryVoltageSensor;
 
     public SampleMecanumDrive(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
@@ -165,6 +173,25 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         trajectorySequenceRunner =
                 new TrajectorySequenceRunnerCancelable(follower, HEADING_PID);
+    }
+
+    public static TrajectoryVelocityConstraint getVelocityConstraint(
+            double maxVel,
+            double maxAngularVel,
+            double trackWidth
+    ) {
+        return new MinVelocityConstraint(
+                Arrays.asList(
+                        new AngularVelocityConstraint(maxAngularVel),
+                        new MecanumVelocityConstraint(maxVel, trackWidth)
+                )
+        );
+    }
+
+    public static TrajectoryAccelerationConstraint getAccelerationConstraint(
+            double maxAccel
+    ) {
+        return new ProfileAccelerationConstraint(maxAccel);
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
@@ -367,20 +394,6 @@ public class SampleMecanumDrive extends MecanumDrive {
         return (double) -imu.getAngularVelocity().xRotationRate;
     }
 
-    public static TrajectoryVelocityConstraint getVelocityConstraint(
-            double maxVel,
-            double maxAngularVel,
-            double trackWidth
-    ) {
-        return new MinVelocityConstraint(
-                Arrays.asList(
-                        new AngularVelocityConstraint(maxAngularVel),
-                        new MecanumVelocityConstraint(maxVel, trackWidth)
-                )
-        );
-    }
-
-
     public void autoAlign(DistanceSensor sensor, double speed, double detect, double place, boolean active) {
         while (sensor.getDistance(DistanceUnit.INCH) > detect && active) {
             this.setWeightedDrivePower(
@@ -448,12 +461,6 @@ public class SampleMecanumDrive extends MecanumDrive {
                         speed / radius
                 )
         );
-    }
-
-    public static TrajectoryAccelerationConstraint getAccelerationConstraint(
-            double maxAccel
-    ) {
-        return new ProfileAccelerationConstraint(maxAccel);
     }
 }
 
