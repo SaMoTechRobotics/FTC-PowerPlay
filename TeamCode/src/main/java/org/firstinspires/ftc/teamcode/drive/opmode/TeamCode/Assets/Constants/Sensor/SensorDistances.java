@@ -11,12 +11,12 @@ public class SensorDistances {
     /**
      * The maximum distance the robot will detect a pole
      */
-    public static double DetectAmount = 8.0;
+    public static double DetectAmount = 15;
 
     /**
      * The target distance the robot will try to align to to deliver the cone
      */
-    public static double PlaceDistance = 4.0;
+    public static double PlaceDistance = 6;
 
     /**
      * The margin of error for the robot to be within the target distance
@@ -26,5 +26,5 @@ public class SensorDistances {
     /**
      * The target distance the robot will try to align to where it is in between the two poles equally
      */
-    public static double CenterDistance = 4;
+    public static double CenterDistance = 8.5;
 }

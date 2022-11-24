@@ -100,6 +100,9 @@ public class Drive extends LinearOpMode {
                     Arm,
                     Claw
             );
+            telemetry.addLine("");
+            telemetry.addData("Left Distance", Chassis.getLeftDistance());
+            telemetry.addData("Right Distance", Chassis.getRightDistance());
 
             // Pose2d ChassisPos = Chassis.getPosition();
             // telemetry.addData("","");
@@ -118,7 +121,7 @@ public class Drive extends LinearOpMode {
             // }
             // if(Slide.getTicks() < SlideHeight.GroundMargin && Claw.detectedCone()) Claw.close();
 
-            telemetry.addData("", "");
+            telemetry.addLine("");
             telemetry.addData("CLAW OPEN", Claw.isOpen() ? "YES!!!!!!" : "NO!!!!!!!");
             telemetry.addData("", "");
             telemetry.addData("Claw Position", Claw.getPosition());

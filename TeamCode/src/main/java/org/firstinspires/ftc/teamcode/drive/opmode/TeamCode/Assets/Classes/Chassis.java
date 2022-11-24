@@ -49,8 +49,8 @@ public class Chassis {
 
         this.LeftSensor =
                 hardwareMap.get(DistanceSensor.class, "leftDistanceSensor");
-//        this.RightSensor =
-//                hardwareMap.get(DistanceSensor.class, "rightDistanceSensor");
+        this.RightSensor =
+                hardwareMap.get(DistanceSensor.class, "rightDistanceSensor");
 
         this.Wheels.FrontLeft.setDirection(DcMotor.Direction.REVERSE);
         this.Wheels.BackLeft.setDirection(DcMotor.Direction.REVERSE);
@@ -187,7 +187,7 @@ public class Chassis {
         if (sensorDistance > SensorDistances.DetectAmount) {
             this.MecanumDrive.setWeightedDrivePower(
                     new Pose2d(
-                            alignDrive == PoleAlign.Forward ? -ChassisSpeed.AlignSpeed : ChassisSpeed.AlignSpeed,
+                            alignDrive == PoleAlign.Forward ? ChassisSpeed.AlignSpeed : -ChassisSpeed.AlignSpeed,
                             0,
                             0
                     )
@@ -196,7 +196,7 @@ public class Chassis {
             this.MecanumDrive.setWeightedDrivePower(
                     new Pose2d(
                             0,
-                            sensorDistance > SensorDistances.PlaceDistance ? ChassisSpeed.AlignSpeed : -ChassisSpeed.AlignSpeed,
+                            sensorDistance > SensorDistances.PlaceDistance ? ChassisSpeed.PlaceSpeed : -ChassisSpeed.PlaceSpeed,
                             0
                     )
             );
@@ -220,6 +220,24 @@ public class Chassis {
      */
     public final Pose2d getPosition() {
         return this.MecanumDrive.getPoseEstimate();
+    }
+
+    /**
+     * Returns the left distance sensors value in inches
+     *
+     * @return The left distance sensors value in inches
+     */
+    public final double getLeftDistance() {
+        return this.LeftSensor.getDistance(DistanceUnit.INCH);
+    }
+
+    /**
+     * Returns the right distance sensors value in inches
+     *
+     * @return The right distance sensors value in inches
+     */
+    public final double getRightDistance() {
+        return this.RightSensor.getDistance(DistanceUnit.INCH);
     }
 
     /**

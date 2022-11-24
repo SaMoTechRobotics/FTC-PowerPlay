@@ -6,13 +6,19 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.*;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.ChassisConstants;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorColors;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorDistances;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideSpeed;
 
@@ -20,80 +26,145 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 @Autonomous(name = "AutoRightProOld", group = "AutoPro")
 public class AutoRightProOld extends LinearOpMode {
 
-  public static double strafe1 = 56.0;
-  public static double back2 = 8.0;
-  public static double forward3 = 8.0;
+    public static double driveToSignalDistance = 24;
 
-  @Override
-  public void runOpMode() throws InterruptedException {
-    FtcDashboard dashboard = FtcDashboard.getInstance();
+    public static double longDriveDistance = 36;
 
-    SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+    public static int ConesToScore = 5;
 
-    Slide Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
+    private static int ParkingPosition = 2;
 
-    Arm Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
+    @Override
+    public void runOpMode() throws InterruptedException {
+        FtcDashboard dashboard = FtcDashboard.getInstance();
 
-    Claw Claw = new Claw(
-      hardwareMap.get(Servo.class, "claw"),
-      hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
-    );
-    Claw.close();
+        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-    Pose2d startPose = new Pose2d(-60, -48, Math.toRadians(0));
+        Slide Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
 
-    drive.setPoseEstimate(startPose);
+        Arm Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
+        Arm.setRotation(ArmRotation.Center);
 
-    waitForStart();
+        Claw Claw = new Claw(
+                hardwareMap.get(Servo.class, "claw"),
+                hardwareMap.get(DistanceSensor.class, "leftDistanceSensor")
+        );
+        Claw.close();
 
-    if (isStopRequested()) return;
+        DistanceSensor leftSensor = hardwareMap.get(DistanceSensor.class, "leftDistanceSensor");
 
-    Trajectory strafeLeftTraj = drive
-      .trajectoryBuilder(startPose)
-      .strafeLeft(strafe1)
-      .build();
+        ColorSensor colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
 
-    drive.followTrajectory(strafeLeftTraj);
+        Pose2d startPose = new Pose2d(-60, -48, Math.toRadians(0));
 
-    Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
+        drive.setPoseEstimate(startPose);
 
-    sleep(2000);
+        waitForStart();
 
-    Trajectory backTraj = drive
-      .trajectoryBuilder(strafeLeftTraj.end())
-      .back(back2)
-      .build();
+        if (isStopRequested()) return;
 
-    drive.followTrajectory(backTraj);
+        Slide.setHeight(SlideHeight.MidPole, SlideSpeed.Max);
 
-    Arm.setRotation(ArmRotation.Left);
 
-    sleep(1000);
+        drive.followTrajectory(drive
+                .trajectoryBuilder(startPose)
+                .back(driveToSignalDistance)
+                .build()
+        ); //drive to cone to read parking position
 
-    Slide.setHeight(SlideHeight.HighPole - 10, SlideSpeed.Mid);
+        ParkingPosition = SensorColors.getParkingPosition( // reads parking position based of detected color
+                SensorColors.detectColor(colorSensor) //detects color
+        );
 
-    sleep(3000);
+        drive.followTrajectory(
+                drive.trajectoryBuilder(drive.getPoseEstimate())
+                        .back(longDriveDistance)
+                        .build()
+        ); //drives to where it will deliver cones
 
-    Claw.open();
 
-    sleep(1000);
+//        sleep(2000);
 
-    Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Mid);
+//        Trajectory backTraj = drive
+//                .trajectoryBuilder(strafeLeftTraj.end())
+//                .back(back2)
+//                .build();
 
-    sleep(3000);
+//        drive.followTrajectory(backTraj);
+        int count = 0;
+        while (opModeIsActive() && count < ConesToScore) {
+            drive.alignWithPoleAsync(leftSensor, SensorDistances.DetectAmount, opModeIsActive());
 
-    Arm.setRotation(ArmRotation.Center);
-    Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
-    Claw.close();
+            Arm.setRotation(ArmRotation.Left);
 
-    Trajectory forwardTraj = drive
-    .trajectoryBuilder(backTraj.end())
-    .forward(back2)
-    .build();
+            drive.alignPlaceDistanceAsync(leftSensor, SensorDistances.PlaceDistance, SensorDistances.PlaceMargin, opModeIsActive());
 
-    drive.followTrajectory(forwardTraj);
+            sleep(500);
 
-    sleep(8000);
+            Slide.setHeight(SlideHeight.HighPole - 10, SlideSpeed.Mid);
 
-  }
+            sleep(1000);
+
+            Claw.open();
+
+            sleep(1000);
+
+            Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Mid);
+
+            sleep(1000);
+
+            drive.alignPlaceDistanceAsync(leftSensor, SensorDistances.CenterDistance, SensorDistances.PlaceMargin, opModeIsActive());
+
+            Arm.setRotation(ArmRotation.Center);
+            Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (4 - count)), SlideSpeed.Max);
+            Claw.close();
+
+            count++;
+
+            if (count == ConesToScore) {
+                Trajectory forwardTraj = drive
+                        .trajectoryBuilder(drive.getPoseEstimate())
+                        .forward(ChassisConstants.HalfTileWidth)
+                        .build();
+
+                drive.followTrajectory(forwardTraj);
+
+                break;
+            }
+            Trajectory forwardTraj = drive
+                    .trajectoryBuilder(drive.getPoseEstimate())
+                    .forward(ChassisConstants.HalfTileWidth * 2)
+                    .build();
+
+            drive.followTrajectory(forwardTraj);
+
+            sleep(1000);
+
+            Claw.open();
+
+            Trajectory pickupTraj = drive
+                    .trajectoryBuilder(forwardTraj.end())
+                    .forward(ChassisConstants.HalfTileWidth)
+                    .build();
+
+            drive.followTrajectory(pickupTraj);
+
+            Claw.close();
+
+            sleep(1000);
+
+            Claw.close();
+
+            Slide.setHeight(SlideHeight.MaxHeight, SlideSpeed.Max);
+
+            Trajectory backTraj = drive
+                    .trajectoryBuilder(pickupTraj.end())
+                    .back(ChassisConstants.HalfTileWidth * 2)
+                    .build();
+
+            drive.followTrajectory(backTraj);
+        }
+
+
+    }
 }
