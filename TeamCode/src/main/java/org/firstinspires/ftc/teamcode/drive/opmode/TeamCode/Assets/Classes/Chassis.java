@@ -33,6 +33,9 @@ public class Chassis {
     public SampleMecanumDrive MecanumDrive;
     public ChassisMode Mode = ChassisMode.Manual;
 
+    private PoleAlign driveAlign = PoleAlign.Backward;
+    private PoleAlign strafeAlign = PoleAlign.Left;
+
     /**
      * Creates a new chassis with 4 motors
      *
@@ -114,15 +117,21 @@ public class Chassis {
      * @param driveStick  The joystick for moving forward and backward, ex: left y
      * @param strafeStick The joystick for strafing, ex: left x
      * @param turnStick   The joystick for turning, ex: right x
+     * @param align       Whether or not to align the robot to the pole
      */
     public void updateWithControls(
             double driveStick,
             double strafeStick,
             double turnStick,
             boolean align,
+            boolean alignDrive,
+            boolean alignStrafe,
             Arm arm,
             Claw claw
     ) {
+        this.driveAlign = alignDrive ? PoleAlign.Backward : PoleAlign.Forward;
+        this.strafeAlign = alignStrafe ? PoleAlign.Left : PoleAlign.Right;
+
         if (align)
             this.Mode = ChassisMode.AutoPlace; // If align button is pressed, set mode to auto place
         else if (driveStick != 0 || strafeStick != 0 || turnStick != 0) // If any of the sticks are not 0, set mode to manual
@@ -157,7 +166,7 @@ public class Chassis {
             this.setPower(this.Wheels.BackLeft, backLeftPower);
             this.setPower(this.Wheels.BackRight, backRightPower);
         } else if (this.Mode == ChassisMode.AutoPlace) { // If in auto place mode, update autonomous movement
-            this.autoPlace(arm, claw, PoleAlign.Backward, PoleAlign.Left);
+            this.autoPlace(arm, claw, this.driveAlign, this.strafeAlign);
         } else { // If something goes wrong, set mode to manual and stop all movement
             this.Mode = ChassisMode.Manual;
             this.setPower(this.Wheels.FrontLeft, 0);
