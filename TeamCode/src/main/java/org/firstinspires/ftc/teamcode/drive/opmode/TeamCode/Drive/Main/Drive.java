@@ -92,19 +92,18 @@ public class Drive extends LinearOpMode {
 //                    rotationEnabled ? Gamepad1.getRightX() : 0 //turn stick
 //            );
 
-            boolean driveAlign = Gamepad1.getButton(GamepadKeys.Button.DPAD_UP);
-            if (Gamepad1.getButton(GamepadKeys.Button.DPAD_UP)) driveAlign = false;
-
-            boolean strafeAlign = Gamepad1.getButton(GamepadKeys.Button.DPAD_RIGHT);
-            if (Gamepad1.getButton(GamepadKeys.Button.DPAD_LEFT)) strafeAlign = false;
+//            boolean driveAlign = Gamepad1.getButton(GamepadKeys.Button.DPAD_UP);
+//            if (Gamepad1.getButton(GamepadKeys.Button.DPAD_UP)) driveAlign = false;
+//
+//            boolean strafeAlign = Gamepad1.getButton(GamepadKeys.Button.DPAD_RIGHT);
+//            if (Gamepad1.getButton(GamepadKeys.Button.DPAD_LEFT)) strafeAlign = false;
 
             // Drives the robot with joysticks from gamepad 1, normal format
             Chassis.updateWithControls(
                     Math.abs(-Gamepad1.getLeftY()) > 0.1 ? -Gamepad1.getLeftY() : 0, //drive stick
                     Math.abs(-Gamepad1.getLeftX()) > 0.1 ? -Gamepad1.getLeftX() : 0, //strafe stick
                     Gamepad1.getRightX(), //turn stick
-                    driveAlign,
-                    strafeAlign,
+                    Gamepad1,
                     Gamepad1.wasJustPressed(GamepadKeys.Button.A), //auto place
                     Arm,
                     Claw

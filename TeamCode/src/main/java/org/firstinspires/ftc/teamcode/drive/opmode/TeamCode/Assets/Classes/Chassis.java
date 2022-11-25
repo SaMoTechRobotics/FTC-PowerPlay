@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -18,23 +20,19 @@ public class Chassis {
 
 
     public Wheels Wheels;
-
-
     public DistanceSensor LeftSensor;
     public DistanceSensor RightSensor;
     public double DriveSpeed = ChassisSpeed.MidDrive;
     public double TurnSpeed = ChassisSpeed.MidTurn;
     public double StrafeSpeed = ChassisSpeed.MidStrafe;
     public boolean brake = false;
-
     /**
      * The stored autonomous class to control robot with RR
      */
     public SampleMecanumDrive MecanumDrive;
     public ChassisMode Mode = ChassisMode.Manual;
-
-    private PoleAlign driveAlign = PoleAlign.Backward;
     private PoleAlign strafeAlign = PoleAlign.Left;
+    private PoleAlign driveAlign = PoleAlign.Backward;
 
     /**
      * Creates a new chassis with 4 motors
@@ -123,14 +121,19 @@ public class Chassis {
             double driveStick,
             double strafeStick,
             double turnStick,
+            GamepadEx gamepad,
             boolean align,
-            boolean alignDrive,
-            boolean alignStrafe,
             Arm arm,
             Claw claw
     ) {
-        this.driveAlign = alignDrive ? PoleAlign.Backward : PoleAlign.Forward;
-        this.strafeAlign = alignStrafe ? PoleAlign.Left : PoleAlign.Right;
+        if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_UP))
+            this.driveAlign = PoleAlign.Backward;
+        if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN))
+            this.driveAlign = PoleAlign.Forward;
+        if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT))
+            this.strafeAlign = PoleAlign.Right;
+        if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT))
+            this.strafeAlign = PoleAlign.Left;
 
         if (align)
             this.Mode = ChassisMode.AutoPlace; // If align button is pressed, set mode to auto place
