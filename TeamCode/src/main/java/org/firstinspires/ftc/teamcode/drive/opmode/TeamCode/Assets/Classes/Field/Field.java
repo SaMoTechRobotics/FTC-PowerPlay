@@ -55,4 +55,25 @@ public class Field {
     public static int getCurrentColumn(Pose2d pose) {
         return (int) Math.round((pose.getY() / TileSize) - 0.5);
     }
+
+    /**
+     * Gets the current grid alignment of the robot based off if it is in the middle of a tile by x or by y
+     *
+     * @param pose The current pose of the robot
+     * @return The grid alignment of the robot
+     */
+    public static GridAlignment getCurrentAlignment(Pose2d pose) {
+        //check if the robot is in the middle of a tile
+        if (pose.getX() % TileSize == 0) {
+            return GridAlignment.Row;
+        }
+
+        return GridAlignment.Unknown;
+    }
+
+    public enum GridAlignment {
+        Row,
+        Column,
+        Unknown
+    }
 }
