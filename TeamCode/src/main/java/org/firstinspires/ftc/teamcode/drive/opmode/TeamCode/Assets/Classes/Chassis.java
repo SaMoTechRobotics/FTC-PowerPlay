@@ -115,14 +115,12 @@ public class Chassis {
      * @param driveStick  The joystick for moving forward and backward, ex: left y
      * @param strafeStick The joystick for strafing, ex: left x
      * @param turnStick   The joystick for turning, ex: right x
-     * @param align       Whether or not to align the robot to the pole
      */
     public void updateWithControls(
             double driveStick,
             double strafeStick,
             double turnStick,
             GamepadEx gamepad,
-            boolean align,
             Arm arm,
             Claw claw
     ) {
@@ -134,6 +132,8 @@ public class Chassis {
             this.strafeAlign = PoleAlign.Right;
         if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT))
             this.strafeAlign = PoleAlign.Left;
+
+        boolean align = gamepad.wasJustPressed(GamepadKeys.Button.A);
 
         if (align)
             this.Mode = ChassisMode.AutoPlace; // If align button is pressed, set mode to auto place

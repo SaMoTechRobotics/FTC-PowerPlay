@@ -104,7 +104,6 @@ public class Drive extends LinearOpMode {
                     Math.abs(-Gamepad1.getLeftX()) > 0.1 ? -Gamepad1.getLeftX() : 0, //strafe stick
                     Gamepad1.getRightX(), //turn stick
                     Gamepad1,
-                    Gamepad1.wasJustPressed(GamepadKeys.Button.A), //auto place
                     Arm,
                     Claw
             );
