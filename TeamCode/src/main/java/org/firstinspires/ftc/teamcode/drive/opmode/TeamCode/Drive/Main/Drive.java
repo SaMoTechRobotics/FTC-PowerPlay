@@ -215,11 +215,9 @@ public class Drive extends LinearOpMode {
 
             /* EYES */
 
-            if (Gamepad1.wasJustPressed(GamepadKeys.Button.X)) {
+            if (Gamepad1.wasJustPressed(GamepadKeys.Button.Y)) {
                 Eyes.setPosition(EyesPosition.Max);
-            } else if (Gamepad1.wasJustPressed(GamepadKeys.Button.Y)) {
-                Eyes.setPosition(EyesPosition.Min);
-            } else {
+            } else if (Slide.getTicks() > SlideHeight.GroundMargin) {
                 Eyes.syncWithSlide(Slide.getTicks());
             }
 

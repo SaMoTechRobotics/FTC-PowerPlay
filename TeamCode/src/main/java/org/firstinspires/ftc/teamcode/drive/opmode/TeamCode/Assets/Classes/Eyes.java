@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Eyes.EyesPosition;
+
 
 public class Eyes {
 
@@ -18,7 +20,7 @@ public class Eyes {
     }
 
     public final void setPosition(double position) {
-        EyeServo.setPosition(position);
+        if (EyeServo.getPosition() != position) EyeServo.setPosition(position);
     }
 
     public final void syncWithSlide(int slideTicks) {
@@ -26,6 +28,7 @@ public class Eyes {
     }
 
     private double positionFromSlideTicks(double ticks) {
-        return ticks / 1000;
+        double position = ticks * EyesPosition.SlideRatio;
+        return Math.min(position, EyesPosition.MaxUp);
     }
 }
