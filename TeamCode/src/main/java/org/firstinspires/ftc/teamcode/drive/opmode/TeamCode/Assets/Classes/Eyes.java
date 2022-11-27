@@ -28,7 +28,7 @@ public class Eyes {
     }
 
     private double positionFromSlideTicks(double ticks) {
-        double position = ticks * EyesPosition.SlideRatio;
+        double position = EyesPosition.SlideBase + (ticks * EyesPosition.SlideRatio);
         return Math.min(position, EyesPosition.MaxUp);
     }
 }
