@@ -14,9 +14,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Chassis;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Eyes;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Field.Field;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Eyes.EyesPosition;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorColors;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
@@ -37,9 +39,11 @@ public class Drive extends LinearOpMode {
         Claw Claw =
                 new Claw(
                         hardwareMap.get(Servo.class, "claw"),
-                        hardwareMap.get(DistanceSensor.class, "leftDistanceSensor")
+                        hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
                 );
         Claw.close();
+
+        Eyes Eyes = new Eyes(hardwareMap.get(Servo.class, "eyesServo"));
 
         ColorSensor ColorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
 
@@ -208,6 +212,19 @@ public class Drive extends LinearOpMode {
             } else {
                 if (Slide.isPaused) Slide.resume();
             }
+
+            /* EYES */
+
+            if (Gamepad1.wasJustPressed(GamepadKeys.Button.X)) {
+                Eyes.setPosition(EyesPosition.Max);
+            } else if (Gamepad1.wasJustPressed(GamepadKeys.Button.Y)) {
+                Eyes.setPosition(EyesPosition.Min);
+            } else {
+                Eyes.syncWithSlide(Slide.getTicks());
+            }
+
+
+            /* TELEMETRY */
 
             Gamepad1.readButtons();
             Gamepad2.readButtons();

@@ -208,7 +208,9 @@ public class Chassis {
             this.MecanumDrive.setWeightedDrivePower(
                     new Pose2d(
                             0,
-                            sensorDistance > SensorDistances.PlaceDistance ? ChassisSpeed.PlaceSpeed : -ChassisSpeed.PlaceSpeed,
+                            sensorDistance > SensorDistances.PlaceDistance ?
+                                    ((alignStrafe == PoleAlign.Left) ? ChassisSpeed.PlaceSpeed : -ChassisSpeed.PlaceSpeed) :
+                                    ((alignStrafe == PoleAlign.Left) ? -ChassisSpeed.PlaceSpeed : ChassisSpeed.PlaceSpeed),
                             0
                     )
             );
