@@ -30,10 +30,10 @@ public class EyesPosition {
     /**
      * The max position of the eye servo for it to be facing up
      */
-    public static double MaxUp = 0.3;
+    public static double MaxUp = 0.4;
 
     /**
      * The ratio of the servo position to the slide ticks
      */
-    public static double SlideRatio = 0.001;
+    public static double SlideRatio = 0.0001;
 }
