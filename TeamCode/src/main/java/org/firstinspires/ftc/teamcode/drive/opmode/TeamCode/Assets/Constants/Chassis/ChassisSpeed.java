@@ -35,12 +35,12 @@ public class ChassisSpeed {
     /**
      * Place speed for when robot is aligning with pole
      */
-    public static double AlignSpeed = 0.2;
+    public static double AlignSpeed = 0.125;
 
     /**
      * Place speed for when robot is driving toward pole to place cone
      */
-    public static double PlaceSpeed = 0.2;
+    public static double PlaceSpeed = 0.15;
 
 
 }

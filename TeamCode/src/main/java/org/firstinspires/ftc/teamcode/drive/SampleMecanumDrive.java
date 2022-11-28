@@ -1,16 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive;
 
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_ACCEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_VEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_VEL;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MOTOR_VELO_PID;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.TRACK_WIDTH;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.encoderTicksToInches;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kA;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kStatic;
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.*;
 
 import androidx.annotation.NonNull;
 
@@ -41,6 +31,10 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.ChassisSpeed;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Chassis;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorDistances;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceRunnerCancelable;
@@ -394,73 +388,115 @@ public class SampleMecanumDrive extends MecanumDrive {
         return (double) -imu.getAngularVelocity().xRotationRate;
     }
 
-    public void autoAlign(DistanceSensor sensor, double speed, double detect, double place, boolean active) {
-        while (sensor.getDistance(DistanceUnit.INCH) > detect && active) {
+    //
+//    public void autoAlign(DistanceSensor sensor, double speed, double detect, double place, boolean active) {
+//        while (sensor.getDistance(DistanceUnit.INCH) > detect && active) {
+//            this.setWeightedDrivePower(
+//                    new Pose2d(
+//                            -speed,
+//                            0,
+//                            0
+//                    )
+//            );
+//            this.update();
+//        }
+//    }
+//
+//    public void alignWithPoleAsync(DistanceSensor sensor, double align, boolean active) {
+//        while (sensor.getDistance(DistanceUnit.INCH) > align && active) {
+//            this.setWeightedDrivePower(
+//                    new Pose2d(
+//                            -ChassisSpeed.AlignSpeed,
+//                            0,
+//                            0
+//                    )
+//            );
+//            this.update();
+//        }
+//        this.setWeightedDrivePower(
+//                new Pose2d(
+//                        0,
+//                        0,
+//                        0
+//                )
+//        );
+//    }
+//
+//    public void alignPlaceDistanceAsync(DistanceSensor sensor, double place, double margin, boolean active) {
+//        while ((sensor.getDistance(DistanceUnit.INCH) > place + margin || sensor.getDistance(DistanceUnit.INCH) < place - margin) && active) {
+//            if (sensor.getDistance(DistanceUnit.INCH) > SensorDistances.DetectAmount)
+//                this.alignWithPoleAsync(sensor, );
+//            this.setWeightedDrivePower(
+//                    new Pose2d(
+//                            0,
+//                            sensor.getDistance(DistanceUnit.INCH) > place ? ChassisSpeed.PlaceSpeed : -ChassisSpeed.PlaceSpeed,
+//                            0
+//                    )
+//            );
+//            this.update();
+//        }
+//        this.setWeightedDrivePower(
+//                new Pose2d(
+//                        0,
+//                        0,
+//                        0
+//                )
+//        );
+//    }
+//
+//    /**
+//     * Pivots around point based on radius
+//     *
+//     * @param speed  speed of pivot
+//     * @param radius radius of pivot
+//     */
+//    public void pivot(double speed, double radius) {
+//        this.setWeightedDrivePower(
+//                new Pose2d( //sets the power to drive forward and turn
+//                        speed,
+//                        0,
+//                        speed / radius
+//                )
+//        );
+//    }
+    public final boolean autoPlace(Arm arm, DistanceSensor leftSensor, DistanceSensor rightSensor, Chassis.PoleAlign alignDrive, Chassis.PoleAlign alignStrafe) {
+        double sensorDistance = alignStrafe == Chassis.PoleAlign.Left ? leftSensor.getDistance(DistanceUnit.INCH) : rightSensor.getDistance(DistanceUnit.INCH);
+
+        if (sensorDistance > SensorDistances.DetectAmount) {
             this.setWeightedDrivePower(
                     new Pose2d(
-                            -speed,
+                            alignDrive == Chassis.PoleAlign.Forward ? ChassisSpeed.AlignSpeed : -ChassisSpeed.AlignSpeed,
                             0,
                             0
                     )
             );
-            this.update();
-        }
-    }
-
-    public void alignWithPoleAsync(DistanceSensor sensor, double align, boolean active) {
-        while (sensor.getDistance(DistanceUnit.INCH) > align && active) {
+            return false;
+        } else if (sensorDistance > SensorDistances.PlaceDistance + SensorDistances.PlaceMargin || sensorDistance < SensorDistances.PlaceDistance - SensorDistances.PlaceMargin) {
+            if (alignStrafe == Chassis.PoleAlign.Left) {
+                arm.setRotation(ArmRotation.Left);
+            } else {
+                arm.setRotation(ArmRotation.Right);
+            }
             this.setWeightedDrivePower(
                     new Pose2d(
-                            -ChassisSpeed.AlignSpeed,
+                            0,
+                            sensorDistance > SensorDistances.PlaceDistance ?
+                                    ((alignStrafe == Chassis.PoleAlign.Left) ? ChassisSpeed.PlaceSpeed : -ChassisSpeed.PlaceSpeed) :
+                                    ((alignStrafe == Chassis.PoleAlign.Left) ? -ChassisSpeed.PlaceSpeed : ChassisSpeed.PlaceSpeed),
+                            0
+                    )
+            );
+            return false;
+        } else {
+            this.setWeightedDrivePower(
+                    new Pose2d(
+                            0,
                             0,
                             0
                     )
             );
-            this.update();
+            return true;
         }
-        this.setWeightedDrivePower(
-                new Pose2d(
-                        0,
-                        0,
-                        0
-                )
-        );
-    }
-
-    public void alignPlaceDistanceAsync(DistanceSensor sensor, double place, double margin, boolean active) {
-        while ((sensor.getDistance(DistanceUnit.INCH) > place + margin || sensor.getDistance(DistanceUnit.INCH) < place - margin) && active) {
-            this.setWeightedDrivePower(
-                    new Pose2d(
-                            0,
-                            sensor.getDistance(DistanceUnit.INCH) > place ? ChassisSpeed.PlaceSpeed : -ChassisSpeed.PlaceSpeed,
-                            0
-                    )
-            );
-            this.update();
-        }
-        this.setWeightedDrivePower(
-                new Pose2d(
-                        0,
-                        0,
-                        0
-                )
-        );
-    }
-
-    /**
-     * Pivots around point based on radius
-     *
-     * @param speed  speed of pivot
-     * @param radius radius of pivot
-     */
-    public void pivot(double speed, double radius) {
-        this.setWeightedDrivePower(
-                new Pose2d( //sets the power to drive forward and turn
-                        speed,
-                        0,
-                        speed / radius
-                )
-        );
     }
 }
 
