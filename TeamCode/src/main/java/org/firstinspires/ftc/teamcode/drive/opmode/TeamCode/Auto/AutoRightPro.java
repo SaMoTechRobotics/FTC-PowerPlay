@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Auto.Pro;
+package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Auto;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
