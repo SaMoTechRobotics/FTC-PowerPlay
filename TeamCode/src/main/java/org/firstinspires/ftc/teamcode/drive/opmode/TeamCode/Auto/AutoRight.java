@@ -22,13 +22,10 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sen
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorDistances;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideSpeed;
-import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Auto.Constants.AutoPositions;
 
 @Config
-@Autonomous(name = "AutoRightPro", group = "AutoPro")
-public class AutoRightPro extends LinearOpMode {
-
-    public static int ConesToScore = 2;
+@Autonomous(name = "AutoRight", group = "AutoPro")
+public class AutoRight extends LinearOpMode {
 
     public static double driveToSignalDistance = 18;
 
@@ -39,6 +36,7 @@ public class AutoRightPro extends LinearOpMode {
 
     public static double pickUpConeDrive = 6;
 
+    public static int ConesToScore = 2;
 
     private static int ParkingPosition = 2;
 
@@ -96,108 +94,147 @@ public class AutoRightPro extends LinearOpMode {
 
         colorSensor.enableLed(false);
 
-        Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max); //Raises slide to high pole
-        Arm.setRotation(ArmRotation.Center); //Sets arm to center position
+        Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
+        Arm.setRotation(ArmRotation.Center);
+
+//        drive.followTrajectory(
+//                drive.trajectoryBuilder(drive.getPoseEstimate())
+//                        .back(longDriveDistance)
+//                        .build()
+//        ); //drives to where it will deliver cones
+
+//        drive.turn(Math.toRadians(90)); //turns to face wall
 
         drive.followTrajectory(
                 drive.trajectoryBuilder(drive.getPoseEstimate())
                         .lineToLinearHeading(new Pose2d(strafePosX, endingLongStrafeY, Math.toRadians(0)))
                         .build()
-        ); //Drives to get setup for aligning with pole
+        );
+        int count = 0;
+        while (opModeIsActive() && count < ConesToScore) {
+//            drive.alignWithPoleAsync(leftSensor, SensorDistances.DetectAmount, opModeIsActive());
 
-        int count = 0; //Counts how many cones have been scored
-        while (opModeIsActive() && count < ConesToScore) { //Loops until all target cones have been scored
-            Chassis.PoleAlign alignDrive = Chassis.PoleAlign.Backward; //Sets the direction to align with the pole
-            while (!drive.autoPlace(Arm, LeftSensor, RightSensor, alignDrive, Chassis.PoleAlign.Left) && opModeIsActive()) { //Loops until the robot is aligned with the pole
+//            Arm.setRotation(ArmRotation.Left);
+
+//            drive.alignPlaceDistanceAsync(leftSensor, SensorDistances.PlaceDistance, SensorDistances.PlaceMargin, opModeIsActive());
+
+            Chassis.PoleAlign alignDrive = Chassis.PoleAlign.Backward;
+            while (!drive.autoPlace(Arm, LeftSensor, RightSensor, alignDrive, Chassis.PoleAlign.Left) && opModeIsActive()) {
                 telemetry.addData("Left Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
                 telemetry.update();
                 drive.update();
-                if (drive.getPoseEstimate().getX() < 24 - SensorDistances.FindBuffer / 2) { //If the robot is too far to the left, reverse the direction to align with the pole
+                if (drive.getPoseEstimate().getX() < 24 - SensorDistances.FindBuffer / 2) {
                     alignDrive = Chassis.PoleAlign.Forward;
-                } else if (drive.getPoseEstimate().getX() > 24 + SensorDistances.FindBuffer) { //If the robot is too far to the right, reverse the direction to align with the pole
+                } else if (drive.getPoseEstimate().getX() > 24 + SensorDistances.FindBuffer) {
                     alignDrive = Chassis.PoleAlign.Backward;
                 }
             }
 
-            sleep(500); //Waits for the robot to settle
+            sleep(500);
 
-            Slide.setHeight(SlideHeight.HighPole - 10, SlideSpeed.Mid); //Lowers slide to ensure cone delivery
+            Slide.setHeight(SlideHeight.HighPole - 10, SlideSpeed.Mid);
 
-            sleep(1000); //Waits for the slide to lower
+            sleep(1000);
 
-            Claw.open(); //Opens claw to drop cone
+            Claw.open();
 
-            Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Mid); //Raises slide to clear pole
+            Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Mid);
 
-            sleep(500); //Waits for the slide to raise
+            sleep(500);
 
-            count++; //Increments the cone count given that a cone has been scored
+//            drive.alignPlaceDistanceAsync(leftSensor, SensorDistances.CenterDistance, SensorDistances.PlaceMargin, opModeIsActive());
 
-            Arm.setRotation(ArmRotation.Center); //Sets arm to center position
+            count++;
 
-            if (count == ConesToScore) break; //Breaks the loop if all target cones have been scored
+            Arm.setRotation(ArmRotation.Center);
+            if (count == ConesToScore) break;
 
-            int finalCount = count; //Creates a final variable to be used in the lambda function
-            drive.followTrajectory( //Drives to the next cone
+            int finalCount = count;
+            drive.followTrajectory(
                     drive.trajectoryBuilder(drive.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(60, strafePosY, Math.toRadians(0)))
-                            .addTemporalMarker(0.5, () -> { //Lowers the slide to pick up the next cone
+                            .addTemporalMarker(0.5, () -> {
                                 Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (ConesToScore - 1 - finalCount)), SlideSpeed.Max);
                                 Claw.close();
                             })
                             .build()
             );
 
-            Claw.open(); //Opens claw to pick up cone
+            Claw.open();
+//
+//            Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (ConesToScore - 1 - finalCount)), SlideSpeed.Max);
+//            Claw.close();
+//
+//            Trajectory forwardTraj = drive
+//                    .trajectoryBuilder(drive.getPoseEstimate())
+//                    .forward(ChassisConstants.HalfTileWidth * 2)
+//                    .build();
+
+//            drive.followTrajectory(forwardTraj);
+
 
             Trajectory pickupTraj = drive
                     .trajectoryBuilder(drive.getPoseEstimate())
                     .forward(pickUpConeDrive)
                     .build();
-            drive.followTrajectory(pickupTraj); //Drives forward to pick up cone
 
-            Claw.close(); //closes claw
+            drive.followTrajectory(pickupTraj);
 
-            sleep(500); //wait for claw to close
+            Claw.close();
 
-            Claw.close(); //closes claw as backup
+            sleep(500);
 
-            Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max); //Raises slide to high pole
+            Claw.close();
 
-            drive.followTrajectory(
-                    drive.trajectoryBuilder(pickupTraj.end())
-                            .back(30)
-                            .build()
-            ); //Drives back to deliver cone
+            Slide.setHeight(SlideHeight.MaxHeight, SlideSpeed.Max);
+
+            Trajectory backTraj = drive
+                    .trajectoryBuilder(pickupTraj.end())
+                    .back(30)
+                    .build();
+
+            drive.followTrajectory(backTraj);
         }
 
 
-        Pose2d ParkingPose = AutoPositions.ParkingRight2; //Sets the parking position to the default position
-        switch (ParkingPosition) { //Sets the parking position based on the detected color
+        switch (ParkingPosition) {
             case 1:
-                ParkingPose = AutoPositions.ParkingRight1;
+                drive.followTrajectory(
+                        drive.trajectoryBuilder(drive.getPoseEstimate())
+                                .lineToLinearHeading(new Pose2d(16, -14, Math.toRadians(0)))
+                                .addTemporalMarker(1, () -> {
+                                    Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
+                                    Claw.close();
+                                })
+                                .build()
+                );
                 break;
             case 2:
-                ParkingPose = AutoPositions.ParkingRight2;
+                drive.followTrajectory(
+                        drive.trajectoryBuilder(drive.getPoseEstimate())
+                                .lineToLinearHeading(new Pose2d(38, -14, Math.toRadians(0)))
+                                .addTemporalMarker(1, () -> {
+                                    Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
+                                    Claw.close();
+                                })
+                                .build()
+                );
                 break;
             case 3:
-                ParkingPose = AutoPositions.ParkingRight3;
+                drive.followTrajectory(
+                        drive.trajectoryBuilder(drive.getPoseEstimate())
+                                .lineToLinearHeading(new Pose2d(62, -14, Math.toRadians(0)))
+                                .addTemporalMarker(1, () -> {
+                                    Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
+                                    Claw.close();
+                                })
+                                .build()
+                );
                 break;
         }
-        drive.followTrajectory(
-                drive.trajectoryBuilder(drive.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(ParkingPose.getX(), ParkingPose.getY(), Math.toRadians(0)))
-                        .addTemporalMarker(1, () -> {
-                            Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max); //Lowers slide to park and finish autonomous
-                            Claw.close(); //Closes claw to park
-                        })
-                        .build()
-        ); //Drives to the parking position
-
-        Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max); //Lowers slide to park and finish autonomous
-        Claw.close(); //Closes claw to park
-
-        while (opModeIsActive()) { //Loops until the opmode is stopped
+        Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
+        Claw.close();
+        while (opModeIsActive()) {
             idle();
         }
     }
