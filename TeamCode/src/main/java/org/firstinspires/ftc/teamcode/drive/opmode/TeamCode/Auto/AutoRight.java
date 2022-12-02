@@ -36,7 +36,7 @@ public class AutoRight extends LinearOpMode {
 
     public static double pickUpConeDrive = 6;
 
-    public static int ConesToScore = 2;
+    public static int ConesToScore = 3;
 
     private static int ParkingPosition = 2;
 
@@ -154,7 +154,7 @@ public class AutoRight extends LinearOpMode {
                     drive.trajectoryBuilder(drive.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(60, strafePosY, Math.toRadians(0)))
                             .addTemporalMarker(0.5, () -> {
-                                Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (ConesToScore - 1 - finalCount)), SlideSpeed.Max);
+                                Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - finalCount)), SlideSpeed.Max);
                                 Claw.close();
                             })
                             .build()
