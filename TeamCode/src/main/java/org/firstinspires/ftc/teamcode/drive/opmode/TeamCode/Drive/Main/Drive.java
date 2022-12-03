@@ -62,7 +62,22 @@ public class Drive extends LinearOpMode {
                 GamepadKeys.Button.RIGHT_BUMPER
         ); // The button to toggle the claw
 
+        telemetry.addData("Reset Slide to Zero Position", "Press A");
+
+        boolean ResetSlide = false;
+
+        while (!isStarted()) {
+            if (Gamepad1.getButton(GamepadKeys.Button.A)) {
+                ResetSlide = !ResetSlide;
+            }
+            telemetry.addData("Reset Slide to Zero Position", "Press A to Toggle");
+            telemetry.addData("Will Reset", ResetSlide);
+            telemetry.update();
+        }
+
         waitForStart();
+
+        if (ResetSlide) Slide.resetToZero();
 
         ColorSensor.enableLed(true);
 

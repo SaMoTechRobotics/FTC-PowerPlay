@@ -57,6 +57,7 @@ public class AutoRight extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Slide Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
+        Slide.resetToZero();
 
         Arm Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
         Arm.setRotation(ArmRotation.Center);

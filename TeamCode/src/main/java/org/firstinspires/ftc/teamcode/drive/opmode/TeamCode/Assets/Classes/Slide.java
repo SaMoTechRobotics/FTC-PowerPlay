@@ -30,9 +30,12 @@ public class Slide {
 
         this.SlideMotor.setDirection(DcMotor.Direction.REVERSE);
         // this.SlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.Status = SlideStatus.Stopped;
+    }
+
+    public final void resetToZero() {
         this.SlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.SlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        this.Status = SlideStatus.Stopped;
     }
 
     public final void pause() {
