@@ -29,15 +29,25 @@ public class AutoRight extends LinearOpMode {
 
     public static double driveToSignalDistance = 18;
 
-    public static double endingLongStrafeY = -12;
+    public static double ReadingWait = 100;
+
+    public static double endingLongStrafeY = -13;
 
     public static double strafePosX = 36;
-    public static double strafePosY = -13;
+    public static double strafePosY = -12;
 
     public static double pickUpConeDrive = 6;
 
     public static int ConesToScore = 3;
+    public static double startX = 36;
+    public static double startY = -64;
 
+    /**
+     * Ending positions
+     */
+    public static double EndPos1 = 17;
+    public static double EndPos2 = 41;
+    public static double EndPos3 = 64;
     private static int ParkingPosition = 2;
 
     @Override
@@ -62,7 +72,7 @@ public class AutoRight extends LinearOpMode {
 
         ColorSensor colorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
 
-        Pose2d startPose = new Pose2d(36, -64, Math.toRadians(270));
+        Pose2d startPose = new Pose2d(startX, startY, Math.toRadians(270));
 
         drive.setPoseEstimate(startPose);
 
@@ -80,7 +90,7 @@ public class AutoRight extends LinearOpMode {
                 .build()
         ); //drive to cone to read parking position
 
-        sleep(100);
+        sleep((long) ReadingWait);
 
         ParkingPosition = SensorColors.getParkingPosition( // reads parking position based of detected color
                 SensorColors.detectColor(colorSensor) //detects color
@@ -90,7 +100,7 @@ public class AutoRight extends LinearOpMode {
         telemetry.addData("Parking Position", ParkingPosition);
         telemetry.update();
 
-        sleep(100);
+//        sleep(ReadingWait);
 
         colorSensor.enableLed(false);
 
@@ -201,7 +211,7 @@ public class AutoRight extends LinearOpMode {
             case 1:
                 drive.followTrajectory(
                         drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(16, -14, Math.toRadians(0)))
+                                .lineToLinearHeading(new Pose2d(EndPos1, strafePosY, Math.toRadians(0)))
                                 .addTemporalMarker(1, () -> {
                                     Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
                                     Claw.close();
@@ -212,7 +222,7 @@ public class AutoRight extends LinearOpMode {
             case 2:
                 drive.followTrajectory(
                         drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(38, -14, Math.toRadians(0)))
+                                .lineToLinearHeading(new Pose2d(EndPos2, strafePosY, Math.toRadians(0)))
                                 .addTemporalMarker(1, () -> {
                                     Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
                                     Claw.close();
@@ -223,7 +233,7 @@ public class AutoRight extends LinearOpMode {
             case 3:
                 drive.followTrajectory(
                         drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(62, -14, Math.toRadians(0)))
+                                .lineToLinearHeading(new Pose2d(EndPos3, strafePosY, Math.toRadians(0)))
                                 .addTemporalMarker(1, () -> {
                                     Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
                                     Claw.close();

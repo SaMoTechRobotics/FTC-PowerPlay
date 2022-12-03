@@ -17,6 +17,7 @@ public class Slide {
     private double ManualSpeed = SlideSpeed.Min;
     private SlideStatus Status = SlideStatus.Stopped;
     private double LastSpeed = 0;
+    private boolean GoingDown = false;
 
     /**
      * Creates a new slide with only 1 motor
@@ -193,6 +194,11 @@ public class Slide {
             Arm arm,
             Claw claw
     ) {
+        if (up | down | left | power != 0) this.GoingDown = false;
+//        if (this.GoingDown && (arm.getRotation() > ArmRotation.Center - ArmRotation.Margin && arm.getRotation() < ArmRotation.Center + ArmRotation.Margin)) {
+        if (this.GoingDown && arm.getRotation() == ArmRotation.Center) {
+            this.setHeight(SlideHeight.Ground, this.Speed);
+        }
         if (up)
             this.setHeight(SlideHeight.HighPole, this.Speed); // Slide set to high pole height if dpad up is pressed
         else if (left)
@@ -200,32 +206,40 @@ public class Slide {
         else if (down)
             this.setHeight(SlideHeight.LowPole, this.Speed); // Slide set to low pole height if dpad down is pressed
         else if (right) {
-            this.setHeight(SlideHeight.Ground, this.Speed); // Slide set to ground height if dpad right is pressed
+            this.GoingDown = true;
             arm.setRotation(ArmRotation.Center);
             claw.close();
+//            this.setHeight(SlideHeight.Ground, this.Speed); // Slide set to ground height if dpad right is pressed
         } else if (power != 0)
             this.manualPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
         else if (this.getTicks() < SlideHeight.GroundMargin) {
             if (this.Status != SlideStatus.Stopped) {
-                this.stop();
+//                this.stop();
                 if (!claw.detectedCone()) claw.open();
             }
         } else if (
                 this.Status != SlideStatus.Stopped &&
                         (this.Status == SlideStatus.ManualPower || this.atTargetPosition())
-        )
+        ) {
             this.holdHeight(); // Slide set to hold height if no dpad buttons are pressed and the slide is not moving
-
+        }
         if (this.getTicks() < 0 && this.SlideMotor.getPower() < 0) this.setPower(0);
         // if (this.getInches() > SlideHeight.MaxHeight) this.setPower(0);
     }
 
-    public final void updateSpeed(boolean fast) {
-        if (fast) {
-            this.ManualSpeed = SlideSpeed.Max;
-        } else {
-            this.ManualSpeed = SlideSpeed.Min;
+    public final void waitForArm(double armRotation) {
+        if (SlideHeight.WaitForArm && this.SlideMotor.getTargetPosition() < this.SlideMotor.getCurrentPosition() && this.SlideMotor.getMode() == DcMotor.RunMode.RUN_TO_POSITION) {
+            if (armRotation > ArmRotation.Center - ArmRotation.Margin && armRotation < ArmRotation.Center + ArmRotation.Margin) {
+                this.SlideMotor.setPower(this.Speed);
+            } else {
+                this.SlideMotor.setPower(0);
+            }
         }
+    }
+
+
+    public final void updateSpeed(boolean fast) {
+        this.ManualSpeed = fast ? SlideSpeed.Max : SlideSpeed.Min;
     }
 
     /**

@@ -27,4 +27,6 @@ public class ArmRotation {
      * The default/center/initial rotation of the arm
      */
     public static double Center = 0.54; //0.5
+
+    public static double Margin = 0.01;
 }

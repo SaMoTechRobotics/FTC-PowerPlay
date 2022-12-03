@@ -13,15 +13,21 @@ public class SensorDistances {
      */
     public static double DetectAmount = 12;
 
+    public static double ManualDetectAmount = 12;
+
     /**
      * The target distance the robot will try to align to to deliver the cone
      */
-    public static double PlaceDistance = 4.75;
+    public static double PlaceDistance = 4.5;
+
+    public static double ManualPlaceDistance = 4.75;
 
     /**
      * The margin of error for the robot to be within the target distance
      */
     public static double PlaceMargin = 0.25;
+
+    public static double ManualPlaceMargin = 0.25;
 
     /**
      * The target distance the robot will try to align to where it is in between the two poles equally

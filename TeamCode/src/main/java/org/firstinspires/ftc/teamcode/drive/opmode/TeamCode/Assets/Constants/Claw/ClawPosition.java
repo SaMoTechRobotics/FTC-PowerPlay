@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class ClawPosition {
+    public static boolean AutoClose = true;
 
     //open: 40, close: 90
     /**

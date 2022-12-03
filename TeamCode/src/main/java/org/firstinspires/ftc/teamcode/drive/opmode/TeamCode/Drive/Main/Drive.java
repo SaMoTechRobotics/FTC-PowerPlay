@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Eyes;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Field.Field;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Claw.ClawPosition;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Eyes.EyesPosition;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorColors;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
@@ -51,10 +52,10 @@ public class Drive extends LinearOpMode {
         GamepadEx Gamepad1 = new GamepadEx(gamepad1);
         GamepadEx Gamepad2 = new GamepadEx(gamepad2);
 
-        ToggleButtonReader chassisBrakeToggle = new ToggleButtonReader(
-                Gamepad1,
-                GamepadKeys.Button.Y
-        ); // The button that toggles the chassis brake
+//        ToggleButtonReader chassisBrakeToggle = new ToggleButtonReader(
+//                Gamepad1,
+//                GamepadKeys.Button.Y
+//        ); // The button that toggles the chassis brake
 
         ToggleButtonReader clawToggleButton = new ToggleButtonReader(
                 Gamepad2,
@@ -77,8 +78,8 @@ public class Drive extends LinearOpMode {
             /* CHASSIS */
 
             // Toggles the chassis brakes
-            Chassis.toggleBrake(chassisBrakeToggle.getState());
-            chassisBrakeToggle.readValue();
+//            Chassis.toggleBrake(chassisBrakeToggle.getState());
+//            chassisBrakeToggle.readValue();
 
             // Updates the chassis speed based on gamepad1 bumpers
             Chassis.updateSpeed(
@@ -125,14 +126,15 @@ public class Drive extends LinearOpMode {
 
             /* CLAW */
 
-            // if(Gamepad2.getButton(GamepadKeys.Button.A) && Slide.getTicks() < SlideHeight.GroundMargin && Claw.detectedCone()) {
-            //   Claw.close();
-            // } else {
-            if (
-                    Gamepad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)
-            ) Claw.toggleOpen(clawToggleButton.getState());
-            // }
-            // if(Slide.getTicks() < SlideHeight.GroundMargin && Claw.detectedCone()) Claw.close();
+            if (ClawPosition.AutoClose && Slide.getTicks() < SlideHeight.GroundMargin && Claw.detectedCone()) {
+                Claw.close();
+            } else {
+                if (Gamepad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) Claw.close();
+                else if (Gamepad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) Claw.open();
+//                ) Claw.toggleOpen(clawToggleButton.getState());
+            }
+//            if (ClawPosition.AutoClose && Slide.getTicks() < SlideHeight.GroundMargin && Claw.detectedCone())
+//                Claw.close();
 
             telemetry.addLine("");
             telemetry.addData("CLAW OPEN", Claw.isOpen() ? "YES!!!!!!" : "NO!!!!!!!");
@@ -177,6 +179,8 @@ public class Drive extends LinearOpMode {
                     Claw
             );
 
+//            Slide.waitForArm(Arm.getRotation());
+
             Slide.updateSpeed(Gamepad2.getButton(GamepadKeys.Button.LEFT_BUMPER));
 
             telemetry.addLine("");
@@ -190,28 +194,28 @@ public class Drive extends LinearOpMode {
             //   Arm.setRotation(ArmRotation.Center);
             //   // if(Slide.getInches() > SlideHeight.SafetyHeight) Claw.close();
             // }
-            // if (Slide.getInches() < SlideHeight.SafetyHeight && Arm.getRotation() != ArmRotation.Center) {
-            //   Slide.setPower(0);
-            // } else {
-            //   // Slide.setPower(Slide.Speed);
-            // }
+//            if (Slide.getInches() < SlideHeight.SafetyHeight && Arm.getRotation() != ArmRotation.Center) {
+//                Slide.setPower(0);
+//            } else {
+//                Slide.setPower(Slide.Speed);
+//            }
 
             // if(Slide.getInches() < SlideHeight.SafetyHeight && previousSlideHeight >= SlideHeight.SafetyHeight) {
             //   Arm.setRotation(ArmRotation.Center);
             //   // Claw.close();
             // }
 
-            if (Slide.getInches() < SlideHeight.SafetyMargin) {
-                Arm.setRotation(ArmRotation.Center);
-            }
-            if (
-                    Slide.getInches() < SlideHeight.SafetyHeight &&
-                            Arm.getRotation() != ArmRotation.Center
-            ) {
-                Slide.pause();
-            } else {
-                if (Slide.isPaused) Slide.resume();
-            }
+//            if (Slide.getInches() < SlideHeight.SafetyMargin) {
+//                Arm.setRotation(ArmRotation.Center);
+//            }
+//            if (
+//                    Slide.getInches() < SlideHeight.SafetyHeight &&
+//                            Arm.getRotation() != ArmRotation.Center
+//            ) {
+//                Slide.pause();
+//            } else {
+//                if (Slide.isPaused) Slide.resume();
+//            }
 
             /* EYES */
 

@@ -25,7 +25,7 @@ public class Chassis {
     public double DriveSpeed = ChassisSpeed.MidDrive;
     public double TurnSpeed = ChassisSpeed.MidTurn;
     public double StrafeSpeed = ChassisSpeed.MidStrafe;
-    public boolean brake = false;
+    public boolean brake = true;
     /**
      * The stored autonomous class to control robot with RR
      */
