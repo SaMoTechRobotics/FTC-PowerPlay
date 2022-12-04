@@ -34,7 +34,7 @@ public class AutoRight extends LinearOpMode {
     public static double endingLongStrafeY = -13;
 
     public static double strafePosX = 36;
-    public static double strafePosY = -12;
+    public static double strafePosY = -10.5;
 
     public static double pickUpConeDrive = 6;
 

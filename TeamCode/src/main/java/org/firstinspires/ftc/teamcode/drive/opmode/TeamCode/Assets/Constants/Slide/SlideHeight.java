@@ -22,7 +22,7 @@ public class SlideHeight {
      */
     public static double HighPole = 43; //4000
     public static double MidPole = 31; //2800
-    public static double LowPole = 18; //2000
+    public static double LowPole = 19; //2000
     public static double Ground = 0;
     /**
      * Ticks of margin to consider the slide at 0

@@ -47,14 +47,19 @@ public class ClawTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            if (clawToggleButton.getState()) {
-                // if toggle state true
-                Claw.open();
-            } else {
-                // if toggle state false
+//            if (clawToggleButton.getState()) {
+//                // if toggle state true
+//                Claw.open();
+//            } else {
+//                // if toggle state false
+//                Claw.close();
+//            }
+//            clawToggleButton.readValue();
+            if (Gamepad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
                 Claw.close();
+            } else if (Gamepad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
+                Claw.open();
             }
-            clawToggleButton.readValue();
 
             Arm.updateWithControls(
                     Gamepad2.getRightX(),
