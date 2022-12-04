@@ -70,8 +70,8 @@ public class Drive extends LinearOpMode {
             if (Gamepad1.getButton(GamepadKeys.Button.A)) {
                 ResetSlide = !ResetSlide;
             }
-            telemetry.addData("Reset Slide to Zero Position", "Press A to Toggle");
-            telemetry.addData("Will Reset", ResetSlide);
+            telemetry.addLine("Press A to reset Slide to zero position");
+            telemetry.addData("Slide will reset", ResetSlide);
             telemetry.update();
         }
 
