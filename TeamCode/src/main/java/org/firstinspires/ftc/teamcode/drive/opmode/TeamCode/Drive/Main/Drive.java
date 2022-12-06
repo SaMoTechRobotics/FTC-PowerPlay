@@ -67,12 +67,14 @@ public class Drive extends LinearOpMode {
         boolean ResetSlide = false;
 
         while (!isStarted()) {
-            if (Gamepad1.wasJustPressed(GamepadKeys.Button.A)) {
+            if (Gamepad2.wasJustPressed(GamepadKeys.Button.A)) {
                 ResetSlide = !ResetSlide;
             }
+            telemetry.addData("Current Slide Ticks", Slide.getTicks());
             telemetry.addLine("Press A to reset Slide to zero position");
             telemetry.addData("Slide will reset", ResetSlide);
             telemetry.update();
+            Gamepad2.readButtons();
         }
 
         waitForStart();
