@@ -24,7 +24,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideSpeed;
 
 @Config
-@Autonomous(name = "AutoLeft", group = "AutoPro")
+@Autonomous(name = "AutoLeft", group = "Auto")
 public class AutoLeft extends LinearOpMode {
 
     public static double driveToSignalDistance = 18;
@@ -41,6 +41,8 @@ public class AutoLeft extends LinearOpMode {
     public static int ConesToScore = 3;
     public static double startX = 36;
     public static double startY = -64;
+
+    public static double finalRot = 180;
 
     /**
      * Ending positions
@@ -118,7 +120,7 @@ public class AutoLeft extends LinearOpMode {
 
         drive.followTrajectory(
                 drive.trajectoryBuilder(drive.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(strafePosX, endingLongStrafeY, Math.toRadians(0)))
+                        .lineToLinearHeading(new Pose2d(strafePosX, endingLongStrafeY, Math.toRadians(finalRot)))
                         .build()
         );
         int count = 0;
@@ -130,8 +132,8 @@ public class AutoLeft extends LinearOpMode {
 //            drive.alignPlaceDistanceAsync(leftSensor, SensorDistances.PlaceDistance, SensorDistances.PlaceMargin, opModeIsActive());
 
             Chassis.PoleAlign alignDrive = Chassis.PoleAlign.Backward;
-            while (!drive.autoPlace(Arm, LeftSensor, RightSensor, alignDrive, Chassis.PoleAlign.Left) && opModeIsActive()) {
-                telemetry.addData("Left Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
+            while (!drive.autoPlace(Arm, LeftSensor, RightSensor, alignDrive, Chassis.PoleAlign.Right) && opModeIsActive()) {
+                telemetry.addData("Sensor", RightSensor.getDistance(DistanceUnit.INCH));
                 telemetry.update();
                 drive.update();
                 if (drive.getPoseEstimate().getX() < 24 - SensorDistances.FindBuffer / 2) {
@@ -163,7 +165,7 @@ public class AutoLeft extends LinearOpMode {
             int finalCount = count;
             drive.followTrajectory(
                     drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(60, strafePosY, Math.toRadians(0)))
+                            .lineToLinearHeading(new Pose2d(60, strafePosY, Math.toRadians(finalRot)))
                             .addTemporalMarker(0.5, () -> {
                                 Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - finalCount)), SlideSpeed.Max);
                                 Claw.close();
@@ -212,7 +214,7 @@ public class AutoLeft extends LinearOpMode {
             case 1:
                 drive.followTrajectory(
                         drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(EndPos1, strafePosY, Math.toRadians(0)))
+                                .lineToLinearHeading(new Pose2d(EndPos1, strafePosY, Math.toRadians(finalRot)))
                                 .addTemporalMarker(1, () -> {
                                     Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
                                     Claw.close();
@@ -223,7 +225,7 @@ public class AutoLeft extends LinearOpMode {
             case 2:
                 drive.followTrajectory(
                         drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(EndPos2, strafePosY, Math.toRadians(0)))
+                                .lineToLinearHeading(new Pose2d(EndPos2, strafePosY, Math.toRadians(finalRot)))
                                 .addTemporalMarker(1, () -> {
                                     Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
                                     Claw.close();
@@ -234,7 +236,7 @@ public class AutoLeft extends LinearOpMode {
             case 3:
                 drive.followTrajectory(
                         drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(EndPos3, strafePosY, Math.toRadians(0)))
+                                .lineToLinearHeading(new Pose2d(EndPos3, strafePosY, Math.toRadians(finalRot)))
                                 .addTemporalMarker(1, () -> {
                                     Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
                                     Claw.close();
