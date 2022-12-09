@@ -29,7 +29,7 @@ public class SlideHeight {
      */
     public static int GroundMargin = 10;
     public static double PlaceMargin = 3;
-    public static double StackConeHeight = 1.0;
+    public static double StackConeHeight = 1.1;
     /**
      * Max and min heights of slide as percentages
      */

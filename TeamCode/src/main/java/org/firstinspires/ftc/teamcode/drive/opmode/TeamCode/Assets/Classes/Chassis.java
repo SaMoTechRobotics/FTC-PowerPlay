@@ -204,11 +204,11 @@ public class Chassis {
                             0
                     )
             );
-        } else if (sensorDistance > SensorDistances.PlaceDistance + SensorDistances.PlaceMargin || sensorDistance < SensorDistances.PlaceDistance - SensorDistances.PlaceMargin) {
+        } else if (sensorDistance > SensorDistances.LeftPlaceDistance + SensorDistances.PlaceMargin || sensorDistance < SensorDistances.LeftPlaceDistance - SensorDistances.PlaceMargin) {
             this.MecanumDrive.setWeightedDrivePower(
                     new Pose2d(
                             0,
-                            sensorDistance > SensorDistances.PlaceDistance ?
+                            sensorDistance > SensorDistances.LeftPlaceDistance ?
                                     ((alignStrafe == PoleAlign.Left) ? ChassisSpeed.ManualPlaceSpeed : -ChassisSpeed.ManualPlaceSpeed) :
                                     ((alignStrafe == PoleAlign.Left) ? -ChassisSpeed.ManualPlaceSpeed : ChassisSpeed.ManualPlaceSpeed),
                             0

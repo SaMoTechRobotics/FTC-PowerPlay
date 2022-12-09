@@ -1,6 +1,16 @@
 package org.firstinspires.ftc.teamcode.drive;
 
-import static org.firstinspires.ftc.teamcode.drive.DriveConstants.*;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ACCEL;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_ACCEL;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_VEL;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_VEL;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MOTOR_VELO_PID;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.TRACK_WIDTH;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.encoderTicksToInches;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kA;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kStatic;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kV;
 
 import androidx.annotation.NonNull;
 
@@ -461,7 +471,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 //    }
     public final boolean autoPlace(Arm arm, DistanceSensor leftSensor, DistanceSensor rightSensor, Chassis.PoleAlign alignDrive, Chassis.PoleAlign alignStrafe) {
         double sensorDistance = alignStrafe == Chassis.PoleAlign.Left ? leftSensor.getDistance(DistanceUnit.INCH) : rightSensor.getDistance(DistanceUnit.INCH);
-
+        double PlaceDistance = alignStrafe == Chassis.PoleAlign.Left ? SensorDistances.LeftPlaceDistance : SensorDistances.RightPlaceDistance;
         if (sensorDistance > SensorDistances.DetectAmount) {
             this.setWeightedDrivePower(
                     new Pose2d(
@@ -471,7 +481,7 @@ public class SampleMecanumDrive extends MecanumDrive {
                     )
             );
             return false;
-        } else if (sensorDistance > SensorDistances.PlaceDistance + SensorDistances.PlaceMargin || sensorDistance < SensorDistances.PlaceDistance - SensorDistances.PlaceMargin) {
+        } else if (sensorDistance > PlaceDistance + SensorDistances.PlaceMargin || sensorDistance < SensorDistances.LeftPlaceDistance - SensorDistances.PlaceMargin) {
             if (alignStrafe == Chassis.PoleAlign.Left) {
                 arm.setRotation(ArmRotation.Left);
             } else {
@@ -480,7 +490,7 @@ public class SampleMecanumDrive extends MecanumDrive {
             this.setWeightedDrivePower(
                     new Pose2d(
                             0,
-                            sensorDistance > SensorDistances.PlaceDistance ?
+                            sensorDistance > PlaceDistance ?
                                     ((alignStrafe == Chassis.PoleAlign.Left) ? ChassisSpeed.PlaceSpeed : -ChassisSpeed.PlaceSpeed) :
                                     ((alignStrafe == Chassis.PoleAlign.Left) ? -ChassisSpeed.PlaceSpeed : ChassisSpeed.PlaceSpeed),
                             0

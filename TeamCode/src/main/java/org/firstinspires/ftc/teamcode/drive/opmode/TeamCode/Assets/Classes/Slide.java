@@ -56,15 +56,6 @@ public class Slide {
     }
 
     /**
-     * Sets the power of motors
-     *
-     * @param power The power to set the motors to, from -1.0 to 1.0
-     */
-    public final void setPower(double power) {
-        if (this.SlideMotor.getPower() != power) this.SlideMotor.setPower(power);
-    }
-
-    /**
      * Sets the mode of the motors
      *
      * @param mode The mode to set the motors to, from DcMotor.RunMode enum
@@ -177,6 +168,19 @@ public class Slide {
         this.setPower(SlideSpeed.Hold);
 
         this.Status = SlideStatus.Holding;
+    }
+
+    public final double getPower() {
+        return this.SlideMotor.getPower();
+    }
+
+    /**
+     * Sets the power of motors
+     *
+     * @param power The power to set the motors to, from -1.0 to 1.0
+     */
+    public final void setPower(double power) {
+        if (this.SlideMotor.getPower() != power) this.SlideMotor.setPower(power);
     }
 
     /**

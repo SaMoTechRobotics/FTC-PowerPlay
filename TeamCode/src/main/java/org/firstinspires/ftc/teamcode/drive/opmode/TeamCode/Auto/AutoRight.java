@@ -44,6 +44,10 @@ public class AutoRight extends LinearOpMode {
 
     public static double finalRot = 0;
 
+    public static double PickupX = 60;
+
+    public static double PoleX = 24;
+
     /**
      * Ending positions
      */
@@ -136,9 +140,9 @@ public class AutoRight extends LinearOpMode {
                 telemetry.addData("Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
                 telemetry.update();
                 drive.update();
-                if (drive.getPoseEstimate().getX() < 24 - SensorDistances.FindBuffer / 2) {
+                if (drive.getPoseEstimate().getX() < PoleX - SensorDistances.FindBuffer / 2) {
                     alignDrive = Chassis.PoleAlign.Forward;
-                } else if (drive.getPoseEstimate().getX() > 24 + SensorDistances.FindBuffer) {
+                } else if (drive.getPoseEstimate().getX() > PoleX + SensorDistances.FindBuffer) {
                     alignDrive = Chassis.PoleAlign.Backward;
                 }
             }
@@ -165,7 +169,7 @@ public class AutoRight extends LinearOpMode {
             int finalCount = count;
             drive.followTrajectory(
                     drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(60, strafePosY, Math.toRadians(finalRot)))
+                            .lineToLinearHeading(new Pose2d(PickupX, strafePosY, Math.toRadians(finalRot)))
                             .addTemporalMarker(0.5, () -> {
                                 Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - finalCount)), SlideSpeed.Max);
                                 Claw.close();

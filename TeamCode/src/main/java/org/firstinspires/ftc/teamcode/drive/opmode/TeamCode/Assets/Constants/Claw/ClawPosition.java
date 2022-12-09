@@ -22,8 +22,8 @@ public class ClawPosition {
     /**
      * The open and close positions of the claw
      */
-    public static double Open = 88; //old claw: 30
-    public static double Close = 75; //old claw: 15
+    public static double Open = 86; //old claw: 30
+    public static double Close = 70; //old claw: 15
 
     public static double ConeDistance = 3.0;
 }

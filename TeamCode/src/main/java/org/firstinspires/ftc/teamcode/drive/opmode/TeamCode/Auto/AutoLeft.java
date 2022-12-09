@@ -33,23 +33,29 @@ public class AutoLeft extends LinearOpMode {
 
     public static double endingLongStrafeY = -13;
 
-    public static double strafePosX = 36;
-    public static double strafePosY = -10.5;
+    public static double strafePosX = -36;
+    public static double strafePosY = -12.5;
 
     public static double pickUpConeDrive = 6;
 
     public static int ConesToScore = 3;
-    public static double startX = 36;
+    public static double startX = -36;
     public static double startY = -64;
 
     public static double finalRot = 180;
 
+    public static double PickupX = -60;
+
+    public static double PoleX = 24;
+
+    public static double PoleAdjust = 1;
+
     /**
      * Ending positions
      */
-    public static double EndPos1 = 17;
-    public static double EndPos2 = 41;
-    public static double EndPos3 = 64;
+    public static double EndPos1 = -60.5;
+    public static double EndPos2 = -41;
+    public static double EndPos3 = -17;
     private static int ParkingPosition = 2;
 
     @Override
@@ -123,6 +129,11 @@ public class AutoLeft extends LinearOpMode {
                         .lineToLinearHeading(new Pose2d(strafePosX, endingLongStrafeY, Math.toRadians(finalRot)))
                         .build()
         );
+//        drive.followTrajectory(
+//                drive.trajectoryBuilder(drive.getPoseEstimate())
+//                        .lineToLinearHeading(new Pose2d(strafePosX, endingLongStrafeY, Math.toRadians(finalRot)))
+//                        .build()
+//        );
         int count = 0;
         while (opModeIsActive() && count < ConesToScore) {
 //            drive.alignWithPoleAsync(leftSensor, SensorDistances.DetectAmount, opModeIsActive());
@@ -136,12 +147,17 @@ public class AutoLeft extends LinearOpMode {
                 telemetry.addData("Sensor", RightSensor.getDistance(DistanceUnit.INCH));
                 telemetry.update();
                 drive.update();
-                if (drive.getPoseEstimate().getX() < 24 - SensorDistances.FindBuffer / 2) {
+                if (Math.abs(drive.getPoseEstimate().getX()) < PoleX - SensorDistances.FindBuffer / 2) {
                     alignDrive = Chassis.PoleAlign.Forward;
-                } else if (drive.getPoseEstimate().getX() > 24 + SensorDistances.FindBuffer) {
+                } else if (Math.abs(drive.getPoseEstimate().getX()) > PoleX + SensorDistances.FindBuffer) {
                     alignDrive = Chassis.PoleAlign.Backward;
                 }
             }
+            drive.followTrajectory(
+                    drive.trajectoryBuilder(drive.getPoseEstimate())
+                            .back(PoleAdjust)
+                            .build()
+            );
 
             sleep(500);
 
@@ -165,7 +181,7 @@ public class AutoLeft extends LinearOpMode {
             int finalCount = count;
             drive.followTrajectory(
                     drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(60, strafePosY, Math.toRadians(finalRot)))
+                            .lineToLinearHeading(new Pose2d(PickupX, strafePosY, Math.toRadians(finalRot)))
                             .addTemporalMarker(0.5, () -> {
                                 Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - finalCount)), SlideSpeed.Max);
                                 Claw.close();
