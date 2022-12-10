@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Chassis;
@@ -26,6 +27,8 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 @Config
 @Autonomous(name = "AutoLeft", group = "Auto")
 public class AutoLeft extends LinearOpMode {
+
+    public static double SpeedUpAmount = 20;
 
     public static double driveToSignalDistance = 18;
 
@@ -95,7 +98,9 @@ public class AutoLeft extends LinearOpMode {
 
         drive.followTrajectory(drive
                 .trajectoryBuilder(startPose)
-                .back(driveToSignalDistance)
+                .back(driveToSignalDistance,
+                        SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL + SpeedUpAmount, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build()
         ); //drive to cone to read parking position
 
@@ -126,7 +131,10 @@ public class AutoLeft extends LinearOpMode {
 
         drive.followTrajectory(
                 drive.trajectoryBuilder(drive.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(strafePosX, endingLongStrafeY, Math.toRadians(finalRot)))
+                        .lineToLinearHeading(new Pose2d(strafePosX, endingLongStrafeY, Math.toRadians(finalRot)),
+                                SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL + SpeedUpAmount, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                                SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                        )
                         .build()
         );
 //        drive.followTrajectory(
@@ -182,7 +190,7 @@ public class AutoLeft extends LinearOpMode {
             drive.followTrajectory(
                     drive.trajectoryBuilder(drive.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(PickupX, strafePosY, Math.toRadians(finalRot)))
-                            .addTemporalMarker(0.5, () -> {
+                            .addTemporalMarker(0.2, () -> {
                                 Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - finalCount)), SlideSpeed.Max);
                                 Claw.close();
                             })
