@@ -133,7 +133,8 @@ public class Chassis {
         if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT))
             this.strafeAlign = PoleAlign.Left;
 
-        boolean align = gamepad.wasJustPressed(GamepadKeys.Button.A);
+//        boolean align = gamepad.wasJustPressed(GamepadKeys.Button.A);
+        boolean align = false;
 
         if (align)
             this.Mode = ChassisMode.AutoPlace; // If align button is pressed, set mode to auto place
