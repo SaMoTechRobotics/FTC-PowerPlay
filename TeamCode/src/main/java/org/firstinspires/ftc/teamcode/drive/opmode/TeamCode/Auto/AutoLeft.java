@@ -29,6 +29,9 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 public class AutoLeft extends LinearOpMode {
 
     public static double SpeedUpAmount = 20;
+    public static double AccelUpAmount = 20;
+
+    public static double DropWait = 800;
 
     public static double driveToSignalDistance = 18;
 
@@ -53,12 +56,14 @@ public class AutoLeft extends LinearOpMode {
 
     public static double PoleAdjust = 1;
 
+    public static double SlideSafetyMargin = 0.5;
+
     /**
      * Ending positions
      */
     public static double EndPos1 = -60.5;
-    public static double EndPos2 = -41;
-    public static double EndPos3 = -17;
+    public static double EndPos2 = -38;
+    public static double EndPos3 = -16;
     private static int ParkingPosition = 2;
 
     @Override
@@ -97,14 +102,17 @@ public class AutoLeft extends LinearOpMode {
         colorSensor.enableLed(true);
 
         drive.followTrajectory(drive
-                .trajectoryBuilder(startPose)
-                .back(driveToSignalDistance,
-                        SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL + SpeedUpAmount, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .build()
+                        .trajectoryBuilder(startPose)
+                        .back(driveToSignalDistance,
+                                SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL + SpeedUpAmount, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                                SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL + AccelUpAmount))
+//                .addDisplacementMarker(() -> {
+//
+//                })
+                        .build()
         ); //drive to cone to read parking position
 
-        sleep((long) ReadingWait);
+//        sleep((long) ReadingWait);
 
         ParkingPosition = SensorColors.getParkingPosition( // reads parking position based of detected color
                 SensorColors.detectColor(colorSensor) //detects color
@@ -116,24 +124,16 @@ public class AutoLeft extends LinearOpMode {
 
 //        sleep(ReadingWait);
 
-        colorSensor.enableLed(false);
+//        colorSensor.enableLed(false);
 
         Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
         Arm.setRotation(ArmRotation.Center);
-
-//        drive.followTrajectory(
-//                drive.trajectoryBuilder(drive.getPoseEstimate())
-//                        .back(longDriveDistance)
-//                        .build()
-//        ); //drives to where it will deliver cones
-
-//        drive.turn(Math.toRadians(90)); //turns to face wall
 
         drive.followTrajectory(
                 drive.trajectoryBuilder(drive.getPoseEstimate())
                         .lineToLinearHeading(new Pose2d(strafePosX, endingLongStrafeY, Math.toRadians(finalRot)),
                                 SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL + SpeedUpAmount, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                                SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
+                                SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL + AccelUpAmount)
                         )
                         .build()
         );
@@ -167,17 +167,21 @@ public class AutoLeft extends LinearOpMode {
                             .build()
             );
 
-            sleep(500);
+            sleep(100);
 
             Slide.setHeight(SlideHeight.HighPole - 10, SlideSpeed.Mid);
 
-            sleep(1000);
+            sleep((long) DropWait);
 
             Claw.open();
 
-            Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Mid);
+            Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
 
-            sleep(500);
+            while (Slide.getInches() < SlideHeight.HighPole - SlideSafetyMargin) {
+                idle();
+            }
+
+//            sleep(Wait);
 
 //            drive.alignPlaceDistanceAsync(leftSensor, SensorDistances.CenterDistance, SensorDistances.PlaceMargin, opModeIsActive());
 

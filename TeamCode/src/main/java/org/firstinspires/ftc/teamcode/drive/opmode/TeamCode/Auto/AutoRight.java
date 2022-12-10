@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Chassis;
@@ -26,6 +27,10 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 @Config
 @Autonomous(name = "AutoRight", group = "Auto")
 public class AutoRight extends LinearOpMode {
+    public static double SpeedUpAmount = 20;
+    public static double AccelUpAmount = 20;
+
+    public static double DropWait = 800;
 
     public static double driveToSignalDistance = 18;
 
@@ -34,9 +39,9 @@ public class AutoRight extends LinearOpMode {
     public static double endingLongStrafeY = -13;
 
     public static double strafePosX = 36;
-    public static double strafePosY = -10.5;
+    public static double strafePosY = -11.5; //-12.5
 
-    public static double pickUpConeDrive = 6;
+    public static double pickUpConeDrive = 7;
 
     public static int ConesToScore = 3;
     public static double startX = 36;
@@ -48,12 +53,16 @@ public class AutoRight extends LinearOpMode {
 
     public static double PoleX = 24;
 
+    public static double PoleAdjust = 1;
+
+    public static double SlideSafetyMargin = 0.5;
+
     /**
      * Ending positions
      */
-    public static double EndPos1 = 17;
-    public static double EndPos2 = 41;
-    public static double EndPos3 = 64;
+    public static double EndPos1 = 16;
+    public static double EndPos2 = 38;
+    public static double EndPos3 = 60;
     private static int ParkingPosition = 2;
 
     @Override
@@ -97,7 +106,7 @@ public class AutoRight extends LinearOpMode {
                 .build()
         ); //drive to cone to read parking position
 
-        sleep((long) ReadingWait);
+//        sleep((long) ReadingWait);
 
         ParkingPosition = SensorColors.getParkingPosition( // reads parking position based of detected color
                 SensorColors.detectColor(colorSensor) //detects color
@@ -109,7 +118,7 @@ public class AutoRight extends LinearOpMode {
 
 //        sleep(ReadingWait);
 
-        colorSensor.enableLed(false);
+//        colorSensor.enableLed(false);
 
         Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
         Arm.setRotation(ArmRotation.Center);
@@ -124,7 +133,10 @@ public class AutoRight extends LinearOpMode {
 
         drive.followTrajectory(
                 drive.trajectoryBuilder(drive.getPoseEstimate())
-                        .lineToLinearHeading(new Pose2d(strafePosX, endingLongStrafeY, Math.toRadians(finalRot)))
+                        .lineToLinearHeading(new Pose2d(strafePosX, endingLongStrafeY, Math.toRadians(finalRot)),
+                                SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL + SpeedUpAmount, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                                SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL + AccelUpAmount)
+                        )
                         .build()
         );
         int count = 0;
@@ -147,17 +159,25 @@ public class AutoRight extends LinearOpMode {
                 }
             }
 
-            sleep(500);
+            drive.followTrajectory(
+                    drive.trajectoryBuilder(drive.getPoseEstimate())
+                            .back(PoleAdjust)
+                            .build()
+            );
+
+            sleep(100);
 
             Slide.setHeight(SlideHeight.HighPole - 10, SlideSpeed.Mid);
 
-            sleep(1000);
+            sleep((long) DropWait);
 
             Claw.open();
 
-            Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Mid);
+            Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
 
-            sleep(500);
+            while (Slide.getInches() < SlideHeight.HighPole - SlideSafetyMargin) {
+                idle();
+            }
 
 //            drive.alignPlaceDistanceAsync(leftSensor, SensorDistances.CenterDistance, SensorDistances.PlaceMargin, opModeIsActive());
 
@@ -170,7 +190,7 @@ public class AutoRight extends LinearOpMode {
             drive.followTrajectory(
                     drive.trajectoryBuilder(drive.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(PickupX, strafePosY, Math.toRadians(finalRot)))
-                            .addTemporalMarker(0.5, () -> {
+                            .addTemporalMarker(0.2, () -> {
                                 Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - finalCount)), SlideSpeed.Max);
                                 Claw.close();
                             })
