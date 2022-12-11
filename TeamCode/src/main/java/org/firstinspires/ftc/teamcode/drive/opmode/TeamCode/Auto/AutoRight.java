@@ -30,7 +30,9 @@ public class AutoRight extends LinearOpMode {
     public static double SpeedUpAmount = 20;
     public static double AccelUpAmount = 20;
 
-    public static double DropWait = 800;
+    public static double DropWait = 900;
+
+    public static double WaitForConeToDrop = 100;
 
     public static double driveToSignalDistance = 18;
 
@@ -172,6 +174,8 @@ public class AutoRight extends LinearOpMode {
             sleep((long) DropWait);
 
             Claw.open();
+
+            sleep((long) WaitForConeToDrop);
 
             Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
 

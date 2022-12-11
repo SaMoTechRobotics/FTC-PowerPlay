@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
 
-@TeleOp(name = "Reset Slide", group = "Util")
+@TeleOp(name = "Reset Slide", group = "Drive")
 public class ResetSlide extends LinearOpMode {
     public static double SpeedModifier = 0.2;
 
