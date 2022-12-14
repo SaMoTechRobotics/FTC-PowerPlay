@@ -7,7 +7,7 @@ public class SlideHeight {
     /**
      * The ticks per revolution of the slide motor
      */
-    public static final double TicksPerRev = 537.7;
+    public static final double TicksPerRev = 384.5; // 537.7
     /**
      * The diameter of the pulley on the slide in inches
      */
