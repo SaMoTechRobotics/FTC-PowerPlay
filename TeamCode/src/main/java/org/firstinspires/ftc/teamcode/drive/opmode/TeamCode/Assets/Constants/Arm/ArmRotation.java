@@ -36,4 +36,6 @@ public class ArmRotation {
     public static double AccelSpeed = 0.0001;
 
     public static double AccelMargin = 0.2;
+
+    public static double DelaySpeed = 0.0001;
 }

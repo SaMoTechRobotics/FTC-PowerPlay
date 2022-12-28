@@ -11,9 +11,10 @@ public class Arm {
 
     private final Servo ArmServo;
 
+    /**
+     * The target rotation of the arm
+     */
     private double TargetRotation = ArmRotation.Center;
-
-    private double Speed = 0.001;
 
     /**
      * Creates a new arm with 1 servo
@@ -39,6 +40,7 @@ public class Arm {
      * @param rotation The position to set the servo to as rotation in degrees
      */
     public final void setRotation(double rotation) {
+        this.TargetRotation = rotation;
         if (this.ArmServo.getPosition() != this.rotationToPosition(rotation)) {
             this.ArmServo.setPosition(
                     this.rotationToPosition(rotation) // Converts the position to a percentage
@@ -46,30 +48,49 @@ public class Arm {
         }
     }
 
+    /**
+     * Sets the target rotation of the arm
+     * @param rotation The target rotation of the arm
+     */
     public final void setTargetRotation(double rotation) {
         this.TargetRotation = rotation;
     }
 
+    /**
+     * Returns the target rotation of the arm
+     * @return The target rotation of the arm
+     */
     public final double getTargetRotation() {
         return this.TargetRotation;
     }
 
-    public final void runToTargetRotation(double[] speed) {
-        if(speed.length > 0) {
-            this.Speed = speed[0];
+    /**
+     * Runs the arm to the target rotation
+     * @param const_speed The speed to run the arm at (optional)
+     */
+    public final void runToTargetRotation(double... const_speed) {
+        double speed = 0.001;
+        if(const_speed.length > 0) {
+            speed = const_speed[0];
         } else {
-            this.Speed = this.getRunSpeed(this.getTargetRotation(), this.getRotation());
+            speed = this.getRunSpeed(this.getTargetRotation(), this.getRotation());
         }
         if (this.TargetRotation > this.getRotation()) {
-            this.setRotation(this.getRotation() + this.Speed);
+            this.setRotation(this.getRotation() + speed);
         } else if (this.TargetRotation < this.getRotation()) {
-            this.setRotation(this.getRotation() - this.Speed);
+            this.setRotation(this.getRotation() - speed);
         }
     }
 
-    public final double getRunSpeed(double targetRotation, double currentRotation) {
+    /**
+     * Returns the speed to run the arm at
+     * @param target The target rotation of the arm
+     * @param current The current rotation of the arm
+     * @return The speed to run the arm at
+     */
+    public final double getRunSpeed(double target, double current) {
         double speed = ArmRotation.MaxSpeed;
-        if (Math.abs(targetRotation - currentRotation) < ArmRotation.AccelMargin) {
+        if (Math.abs(target - current) < ArmRotation.AccelMargin) {
             speed = ArmRotation.MinSpeed;
         }
         return speed;
