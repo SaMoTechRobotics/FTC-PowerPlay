@@ -40,28 +40,38 @@ public class ArmTest extends LinearOpMode {
 
         while (opModeIsActive()) {
 
+//            if(Gamepad2.wasJustPressed(GamepadKeys.Button.X)) {
+//                ArmTargetPos = ArmRotation.Left;
+//            } else if(Gamepad2.wasJustPressed(GamepadKeys.Button.B)) {
+//                ArmTargetPos = ArmRotation.Right;
+//            } else if(Gamepad2.wasJustPressed(GamepadKeys.Button.Y)) {
+//                ArmTargetPos = ArmRotation.Center;
+//            }
+//
+//
+//            if(Arm.getRotation() < ArmTargetPos) {
+//                Arm.setRotation(Arm.getRotation() + ArmSpeed);
+//            } else if(Arm.getRotation() > ArmTargetPos) {
+//                Arm.setRotation(Arm.getRotation() - ArmSpeed);
+//            }
+
             if(Gamepad2.wasJustPressed(GamepadKeys.Button.X)) {
-                ArmTargetPos = ArmRotation.Left;
+                Arm.setTargetRotation(ArmRotation.Left);
             } else if(Gamepad2.wasJustPressed(GamepadKeys.Button.B)) {
-                ArmTargetPos = ArmRotation.Right;
+                Arm.setTargetRotation(ArmRotation.Right);
             } else if(Gamepad2.wasJustPressed(GamepadKeys.Button.Y)) {
-                ArmTargetPos = ArmRotation.Center;
+                Arm.setTargetRotation(ArmRotation.Center);
             }
 
-
-            if(Arm.getRotation() < ArmTargetPos) {
-                Arm.setRotation(Arm.getRotation() + ArmSpeed);
-            } else if(Arm.getRotation() > ArmTargetPos) {
-                Arm.setRotation(Arm.getRotation() - ArmSpeed);
-            }
+            Arm.runToTargetRotation();
 
             telemetry.addData("Arm Rotation", Arm.getRotation());
             telemetry.addData("Arm Target Pos", ArmTargetPos);
             telemetry.update();
 
-            if(Delay > 0) {
-                sleep((long) Delay);
-            }
+//            if(Delay > 0) {
+//                sleep((long) Delay);
+//            }
             Gamepad2.readButtons();
         }
     }
