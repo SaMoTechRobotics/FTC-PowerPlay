@@ -29,4 +29,11 @@ public class ArmRotation {
     public static double Center = 0.54; //0.5
 
     public static double Margin = 0.01;
+
+    public static double MaxSpeed = 0.01;
+    public static double MinSpeed = 0.001;
+
+    public static double AccelSpeed = 0.0001;
+
+    public static double AccelMargin = 0.2;
 }

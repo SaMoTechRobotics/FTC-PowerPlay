@@ -11,6 +11,10 @@ public class Arm {
 
     private final Servo ArmServo;
 
+    private double TargetRotation = ArmRotation.Center;
+
+    private double Speed = 0.001;
+
     /**
      * Creates a new arm with 1 servo
      *
@@ -42,13 +46,33 @@ public class Arm {
         }
     }
 
-    /**
-     * Rotates the arm
-     *
-     * @param speed The speed to rotate the arm at
-     */
-    public final void addRotation(double speed) {
-        // this.ArmServo.setPower(speed);
+    public final void setTargetRotation(double rotation) {
+        this.TargetRotation = rotation;
+    }
+
+    public final double getTargetRotation() {
+        return this.TargetRotation;
+    }
+
+    public final void runToTargetRotation(double[] speed) {
+        if(speed.length > 0) {
+            this.Speed = speed[0];
+        } else {
+            this.Speed = this.getRunSpeed(this.getTargetRotation(), this.getRotation());
+        }
+        if (this.TargetRotation > this.getRotation()) {
+            this.setRotation(this.getRotation() + this.Speed);
+        } else if (this.TargetRotation < this.getRotation()) {
+            this.setRotation(this.getRotation() - this.Speed);
+        }
+    }
+
+    public final double getRunSpeed(double targetRotation, double currentRotation) {
+        double speed = ArmRotation.MaxSpeed;
+        if (Math.abs(targetRotation - currentRotation) < ArmRotation.AccelMargin) {
+            speed = ArmRotation.MinSpeed;
+        }
+        return speed;
     }
 
     /**
