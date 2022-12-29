@@ -55,6 +55,8 @@ public class ArmTest extends LinearOpMode {
 //                Arm.setRotation(Arm.getRotation() - ArmSpeed);
 //            }
 
+
+
             if(Gamepad2.wasJustPressed(GamepadKeys.Button.X)) {
                 Arm.setTargetRotation(ArmRotation.Left);
             } else if(Gamepad2.wasJustPressed(GamepadKeys.Button.B)) {
@@ -63,10 +65,16 @@ public class ArmTest extends LinearOpMode {
                 Arm.setTargetRotation(ArmRotation.Center);
             }
 
-            Arm.runToTargetRotation();
+            if(Gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
+                telemetry.addData("Arm Speed (Default)", ArmRotation.MaxSpeed);
+                Arm.runToTargetRotation(ArmRotation.MaxSpeed);
+            } else {
+                telemetry.addData("Arm Speed", Arm.getRunSpeed(Arm.getTargetRotation(), Arm.getRotation()));
+                Arm.runToTargetRotation();
+            }
 
             telemetry.addData("Arm Rotation", Arm.getRotation());
-            telemetry.addData("Arm Target Pos", ArmTargetPos);
+            telemetry.addData("Arm Target Pos", Arm.getTargetRotation());
             telemetry.update();
 
 //            if(Delay > 0) {

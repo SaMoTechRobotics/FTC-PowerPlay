@@ -16,6 +16,8 @@ public class Arm {
      */
     private double TargetRotation = ArmRotation.Center;
 
+    private double RampingSpeed;
+
     /**
      * Creates a new arm with 1 servo
      *
@@ -53,6 +55,7 @@ public class Arm {
      * @param rotation The target rotation of the arm
      */
     public final void setTargetRotation(double rotation) {
+        this.RampingSpeed = ArmRotation.MaxSpeed;
         this.TargetRotation = rotation;
     }
 
@@ -69,16 +72,20 @@ public class Arm {
      * @param const_speed The speed to run the arm at (optional)
      */
     public final void runToTargetRotation(double... const_speed) {
-        double speed = 0.001;
+        double speed = ArmRotation.MaxSpeed;
         if(const_speed.length > 0) {
             speed = const_speed[0];
         } else {
             speed = this.getRunSpeed(this.getTargetRotation(), this.getRotation());
         }
-        if (this.TargetRotation > this.getRotation()) {
-            this.setRotation(this.getRotation() + speed);
-        } else if (this.TargetRotation < this.getRotation()) {
-            this.setRotation(this.getRotation() - speed);
+        if (this.getRotation() < this.TargetRotation) {
+            this.ArmServo.setPosition(
+                    this.rotationToPosition(this.getRotation() + speed) // Converts the position to a percentage
+            );
+        } else if (this.getRotation() > this.TargetRotation) {
+            this.ArmServo.setPosition(
+                    this.rotationToPosition(this.getRotation() - speed) // Converts the position to a percentage
+            );
         }
     }
 
@@ -91,7 +98,15 @@ public class Arm {
     public final double getRunSpeed(double target, double current) {
         double speed = ArmRotation.MaxSpeed;
         if (Math.abs(target - current) < ArmRotation.AccelMargin) {
+//            if(this.RampingSpeed > ArmRotation.MinSpeed) {
+//                this.RampingSpeed -= ArmRotation.AccelSpeed;
+//            } else if(this.RampingSpeed < ArmRotation.MinSpeed) {
+//                this.RampingSpeed += ArmRotation.AccelSpeed;
+//            }
             speed = ArmRotation.MinSpeed;
+//            speed = this.RampingSpeed;
+        } else {
+//            this.RampingSpeed = ArmRotation.MaxSpeed;
         }
         return speed;
     }
@@ -108,17 +123,22 @@ public class Arm {
             double speed,
             boolean left,
             boolean right,
-            boolean center
+            boolean center,
+            boolean const_speed
     ) {
         if (center) {
-            this.setRotation(ArmRotation.Center); // Sets the rotation to the middle
+            if(const_speed) this.setRotation(ArmRotation.Center); else this.setTargetRotation(ArmRotation.Center);
+//            this.setRotation(ArmRotation.Center); // Sets the rotation to the middle
         } else if (left) {
-            this.setRotation(ArmRotation.Left); // Sets the rotation to the left
+            if(const_speed) this.setRotation(ArmRotation.Left); else this.setTargetRotation(ArmRotation.Left);
+//            this.setRotation(ArmRotation.Left); // Sets the rotation to the left
         } else if (right) {
-            this.setRotation(ArmRotation.Right); // Sets the rotation to the right
+            if(const_speed) this.setRotation(ArmRotation.Right); else this.setTargetRotation(ArmRotation.Right);
+//            this.setRotation(ArmRotation.Right); // Sets the rotation to the right
         } else {
             // this.addRotation(speed); // Adds the speed to the rotation
         }
+        if (!const_speed) this.runToTargetRotation();
     }
 
     /**
