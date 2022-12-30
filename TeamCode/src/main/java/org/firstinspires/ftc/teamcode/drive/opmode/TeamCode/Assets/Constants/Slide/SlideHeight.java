@@ -11,7 +11,7 @@ public class SlideHeight {
     /**
      * The diameter of the pulley on the slide in inches
      */
-    public static final double RevDiameter = 1.673228;
+    public static final double RevDiameter = 2.12598; //1.673228;
     /**
      * The ticks per inch of the slide moving up
      */
