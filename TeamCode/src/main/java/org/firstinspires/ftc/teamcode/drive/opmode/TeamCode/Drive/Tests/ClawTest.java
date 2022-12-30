@@ -65,7 +65,8 @@ public class ClawTest extends LinearOpMode {
                     Gamepad2.getRightX(),
                     gamepad2.x,
                     gamepad2.b,
-                    gamepad2.y
+                    gamepad2.y,
+                    Gamepad2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) < 0.5
             );
         }
     }
