@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Auto.Pro;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -20,6 +21,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Chass
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Claw.ClawPosition;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorColors;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorDistances;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
@@ -32,11 +34,11 @@ public class AutoRightPro extends LinearOpMode {
     public static double FastTurnSpeed = 80;
     public static double FastAccelSpeed = 100;
 
-    public static double A_LongDrive = 55;
+    public static double A_LongDrive = 50;
     public static double A_DetectDist = 18;
 
-    public static double B_FindPoleX = 28;
-    public static double B_FindPoleY = -13;
+    public static double B_FindPoleX = 35;
+    public static double B_FindPoleY = -15;
 
     public static double C_PoleAdjust = 1;
 
@@ -44,10 +46,10 @@ public class AutoRightPro extends LinearOpMode {
 
     public static double C_ClearPoleStrafe = 5;
 
-    public static double D_PickupX = 60;
-    public static double D_PickupY = -13;
+    public static double D_PickupX = 56;
+    public static double D_PickupY = -16;
 
-    public static double D_PickupForward = 10;
+    public static double D_PickupForward = 7;
 
     public static double D_HeadingMarginToReset = 0.2;
 
@@ -169,7 +171,10 @@ public class AutoRightPro extends LinearOpMode {
                             Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
 
 
-                            telemetry.addData("Detected Color", SensorColors.detectColor(colorSensor));
+                            telemetry.addData("Detected Color", detectedColor);
+//                            dashboard.sendTelemetryPacket(
+//                                    new TelemetryPacket().addLine("Detected Color: " + detectedColor)
+//                            );
                             telemetry.addData("Parking Position", ParkingPosition);
                             telemetry.update();
                         })
@@ -212,6 +217,9 @@ public class AutoRightPro extends LinearOpMode {
 
             sleep((long) C_LowerConeTime); //Lets the slide descend a bit
 
+
+            Claw.setOpenAmount(ClawPosition.Open); //Sets claw to open fully
+
             Claw.open(); //Opens claw to drop cone
 
 //            sleep((long) WaitForConeToDrop);
@@ -222,7 +230,11 @@ public class AutoRightPro extends LinearOpMode {
                             .build()
             ); //Drives away from high pole to clear it
 
+//            Claw.open(); //Opens claw to drop cone
+
             Arm.setRotation(ArmRotation.Center); //Sets arm to center position
+
+            Claw.close();
 
 //            Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
 //
@@ -259,15 +271,21 @@ public class AutoRightPro extends LinearOpMode {
 
             Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - count)), SlideSpeed.Max); //Sets slide to height of next cone in 5 stack
 
+            Claw.setOpenAmount(ClawPosition.PickupOpen);
+
             drive.followTrajectory(
                     drive.trajectoryBuilder(drive.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(D_PickupX, D_PickupY, Math.toRadians(finalRot)),
                                     SampleMecanumDrive.getVelocityConstraint(FastSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                                     SampleMecanumDrive.getAccelerationConstraint(FastAccelSpeed)
                             ) //Drives to 5 stack
-                            .addTemporalMarker(0.2, Claw::close) //Closes claw while slide is lowering
+//                            .addTemporalMarker(0.1, Claw::close) //Closes claw while slide is lowering
                             .build()
             );
+
+            while(Slide.getInches() > SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - count))) {
+                idle();
+            }
 
             Claw.open(); //Opens claw to get ready to pick up cone
 
