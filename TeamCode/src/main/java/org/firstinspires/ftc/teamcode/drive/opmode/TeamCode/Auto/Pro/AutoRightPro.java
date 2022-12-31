@@ -49,6 +49,10 @@ public class AutoRightPro extends LinearOpMode {
 
     public static double D_PickupForward = 10;
 
+    public static double D_HeadingMarginToReset = 0.2;
+
+    public static boolean D_ResetPoseX = true;
+
     public static double E_PickupConeWait = 500;
     public static double E_PickupResetX = 64;
 
@@ -140,62 +144,20 @@ public class AutoRightPro extends LinearOpMode {
         ElapsedTime timer = new ElapsedTime();
         timer.reset();
 
-
         waitForStart();
 
         if (isStopRequested()) return;
 
         Arm.setRotation(ArmRotation.Center);
-        Slide.setHeight(SlideHeight.LowPole, SlideSpeed.Mid);
-
-//
-//        drive.followTrajectory(drive
-//                .trajectoryBuilder(startPose)
-//                .back(driveToSignalDistance)
-//                .build()
-//        ); //drive to cone to read parking position
-//
-////        sleep((long) ReadingWait);
-//
-//        ParkingPosition = SensorColors.getParkingPosition( // reads parking position based of detected color
-//                SensorColors.detectColor(colorSensor) //detects color
-//        );
-//
-//        telemetry.addData("Detected Color", SensorColors.detectColor(colorSensor));
-//        telemetry.addData("Parking Position", ParkingPosition);
-//        telemetry.update();
-//
-////        sleep(ReadingWait);
-//
-////        colorSensor.enableLed(false);
-//
-//        Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
-//        Arm.setRotation(ArmRotation.Center);
-//
-////        drive.followTrajectory(
-////                drive.trajectoryBuilder(drive.getPoseEstimate())
-////                        .back(longDriveDistance)
-////                        .build()
-////        ); //drives to where it will deliver cones
-//
-////        drive.turn(Math.toRadians(90)); //turns to face wall
-//
-//        drive.followTrajectory(
-//                drive.trajectoryBuilder(drive.getPoseEstimate())
-//                        .lineToLinearHeading(new Pose2d(strafePosX, endingLongStrafeY, Math.toRadians(finalRot)),
-//                                SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL + SpeedUpAmount, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-//                                SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL + AccelUpAmount)
-//                        )
-//                        .build()
-//        );
+        Slide.setHeight(SlideHeight.LowPole, SlideSpeed.Mid); //Sets Slide to low pole height slowly
 
         drive.followTrajectory(
                 drive.trajectoryBuilder(startPose)
                         .back(A_LongDrive,
                                 SampleMecanumDrive.getVelocityConstraint(FastSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                                 SampleMecanumDrive.getAccelerationConstraint(FastAccelSpeed)
-                        )
-                        .addDisplacementMarker(A_DetectDist, () -> {
+                        ) //Drives to high pole
+                        .addDisplacementMarker(A_DetectDist, () -> { //Reads signal sleeve
                             SensorColors.Color detectedColor = SensorColors.detectColor(colorSensor);
 //                            if(detectedColor != SensorColors.Color.Grey && detectedColor != SensorColors.Color.Unknown) {
 //                                GotParkingPos[0] = true;
@@ -219,7 +181,7 @@ public class AutoRightPro extends LinearOpMode {
                         .lineToLinearHeading(new Pose2d(B_FindPoleX, B_FindPoleY, Math.toRadians(finalRot)),
                                 SampleMecanumDrive.getVelocityConstraint(DriveConstants.MAX_VEL, FastTurnSpeed, DriveConstants.TRACK_WIDTH),
                                 SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL)
-                        )
+                        ) //Gets ready to align with high pole
                         .build()
         );
 
@@ -227,7 +189,7 @@ public class AutoRightPro extends LinearOpMode {
         while (opModeIsActive() && count < ConesToScore) {
 
             Chassis.PoleAlign alignDrive = Chassis.PoleAlign.Backward;
-            while (!drive.autoPlace(Arm, LeftSensor, RightSensor, alignDrive, Chassis.PoleAlign.Left) && opModeIsActive()) {
+            while (!drive.autoPlace(Arm, LeftSensor, RightSensor, alignDrive, Chassis.PoleAlign.Left) && opModeIsActive()) { //Aligns with high pole
                 telemetry.addData("Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
                 telemetry.update();
                 drive.update();
@@ -242,15 +204,15 @@ public class AutoRightPro extends LinearOpMode {
                     drive.trajectoryBuilder(drive.getPoseEstimate())
                             .back(C_PoleAdjust)
                             .build()
-            );
+            ); //Adjusts to be in perfectly lined up with high pole
 
 //            sleep(100);
 
-            Slide.setHeight(SlideHeight.MidPole, SlideSpeed.Mid);
+            Slide.setHeight(SlideHeight.MidPole, SlideSpeed.Mid); //Sets Slide to mid pole height slowly
 
-            sleep((long) C_LowerConeTime);
+            sleep((long) C_LowerConeTime); //Lets the slide descend a bit
 
-            Claw.open();
+            Claw.open(); //Opens claw to drop cone
 
 //            sleep((long) WaitForConeToDrop);
 
@@ -258,9 +220,9 @@ public class AutoRightPro extends LinearOpMode {
                     drive.trajectoryBuilder(drive.getPoseEstimate())
                             .strafeRight(C_ClearPoleStrafe)
                             .build()
-            );
+            ); //Drives away from high pole to clear it
 
-            Arm.setRotation(ArmRotation.Center);
+            Arm.setRotation(ArmRotation.Center); //Sets arm to center position
 
 //            Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
 //
@@ -268,10 +230,9 @@ public class AutoRightPro extends LinearOpMode {
 //                idle();
 //            }
 
-            count++;
+            count++; //Increments cone count
 
-//            Arm.setRotation(ArmRotation.Center);
-            if (count == ConesToScore) break;
+            if (count == ConesToScore) break; //If all cones have been scored, break out of loop
 
 //            int finalCount = count;
 //            drive.followTrajectory(
@@ -296,55 +257,62 @@ public class AutoRightPro extends LinearOpMode {
 
 //            drive.followTrajectory(forwardTraj);
 
-            Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - count)), SlideSpeed.Max);
+            Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - count)), SlideSpeed.Max); //Sets slide to height of next cone in 5 stack
 
             drive.followTrajectory(
                     drive.trajectoryBuilder(drive.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(D_PickupX, D_PickupY, Math.toRadians(finalRot)),
                                     SampleMecanumDrive.getVelocityConstraint(FastSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                                     SampleMecanumDrive.getAccelerationConstraint(FastAccelSpeed)
-                            )
-                            .addTemporalMarker(0.2, Claw::close)
+                            ) //Drives to 5 stack
+                            .addTemporalMarker(0.2, Claw::close) //Closes claw while slide is lowering
                             .build()
             );
 
-            Claw.open();
+            Claw.open(); //Opens claw to get ready to pick up cone
 
             drive.followTrajectory(
                     drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .forward(D_PickupForward)
+                            .forward(D_PickupForward) //Drives forward to pick up cone and align with wall
                             .build()
             );
 
-            drive.setPoseEstimate(new Pose2d(E_PickupResetX, drive.getPoseEstimate().getY(), drive.getPoseEstimate().getHeading()));
 
-            Claw.close();
+            //Only reset pose if heading is accurate to D_HeadingMarginToReset of a degree and if D_ResetPoseX is true
+            if (Math.abs(drive.getPoseEstimate().getHeading() - Math.toRadians(finalRot)) < Math.toRadians(D_HeadingMarginToReset) && D_ResetPoseX) {
+                drive.setPoseEstimate(new Pose2d(E_PickupResetX, drive.getPoseEstimate().getY(), drive.getPoseEstimate().getHeading())); //Resets X position to be in line with wall
+            }
 
-            sleep((long) E_PickupConeWait);
+            Claw.close(); //Closes claw to pick up cone
 
-            Claw.close();
+            sleep((long) E_PickupConeWait); //Waits for cone to be picked up
 
-            Slide.setHeight(SlideHeight.MaxHeight, SlideSpeed.Max);
+            Claw.close(); //Closes claw to make sure cone is still picked up
+
+            Slide.setHeight(SlideHeight.MaxHeight, SlideSpeed.Max); //Sets slide to max height
 
             drive.followTrajectory(
                     drive.trajectoryBuilder(drive.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(B_FindPoleX, B_FindPoleY, Math.toRadians(finalRot)),
                                     SampleMecanumDrive.getVelocityConstraint(FastSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                                     SampleMecanumDrive.getAccelerationConstraint(FastAccelSpeed)
-                            )
+                            ) //Drives to get ready to align with high pole
                             .build()
             );
 
         }
 
-        Arm.setRotation(ArmRotation.Center);
-        Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
-        Claw.close();
-        switch (ParkingPosition) {
+
+        //When all cones have been scored, below executes:
+
+        Arm.setRotation(ArmRotation.Center); //Sets arm to center position
+        Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max); //Sets slide to ground height
+        Claw.close(); //Closes claw to lower slide
+        switch (ParkingPosition) { //Drives to parking position
             case 1:
                 drive.followTrajectory(
                         drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(EndPos1, D_PickupY, Math.toRadians(finalRot)))
+                                .lineToLinearHeading(new Pose2d(EndPos1, D_PickupY, Math.toRadians(finalRot))) //Drives to end position 1
 //                                .addTemporalMarker(1, () -> {
 //                                    Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
 //                                    Claw.close();
@@ -355,7 +323,7 @@ public class AutoRightPro extends LinearOpMode {
             case 2:
                 drive.followTrajectory(
                         drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(EndPos2, D_PickupY, Math.toRadians(finalRot)))
+                                .lineToLinearHeading(new Pose2d(EndPos2, D_PickupY, Math.toRadians(finalRot))) //Drives to end position 2
 //                                .addTemporalMarker(1, () -> {
 //                                    Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
 //                                    Claw.close();
@@ -366,7 +334,7 @@ public class AutoRightPro extends LinearOpMode {
             case 3:
                 drive.followTrajectory(
                         drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .lineToLinearHeading(new Pose2d(EndPos3, D_PickupY, Math.toRadians(finalRot)))
+                                .lineToLinearHeading(new Pose2d(EndPos3, D_PickupY, Math.toRadians(finalRot))) //Drives to end position 3
 //                                .addTemporalMarker(1, () -> {
 //                                    Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
 //                                    Claw.close();
@@ -375,9 +343,10 @@ public class AutoRightPro extends LinearOpMode {
                 );
                 break;
         }
-        Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
-        Claw.close();
-        while (opModeIsActive()) {
+        Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max); //Sets slide to ground height
+        Claw.close(); //Closes claw to lower slide
+
+        while (opModeIsActive()) { //Waits for autonomous to end
             telemetry.addData("Timer", timer.seconds());
             telemetry.addData("Slide", Slide.getInches());
             telemetry.update();
