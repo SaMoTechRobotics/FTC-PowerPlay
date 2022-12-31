@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
@@ -124,8 +125,21 @@ public class AutoRightPro extends LinearOpMode {
 
         telemetry.addData("Autonomous", "AutoRightPro");
         telemetry.addLine("Autonomous Overview:");
-        telemetry.addLine("...");
+        telemetry.addLine("1. Drives directly towards signal cone until close to high pole (reads signal sleeve)");
+        telemetry.addLine("2. Turns to face stack of 5 then backs up and aligns with high pole");
+        telemetry.addLine("3. Drops cone while driving away from high pole");
+        telemetry.addLine("4. Drives to stack of 5 cones");
+        telemetry.addLine("5. Picks up cone and drives to high pole");
+        telemetry.addLine("6. Repeats steps 3-5 until " + ConesToScore + " cones are scored");
+        telemetry.addLine("7. Drives to parking position");
+        telemetry.addLine("8. Autonomous finishes awesome!");
         telemetry.update();
+
+
+        //Timer that will be used to time the autonomous
+        ElapsedTime timer = new ElapsedTime();
+        timer.reset();
+
 
         waitForStart();
 
@@ -364,6 +378,9 @@ public class AutoRightPro extends LinearOpMode {
         Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
         Claw.close();
         while (opModeIsActive()) {
+            telemetry.addData("Timer", timer.seconds());
+            telemetry.addData("Slide", Slide.getInches());
+            telemetry.update();
             idle();
         }
     }
