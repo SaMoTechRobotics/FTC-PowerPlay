@@ -127,18 +127,24 @@ public class Arm {
             boolean const_speed
     ) {
         if (center) {
-            if(const_speed) this.setRotation(ArmRotation.Center); else this.setTargetRotation(ArmRotation.Center);
+//            if(const_speed)
+                this.setRotation(ArmRotation.Center);
+//            else this.setTargetRotation(ArmRotation.Center);
 //            this.setRotation(ArmRotation.Center); // Sets the rotation to the middle
         } else if (left) {
-            if(const_speed) this.setRotation(ArmRotation.Left); else this.setTargetRotation(ArmRotation.Left);
+//            if(const_speed)
+                this.setRotation(ArmRotation.Left);
+//                else this.setTargetRotation(ArmRotation.Left);
 //            this.setRotation(ArmRotation.Left); // Sets the rotation to the left
         } else if (right) {
-            if(const_speed) this.setRotation(ArmRotation.Right); else this.setTargetRotation(ArmRotation.Right);
+//            if(const_speed)
+                this.setRotation(ArmRotation.Right);
+//                else this.setTargetRotation(ArmRotation.Right);
 //            this.setRotation(ArmRotation.Right); // Sets the rotation to the right
         } else {
             // this.addRotation(speed); // Adds the speed to the rotation
         }
-        if (!const_speed) this.runToTargetRotation();
+//        if (!const_speed) this.runToTargetRotation();
     }
 
     /**
