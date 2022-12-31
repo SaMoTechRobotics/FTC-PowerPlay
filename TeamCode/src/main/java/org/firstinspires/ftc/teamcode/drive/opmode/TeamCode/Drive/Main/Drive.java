@@ -148,6 +148,12 @@ public class Drive extends LinearOpMode {
 
             /* CLAW */
 
+            if(Slide.getInches() < SlideHeight.ClawOpenMargin) {
+                Claw.setOpenAmount(ClawPosition.PickupOpen);
+            } else {
+                Claw.setOpenAmount(ClawPosition.Open);
+            }
+
             if (ClawPosition.AutoClose && Slide.getTicks() < SlideHeight.GroundMargin && Claw.detectedCone()) {
                 Claw.close();
             } else {
