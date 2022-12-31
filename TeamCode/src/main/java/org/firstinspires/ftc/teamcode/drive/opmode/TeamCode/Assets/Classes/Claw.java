@@ -17,6 +17,8 @@ public class Claw {
     private boolean open = false;
     private boolean detectedCone = false;
 
+    private double OpenAmount = ClawPosition.PickupOpen;
+
     /**
      * Creates a new claw with 1 servo
      *
@@ -42,6 +44,10 @@ public class Claw {
         );
     }
 
+    public final void setOpenAmount(double openPosition) {
+        this.OpenAmount = openPosition;
+    }
+
     public final boolean isOpen() {
         return this.open;
     }
@@ -51,7 +57,8 @@ public class Claw {
      */
     public final void open() {
         this.open = true;
-        this.setPosition(ClawPosition.Open);
+//        this.setPosition(ClawPosition.Open);
+        this.setPosition(this.OpenAmount);
     }
 
     /**
