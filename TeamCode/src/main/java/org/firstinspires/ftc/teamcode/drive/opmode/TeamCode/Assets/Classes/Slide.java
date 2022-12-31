@@ -230,7 +230,7 @@ public class Slide {
         ) {
             this.holdHeight(); // Slide set to hold height if no dpad buttons are pressed and the slide is not moving
         }
-        if (this.getTicks() < 0 && this.SlideMotor.getPower() < 0) this.setPower(0);
+        if (this.getTicks() <= 0 && this.SlideMotor.getPower() < 0) this.setPower(0);
         // if (this.getInches() > SlideHeight.MaxHeight) this.setPower(0);
     }
 
@@ -246,7 +246,7 @@ public class Slide {
 
 
     public final void updateSpeed(boolean fast) {
-        this.ManualSpeed = fast ? SlideSpeed.Max : SlideSpeed.Min;
+        this.ManualSpeed = fast ? SlideSpeed.Mid : SlideSpeed.Min;
     }
 
     /**

@@ -47,4 +47,6 @@ public class SlideHeight {
      * The safety margin to move arm to center preventing failure in robot
      */
     public static double SafetyMargin = 15;
+
+    public static double ClawOpenMargin = 13;
 }

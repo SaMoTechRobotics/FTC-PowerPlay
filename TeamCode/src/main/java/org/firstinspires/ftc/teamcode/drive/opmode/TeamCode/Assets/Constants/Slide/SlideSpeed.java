@@ -15,7 +15,7 @@ public class SlideSpeed {
      */
     public static double Max = 1.0;
     public static double Mid = 0.5;
-    public static double Min = 0.3;
+    public static double Min = 0.2;
 
     /**
      * The speed of the slide to hold its position
