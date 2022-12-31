@@ -55,23 +55,23 @@ public class AutoRightPro extends LinearOpMode {
 
 
 
-    public static double SpeedUpAmount = 20;
-    public static double AccelUpAmount = 20;
+//    public static double SpeedUpAmount = 20;
+//    public static double AccelUpAmount = 20;
 
-    public static double DropWait = 900;
+//    public static double DropWait = 900;
 
-    public static double WaitForConeToDrop = 100;
+//    public static double WaitForConeToDrop = 100;
 
-    public static double driveToSignalDistance = 18;
+//    public static double driveToSignalDistance = 18;
 
-    public static double ReadingWait = 100;
+//    public static double ReadingWait = 100;
 
-    public static double endingLongStrafeY = -13;
+//    public static double endingLongStrafeY = -13;
 
-    public static double strafePosX = 36;
-    public static double strafePosY = -11.5; //-12.5
+//    public static double strafePosX = 36;
+//    public static double strafePosY = -11.5; //-12.5
 
-    public static double pickUpConeDrive = 7;
+//    public static double pickUpConeDrive = 7;
 
     public static int ConesToScore = 3;
     public static double startX = 36;
@@ -79,13 +79,13 @@ public class AutoRightPro extends LinearOpMode {
 
     public static double finalRot = 0;
 
-    public static double PickupX = 60;
+//    public static double PickupX = 60;
 
     public static double PoleX = 24;
 
-    public static double PoleAdjust = 1;
+//    public static double PoleAdjust = 1;
 
-    public static double SlideSafetyMargin = 0.5;
+//    public static double SlideSafetyMargin = 0.5;
 
     /**
      * Ending positions
