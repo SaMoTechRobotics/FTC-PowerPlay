@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -30,24 +31,29 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 @Config
 @Autonomous(name = "AutoRightPro", group = "AutoPro")
 public class AutoRightPro extends LinearOpMode {
-    public static double FastSpeed = 100;
-    public static double FastTurnSpeed = 80;
-    public static double FastAccelSpeed = 100;
+
+    public static double FastSpeed = 90;
+    public static double FastTurnSpeed = 15;
+    public static double FastAccelSpeed = 80;
 
     public static double A_LongDrive = 50;
-    public static double A_DetectDist = 18;
+    public static double A_LongAccelSpeed = 60;
+    public static double A_LongSpeed = 65;
+    public static double A_DetectDist = 17;
+    public static double A_DetectTries = 10;
+    public static double A_DetectTryMultiplier = 0.25;
 
     public static double B_FindPoleX = 35;
-    public static double B_FindPoleY = -15;
+    public static double B_FindPoleY = -18;
 
     public static double C_PoleAdjust = 1;
 
-    public static double C_LowerConeTime = 900;
+    public static double C_LowerConeTime = 300;
 
     public static double C_ClearPoleStrafe = 5;
 
     public static double D_PickupX = 56;
-    public static double D_PickupY = -16;
+    public static double D_PickupY = -18;
 
     public static double D_PickupForward = 7;
 
@@ -55,8 +61,9 @@ public class AutoRightPro extends LinearOpMode {
 
     public static boolean D_ResetPoseX = true;
 
-    public static double E_PickupConeWait = 500;
+    public static double E_PickupConeWait = 200;
     public static double E_PickupResetX = 64;
+    public static double E_PickupResetYOffset = 0;
 
 
 
@@ -80,7 +87,7 @@ public class AutoRightPro extends LinearOpMode {
 
 //    public static double pickUpConeDrive = 7;
 
-    public static int ConesToScore = 3;
+    public static int ConesToScore = 4;
     public static double startX = 36;
     public static double startY = -64;
 
@@ -153,33 +160,76 @@ public class AutoRightPro extends LinearOpMode {
         Arm.setRotation(ArmRotation.Center);
         Slide.setHeight(SlideHeight.LowPole, SlideSpeed.Mid); //Sets Slide to low pole height slowly
 
-        drive.followTrajectory(
-                drive.trajectoryBuilder(startPose)
-                        .back(A_LongDrive,
-                                SampleMecanumDrive.getVelocityConstraint(FastSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                                SampleMecanumDrive.getAccelerationConstraint(FastAccelSpeed)
-                        ) //Drives to high pole
-                        .addDisplacementMarker(A_DetectDist, () -> { //Reads signal sleeve
-                            SensorColors.Color detectedColor = SensorColors.detectColor(colorSensor);
+        final boolean[] GotColor = {false};
+
+//        drive.followTrajectory(
+        TrajectoryBuilder FullSpeedDetectionTraj = drive.trajectoryBuilder(startPose)
+                .back(A_LongDrive,
+                        SampleMecanumDrive.getVelocityConstraint(A_LongSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(A_LongAccelSpeed)
+                ); //Drives to high pole
+
+//        drive.setPoseEstimate(drive.getPoseEstimate().getX(), drive.getPoseEstimate().getY());
+//                .addDisplacementMarker(A_DetectDist, () -> { //Reads signal sleeve
+//                    SensorColors.Color detectedColor = SensorColors.detectColor(colorSensor);
+////                            if(detectedColor != SensorColors.Color.Grey && detectedColor != SensorColors.Color.Unknown) {
+////                                GotParkingPos[0] = true;
+////                            }
+//                    ParkingPosition = SensorColors.getParkingPosition( // reads parking position based of detected color
+//                            detectedColor
+//                    );
+//
+//                    Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
+//
+//
+//                    telemetry.addData("Detected Color", detectedColor);
+////                            dashboard.sendTelemetryPacket(
+////                                    new TelemetryPacket().addLine("Detected Color: " + detectedColor)
+////                            );
+//                    telemetry.addData("Parking Position", ParkingPosition);
+//                    telemetry.update();
+//                });
+//                .build();
+//        );
+
+
+
+        for(int i = 0; i < A_DetectTries; i++) {
+            FullSpeedDetectionTraj.addDisplacementMarker(A_DetectDist + (i * A_DetectTryMultiplier), () -> { //Reads signal sleeve
+                Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
+                if(GotColor[0] || colorSensor.alpha() < SensorColors.AlphaDetectionMargin) {
+                    if(!GotColor[0]) {
+//                        telemetry.addData("Got Color", GotColor[0]);
+                        telemetry.addData("Alpha", colorSensor.alpha());
+                        telemetry.update();
+                    }
+                    return;
+                }
+
+                SensorColors.Color detectedColor = SensorColors.detectColor(colorSensor);
 //                            if(detectedColor != SensorColors.Color.Grey && detectedColor != SensorColors.Color.Unknown) {
 //                                GotParkingPos[0] = true;
 //                            }
-                            ParkingPosition = SensorColors.getParkingPosition( // reads parking position based of detected color
-                                    detectedColor
-                            );
+                ParkingPosition = SensorColors.getParkingPosition( // reads parking position based of detected color
+                        detectedColor
+                );
 
-                            Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
+                GotColor[0] = true;
 
 
-                            telemetry.addData("Detected Color", detectedColor);
+
+                telemetry.addData("Detected Color", detectedColor);
 //                            dashboard.sendTelemetryPacket(
 //                                    new TelemetryPacket().addLine("Detected Color: " + detectedColor)
 //                            );
-                            telemetry.addData("Parking Position", ParkingPosition);
-                            telemetry.update();
-                        })
-                        .build()
-        );
+                telemetry.addData("Parking Position", ParkingPosition);
+                telemetry.update();
+            });
+        }
+
+        drive.followTrajectory(FullSpeedDetectionTraj.build());
+
+        Arm.setRotation(ArmRotation.Center); //Sets arm to center position
 
         drive.followTrajectory(
                 drive.trajectoryBuilder(drive.getPoseEstimate())
@@ -213,7 +263,7 @@ public class AutoRightPro extends LinearOpMode {
 
 //            sleep(100);
 
-            Slide.setHeight(SlideHeight.MidPole, SlideSpeed.Mid); //Sets Slide to mid pole height slowly
+            Slide.setHeight(SlideHeight.LowPole, SlideSpeed.Mid); //Sets Slide to mid pole height slowly
 
             sleep((long) C_LowerConeTime); //Lets the slide descend a bit
 
@@ -234,7 +284,7 @@ public class AutoRightPro extends LinearOpMode {
 
             Arm.setRotation(ArmRotation.Center); //Sets arm to center position
 
-            Claw.close();
+//            Claw.close();
 
 //            Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
 //
@@ -273,6 +323,9 @@ public class AutoRightPro extends LinearOpMode {
 
             Claw.setOpenAmount(ClawPosition.PickupOpen);
 
+            Claw.close();
+//            Claw.open();
+
             drive.followTrajectory(
                     drive.trajectoryBuilder(drive.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(D_PickupX, D_PickupY, Math.toRadians(finalRot)),
@@ -284,6 +337,7 @@ public class AutoRightPro extends LinearOpMode {
             );
 
             while(Slide.getInches() > SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - count))) {
+                Claw.open();
                 idle();
             }
 
@@ -297,9 +351,9 @@ public class AutoRightPro extends LinearOpMode {
 
 
             //Only reset pose if heading is accurate to D_HeadingMarginToReset of a degree and if D_ResetPoseX is true
-            if (Math.abs(drive.getPoseEstimate().getHeading() - Math.toRadians(finalRot)) < Math.toRadians(D_HeadingMarginToReset) && D_ResetPoseX) {
-                drive.setPoseEstimate(new Pose2d(E_PickupResetX, drive.getPoseEstimate().getY(), drive.getPoseEstimate().getHeading())); //Resets X position to be in line with wall
-            }
+//            if (Math.abs(drive.getPoseEstimate().getHeading() - Math.toRadians(finalRot)) < Math.toRadians(D_HeadingMarginToReset) && D_ResetPoseX) {
+                drive.setPoseEstimate(new Pose2d(E_PickupResetX, drive.getPoseEstimate().getY() + E_PickupResetYOffset, drive.getPoseEstimate().getHeading())); //Resets X position to be in line with wall
+//            }
 
             Claw.close(); //Closes claw to pick up cone
 
