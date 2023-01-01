@@ -9,6 +9,8 @@ import com.qualcomm.robotcore.hardware.ColorSensor;
 @Config
 public class SensorColors {
 
+    public static double AlphaDetectionMargin = 100;
+
     /**
      * The detected color from the color sensor
      *
