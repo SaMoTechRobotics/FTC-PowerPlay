@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis;
 
 import com.acmerobotics.dashboard.config.Config;
 
@@ -35,7 +35,7 @@ public class ChassisSpeed {
     /**
      * Place speed for when robot is aligning with pole
      */
-    public static double AlignSpeed = 0.125;
+    public static double AlignSpeed = 0.12;
     public static double ManualAlignSpeed = 0.2;
 
     /**
