@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Drive.Main;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
@@ -24,8 +25,13 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sen
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 
+@Config
 @TeleOp(name = "Drive", group = "Drive")
 public class Drive extends LinearOpMode {
+
+    public static double MoveMultiply = 0.5;
+
+    public static boolean BrakeOn = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -87,6 +93,8 @@ public class Drive extends LinearOpMode {
 
         ColorSensor.enableLed(true);
 
+        double avgStickY = 0;
+
         while (opModeIsActive()) {
             telemetry.addData("Color Sensor", "");
             telemetry.addData("Red", ColorSensor.red());
@@ -125,9 +133,21 @@ public class Drive extends LinearOpMode {
 //            boolean strafeAlign = Gamepad1.getButton(GamepadKeys.Button.DPAD_RIGHT);
 //            if (Gamepad1.getButton(GamepadKeys.Button.DPAD_LEFT)) strafeAlign = false;
 
+
+            if(Math.abs(Gamepad1.getLeftY()) < 0.1) {
+                if(avgStickY < 0) avgStickY += MoveMultiply;
+                if(avgStickY > 0) avgStickY -= MoveMultiply;
+                if(avgStickY < 0.5 && avgStickY > -0.5) avgStickY = 0;
+            } else {
+                if(Math.abs(avgStickY) < 1) avgStickY += -Gamepad1.getLeftY() * MoveMultiply;
+            }
+
+            Chassis.toggleBrake(BrakeOn);
+
             // Drives the robot with joysticks from gamepad 1, normal format
             Chassis.updateWithControls(
-                    Math.abs(-Gamepad1.getLeftY()) > 0.1 ? -Gamepad1.getLeftY() : 0, //drive stick
+//                    Math.abs(-Gamepad1.getLeftY()) > 0.1 ? -Gamepad1.getLeftY() : 0, //drive stick
+                    avgStickY,
                     Math.abs(-Gamepad1.getLeftX()) > 0.1 ? -Gamepad1.getLeftX() : 0, //strafe stick
                     Gamepad1.getRightX(), //turn stick
                     Gamepad1,
@@ -178,7 +198,8 @@ public class Drive extends LinearOpMode {
                     gamepad2.b,
                     gamepad2.x,
                     gamepad2.y,
-                    Gamepad2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) < 0.5
+                    false
+//                    Gamepad2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) < 0.5
             );
             else Arm.setRotation(ArmRotation.Center);
 
@@ -210,7 +231,7 @@ public class Drive extends LinearOpMode {
 
 //            Slide.waitForArm(Arm.getRotation());
 
-            Slide.updateSpeed(Gamepad2.getButton(GamepadKeys.Button.LEFT_BUMPER));
+            Slide.updateSpeed(Gamepad2.getButton(GamepadKeys.Button.A));
 
             telemetry.addLine("");
             telemetry.addData("Slide Inches", Slide.getInches());
