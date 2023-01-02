@@ -311,9 +311,10 @@ public class AutoRightPro extends LinearOpMode {
             count++; //Increments cone count
 
 
-            if ((!BonusCone || ParkingPosition != 3 && timer.seconds() > F_BonusPickupTimeMargin) && count == ConesToScore) break; //If all cones have been scored, break out of loop
+//            if ((!BonusCone || ParkingPosition != 3 && timer.seconds() > F_BonusPickupTimeMargin) && count == ConesToScore) break; //If all cones have been scored, break out of loop
+            if (count == ConesToScore) break; //If all cones have been scored, break out of loop
 
-            telemetry.addData("Time Remaining Before Getting Last Cone", 30 - timer.seconds());
+//            telemetry.addData("Time Remaining Before Getting Last Cone", 30 - timer.seconds());seconds
 //            telemetry.update();
 
 //            int finalCount = count;
@@ -381,7 +382,7 @@ public class AutoRightPro extends LinearOpMode {
 
             Claw.close(); //Closes claw to make sure cone is still picked up
 
-            if (count == ConesToScore) break; //If all cones have been scored, break out of loop
+//            if (count == ConesToScore) break; //If all cones have been scored, break out of loop
 
 
             Slide.setHeight(SlideHeight.MaxHeight, SlideSpeed.Max); //Sets slide to max height
@@ -399,115 +400,115 @@ public class AutoRightPro extends LinearOpMode {
 
 
         //When all cones have been scored, below executes:
-        if(BonusCone) {
-            telemetry.addData("Time Remaining After Got Cone", 30 - timer.seconds());
-//            telemetry.update();
-
-//            if(ParkingPosition == 3 || ParkingPosition == 2) {
-//                Slide.setHeight(SlideHeight.LowPole, SlideSpeed.Mid); //Sets slide to mid pole height slowly
+//        if(BonusCone) {
+//            telemetry.addData("Time Remaining After Got Cone", 30 - timer.seconds());
+////            telemetry.update();
 //
-//                drive.followTrajectory(
-//                        drive.trajectoryBuilder(drive.getPoseEstimate())
-//                                .lineToLinearHeading(new Pose2d(F_FindBonusPoleX, F_FindBonusPoleY, Math.toRadians(finalRot)),
-//                                        SampleMecanumDrive.getVelocityConstraint(FastSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-//                                        SampleMecanumDrive.getAccelerationConstraint(FastAccelSpeed)
-//                                ) //Drives to park
-//                                .build()
-//                );
-//
-//                while(Slide.getInches() < SlideHeight.LowPole - D_PickupSlideWaitMargin || Slide.getInches() > SlideHeight.LowPole + D_PickupSlideWaitMargin) {
-//                    idle();
-//                }
-//
-//                //Aligns with small pole on right front
-//                Chassis.PoleAlign alignDrive = Chassis.PoleAlign.Forward;
-//                while (!drive.autoPlace(Arm, LeftSensor, RightSensor, alignDrive, Chassis.PoleAlign.Right) && opModeIsActive()) { //Aligns with high pole
-//                    telemetry.addData("Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
-//                    telemetry.update();
-//                    drive.update();
-//                    if (drive.getPoseEstimate().getX() < BonusPoleX - SensorDistances.FindBuffer / 2) {
-//                        alignDrive = Chassis.PoleAlign.Forward;
-//                    } else if (drive.getPoseEstimate().getX() > BonusPoleX + SensorDistances.FindBuffer) {
-//                        alignDrive = Chassis.PoleAlign.Backward;
-//                    }
-//                }
-//
-//                drive.followTrajectory(
-//                        drive.trajectoryBuilder(drive.getPoseEstimate())
-//                                .back(C_PoleAdjust)
-//                                .build()
-//                ); //Adjusts to be in perfectly lined up with high pole
-//
-//
-//            } else {
-//                drive.followTrajectory(
-//                        drive.trajectoryBuilder(drive.getPoseEstimate())
-//                                .lineToLinearHeading(new Pose2d(EndPos3, D_PickupY, Math.toRadians(finalRot)),
-//                                        SampleMecanumDrive.getVelocityConstraint(ParkingSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-//                                        SampleMecanumDrive.getAccelerationConstraint(ParkingAccelSpeed)
-//                                ) //Drives to park
-//                                .build()
-//                );
+////            if(ParkingPosition == 3 || ParkingPosition == 2) {
+////                Slide.setHeight(SlideHeight.LowPole, SlideSpeed.Mid); //Sets slide to mid pole height slowly
+////
+////                drive.followTrajectory(
+////                        drive.trajectoryBuilder(drive.getPoseEstimate())
+////                                .lineToLinearHeading(new Pose2d(F_FindBonusPoleX, F_FindBonusPoleY, Math.toRadians(finalRot)),
+////                                        SampleMecanumDrive.getVelocityConstraint(FastSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+////                                        SampleMecanumDrive.getAccelerationConstraint(FastAccelSpeed)
+////                                ) //Drives to park
+////                                .build()
+////                );
+////
+////                while(Slide.getInches() < SlideHeight.LowPole - D_PickupSlideWaitMargin || Slide.getInches() > SlideHeight.LowPole + D_PickupSlideWaitMargin) {
+////                    idle();
+////                }
+////
+////                //Aligns with small pole on right front
+////                Chassis.PoleAlign alignDrive = Chassis.PoleAlign.Forward;
+////                while (!drive.autoPlace(Arm, LeftSensor, RightSensor, alignDrive, Chassis.PoleAlign.Right) && opModeIsActive()) { //Aligns with high pole
+////                    telemetry.addData("Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
+////                    telemetry.update();
+////                    drive.update();
+////                    if (drive.getPoseEstimate().getX() < BonusPoleX - SensorDistances.FindBuffer / 2) {
+////                        alignDrive = Chassis.PoleAlign.Forward;
+////                    } else if (drive.getPoseEstimate().getX() > BonusPoleX + SensorDistances.FindBuffer) {
+////                        alignDrive = Chassis.PoleAlign.Backward;
+////                    }
+////                }
+////
+////                drive.followTrajectory(
+////                        drive.trajectoryBuilder(drive.getPoseEstimate())
+////                                .back(C_PoleAdjust)
+////                                .build()
+////                ); //Adjusts to be in perfectly lined up with high pole
+////
+////
+////            } else {
+////                drive.followTrajectory(
+////                        drive.trajectoryBuilder(drive.getPoseEstimate())
+////                                .lineToLinearHeading(new Pose2d(EndPos3, D_PickupY, Math.toRadians(finalRot)),
+////                                        SampleMecanumDrive.getVelocityConstraint(ParkingSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+////                                        SampleMecanumDrive.getAccelerationConstraint(ParkingAccelSpeed)
+////                                ) //Drives to park
+////                                .build()
+////                );
+////            }
+//            Slide.setHeight(SlideHeight.MidPole, SlideSpeed.Mid);
+//            Claw.close();
+//            Arm.setRotation(ArmRotation.Center);
+//            switch (ParkingPosition) { //Drives to parking position
+//                case 1:
+//                    drive.followTrajectory(
+//                            drive.trajectoryBuilder(drive.getPoseEstimate())
+//                                    .lineToLinearHeading(new Pose2d(EndPos1, D_PickupY, Math.toRadians(finalRot)),
+//                                            SampleMecanumDrive.getVelocityConstraint(ParkingSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                                            SampleMecanumDrive.getAccelerationConstraint(ParkingAccelSpeed)
+//                                    ) //Drives to end position 1
+////                                .addTemporalMarker(1, () -> {
+////                                    Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
+////                                    Claw.close();
+////                                })
+//                                    .addDisplacementMarker(5, () -> {
+//                                        Slide.setHeight(SlideHeight.Ground, SlideSpeed.Mid); //Sets slide to mid pole height slowly
+//                                    })
+//                                    .build()
+//                    );
+//                    break;
+//                case 2:
+//                    drive.followTrajectory(
+//                            drive.trajectoryBuilder(drive.getPoseEstimate())
+//                                    .lineToLinearHeading(new Pose2d(EndPos2, D_PickupY, Math.toRadians(finalRot)),
+//                                            SampleMecanumDrive.getVelocityConstraint(ParkingSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                                            SampleMecanumDrive.getAccelerationConstraint(ParkingAccelSpeed)
+//                                    ) //Drives to end position 2
+//                                    .addDisplacementMarker(5, () -> {
+//                                        Slide.setHeight(SlideHeight.Ground, SlideSpeed.Mid); //Sets slide to mid pole height slowly
+//                                    })
+////                                .addTemporalMarker(1, () -> {
+////                                    Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
+////                                    Claw.close();
+////                                })
+//                                    .build()
+//                    );
+//                    break;
+//                case 3:
+//                    drive.followTrajectory(
+//                            drive.trajectoryBuilder(drive.getPoseEstimate())
+//                                    .lineToLinearHeading(new Pose2d(EndPos3, D_PickupY, Math.toRadians(finalRot)),
+//                                            SampleMecanumDrive.getVelocityConstraint(ParkingSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                                            SampleMecanumDrive.getAccelerationConstraint(ParkingAccelSpeed)
+//                                    ) //Drives to end position 3
+//                                    .addDisplacementMarker(5, () -> {
+//                                        Slide.setHeight(SlideHeight.Ground, SlideSpeed.Mid); //Sets slide to mid pole height slowly
+//                                    })
+////                                .addTemporalMarker(1, () -> {
+////                                    Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
+////                                    Claw.close();
+////                                })
+//                                    .build()
+//                    );
+//                    break;
 //            }
-            Slide.setHeight(SlideHeight.MidPole, SlideSpeed.Mid);
-            Claw.close();
-            Arm.setRotation(ArmRotation.Center);
-            switch (ParkingPosition) { //Drives to parking position
-                case 1:
-                    drive.followTrajectory(
-                            drive.trajectoryBuilder(drive.getPoseEstimate())
-                                    .lineToLinearHeading(new Pose2d(EndPos1, D_PickupY, Math.toRadians(finalRot)),
-                                            SampleMecanumDrive.getVelocityConstraint(ParkingSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                                            SampleMecanumDrive.getAccelerationConstraint(ParkingAccelSpeed)
-                                    ) //Drives to end position 1
-//                                .addTemporalMarker(1, () -> {
-//                                    Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
-//                                    Claw.close();
-//                                })
-                                    .addDisplacementMarker(5, () -> {
-                                        Slide.setHeight(SlideHeight.Ground, SlideSpeed.Mid); //Sets slide to mid pole height slowly
-                                    })
-                                    .build()
-                    );
-                    break;
-                case 2:
-                    drive.followTrajectory(
-                            drive.trajectoryBuilder(drive.getPoseEstimate())
-                                    .lineToLinearHeading(new Pose2d(EndPos2, D_PickupY, Math.toRadians(finalRot)),
-                                            SampleMecanumDrive.getVelocityConstraint(ParkingSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                                            SampleMecanumDrive.getAccelerationConstraint(ParkingAccelSpeed)
-                                    ) //Drives to end position 2
-                                    .addDisplacementMarker(5, () -> {
-                                        Slide.setHeight(SlideHeight.Ground, SlideSpeed.Mid); //Sets slide to mid pole height slowly
-                                    })
-//                                .addTemporalMarker(1, () -> {
-//                                    Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
-//                                    Claw.close();
-//                                })
-                                    .build()
-                    );
-                    break;
-                case 3:
-                    drive.followTrajectory(
-                            drive.trajectoryBuilder(drive.getPoseEstimate())
-                                    .lineToLinearHeading(new Pose2d(EndPos3, D_PickupY, Math.toRadians(finalRot)),
-                                            SampleMecanumDrive.getVelocityConstraint(ParkingSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                                            SampleMecanumDrive.getAccelerationConstraint(ParkingAccelSpeed)
-                                    ) //Drives to end position 3
-                                    .addDisplacementMarker(5, () -> {
-                                        Slide.setHeight(SlideHeight.Ground, SlideSpeed.Mid); //Sets slide to mid pole height slowly
-                                    })
-//                                .addTemporalMarker(1, () -> {
-//                                    Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
-//                                    Claw.close();
-//                                })
-                                    .build()
-                    );
-                    break;
-            }
-            Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
-            Claw.close();
-        } else {
+//            Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max);
+//            Claw.close();
+//        } else {
                 Arm.setRotation(ArmRotation.Center); //Sets arm to center position
                 Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max); //Sets slide to ground height
                 Claw.close(); //Closes claw to lower slide
@@ -557,7 +558,7 @@ public class AutoRightPro extends LinearOpMode {
                 }
                 Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max); //Sets slide to ground height
                 Claw.close(); //Closes claw to lower slide
-            }
+//            }
         telemetry.addData("Time Remaining", timer.seconds());
         telemetry.update();
 
