@@ -245,7 +245,7 @@ public class AutoRightPro extends LinearOpMode {
 
         drive.followTrajectory(FullSpeedDetectionTraj.build());
 
-        Arm.setRotation(ArmRotation.Center); //Sets arm to center position
+        Arm.setRotation(ArmRotation.Left); //Sets arm to center position
 
         drive.followTrajectory(
                 drive.trajectoryBuilder(drive.getPoseEstimate())
