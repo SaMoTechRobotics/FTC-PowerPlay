@@ -120,9 +120,9 @@ public class AutoLeftPro extends LinearOpMode {
     /**
      * Ending positions
      */
-    public static double EndPos1 = 14;
+    public static double EndPos1 = 58; //14
     public static double EndPos2 = 36;
-    public static double EndPos3 = 58;
+    public static double EndPos3 = 14; //58
     private static int ParkingPosition = 2;
 
     @Override
@@ -152,7 +152,7 @@ public class AutoLeftPro extends LinearOpMode {
 
         drive.setPoseEstimate(startPose);
 
-        telemetry.addData("Autonomous", "AutoRightPro");
+        telemetry.addData("Autonomous", "AutoLeftPro");
         telemetry.addLine("Autonomous Overview:");
         telemetry.addLine("1. Drives directly towards signal cone until close to high pole (reads signal sleeve)");
         telemetry.addLine("2. Turns to face stack of 5 then backs up and aligns with high pole");
@@ -264,9 +264,9 @@ public class AutoLeftPro extends LinearOpMode {
                 telemetry.addData("Sensor", RightSensor.getDistance(DistanceUnit.INCH));
                 telemetry.update();
                 drive.update();
-                if (drive.getPoseEstimate().getX() < PoleX - SensorDistances.FindBuffer / 2) {
+                if (drive.getPoseEstimate().getX() < -PoleX - SensorDistances.FindBuffer / 2) {
                     alignDrive = Chassis.PoleAlign.Forward;
-                } else if (drive.getPoseEstimate().getX() > PoleX + SensorDistances.FindBuffer) {
+                } else if (drive.getPoseEstimate().getX() > -PoleX + SensorDistances.FindBuffer) {
                     alignDrive = Chassis.PoleAlign.Backward;
                 }
             }
