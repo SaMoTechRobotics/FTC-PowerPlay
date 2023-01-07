@@ -98,14 +98,17 @@ public class Chassis {
             this.DriveSpeed = ChassisSpeed.MaxDrive;
             this.TurnSpeed = ChassisSpeed.MaxTurn;
             this.StrafeSpeed = ChassisSpeed.MaxStrafe;
+            this.toggleBrake(true);
         } else if (low) { // Right bumper is min speeds
             this.DriveSpeed = ChassisSpeed.MinDrive;
             this.TurnSpeed = ChassisSpeed.MinTurn;
             this.StrafeSpeed = ChassisSpeed.MinStrafe;
+            this.toggleBrake(true);
         } else { // No bumper is mid speeds
             this.DriveSpeed = ChassisSpeed.MidDrive;
             this.TurnSpeed = ChassisSpeed.MidTurn;
             this.StrafeSpeed = ChassisSpeed.MidStrafe;
+            this.toggleBrake(false);
         }
     }
 

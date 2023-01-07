@@ -118,7 +118,7 @@ public class Drive extends LinearOpMode {
             );
 
             //enable rotation if right trigger is down
-            boolean rotationEnabled = Gamepad1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5;
+//            boolean rotationEnabled = Gamepad1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5;
 
             // Drives the robot with joysticks from gamepad 1, format of each joystick being one direction
 //            Chassis.updateWithControls(
@@ -134,20 +134,20 @@ public class Drive extends LinearOpMode {
 //            if (Gamepad1.getButton(GamepadKeys.Button.DPAD_LEFT)) strafeAlign = false;
 
 
-            if(Math.abs(Gamepad1.getLeftY()) < 0.1) {
-                if(avgStickY < 0) avgStickY += MoveMultiply;
-                if(avgStickY > 0) avgStickY -= MoveMultiply;
-                if(avgStickY < 0.5 && avgStickY > -0.5) avgStickY = 0;
-            } else {
-                if(Math.abs(avgStickY) < 1) avgStickY += -Gamepad1.getLeftY() * MoveMultiply;
-            }
+//            if(Math.abs(Gamepad1.getLeftY()) < 0.1) {
+//                if(avgStickY < 0) avgStickY += MoveMultiply;
+//                if(avgStickY > 0) avgStickY -= MoveMultiply;
+//                if(avgStickY < 0.5 && avgStickY > -0.5) avgStickY = 0;
+//            } else {
+//                if(Math.abs(avgStickY) < 1) avgStickY += -Gamepad1.getLeftY() * MoveMultiply;
+//            }
 
-            Chassis.toggleBrake(BrakeOn);
+//            Chassis.toggleBrake(BrakeOn);
 
             // Drives the robot with joysticks from gamepad 1, normal format
             Chassis.updateWithControls(
-//                    Math.abs(-Gamepad1.getLeftY()) > 0.1 ? -Gamepad1.getLeftY() : 0, //drive stick
-                    avgStickY,
+                    Math.abs(-Gamepad1.getLeftY()) > 0.1 ? -Gamepad1.getLeftY() : 0, //drive stick
+//                    avgStickY,
                     Math.abs(-Gamepad1.getLeftX()) > 0.1 ? -Gamepad1.getLeftX() : 0, //strafe stick
                     Gamepad1.getRightX(), //turn stick
                     Gamepad1,
