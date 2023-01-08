@@ -158,15 +158,7 @@ public class AutoRightPro extends LinearOpMode {
         drive.setPoseEstimate(startPose);
 
         telemetry.addData("Autonomous", "AutoRightPro");
-        telemetry.addLine("Autonomous Overview:");
-        telemetry.addLine("1. Drives directly towards signal cone until close to high pole (reads signal sleeve)");
-        telemetry.addLine("2. Turns to face stack of 5 then backs up and aligns with high pole");
-        telemetry.addLine("3. Drops cone while driving away from high pole");
-        telemetry.addLine("4. Drives to stack of 5 cones");
-        telemetry.addLine("5. Picks up cone and drives to high pole");
-        telemetry.addLine("6. Repeats steps 3-5 until " + ConesToScore + " cones are scored");
-        telemetry.addLine("7. Drives to parking position");
-        telemetry.addLine("8. Autonomous finishes awesome!");
+        telemetry.addLine("1 + 2 Cones on High Pole");
         telemetry.update();
 
 
