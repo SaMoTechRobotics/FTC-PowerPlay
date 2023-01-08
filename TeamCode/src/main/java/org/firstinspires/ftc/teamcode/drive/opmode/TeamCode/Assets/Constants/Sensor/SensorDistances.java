@@ -11,15 +11,15 @@ public class SensorDistances {
     /**
      * The maximum distance the robot will detect a pole
      */
-    public static double DetectAmount = 12;
+    public static double DetectAmount = 14;
 
     public static double ManualDetectAmount = 12;
 
     /**
      * The target distance the robot will try to align to to deliver the cone
      */
-    public static double LeftPlaceDistance = 4.2;
-    public static double RightPlaceDistance = 4.9;
+    public static double LeftPlaceDistance = 4.5;
+    public static double RightPlaceDistance = 4.5;
 
     public static double ManualPlaceDistance = 4.75;
 
@@ -38,5 +38,7 @@ public class SensorDistances {
     /**
      * The buffer for how long the robot will drive until it starts going back
      */
-    public static double FindBuffer = 5;
+    public static double FindBuffer = 3;
+
+    public static double FindGiveUpTime = 5;
 }
