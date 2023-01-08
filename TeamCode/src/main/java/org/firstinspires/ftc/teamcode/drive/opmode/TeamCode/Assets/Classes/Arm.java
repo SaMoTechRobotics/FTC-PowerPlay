@@ -43,11 +43,11 @@ public class Arm {
      */
     public final void setRotation(double rotation) {
         this.TargetRotation = rotation;
-        if (this.ArmServo.getPosition() != this.rotationToPosition(rotation)) {
+//        if (this.ArmServo.getPosition() != this.rotationToPosition(rotation)) {
             this.ArmServo.setPosition(
                     this.rotationToPosition(rotation) // Converts the position to a percentage
             );
-        }
+//        }
     }
 
     /**
