@@ -19,6 +19,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Eyes;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Field.Field;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.ChassisSpeed;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Claw.ClawPosition;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Eyes.EyesPosition;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorColors;
@@ -146,9 +147,9 @@ public class Drive extends LinearOpMode {
 
             // Drives the robot with joysticks from gamepad 1, normal format
             Chassis.updateWithControls(
-                    Math.abs(-Gamepad1.getLeftY()) > 0.1 ? -Gamepad1.getLeftY() : 0, //drive stick
+                    Math.abs(-Gamepad1.getLeftY()) > ChassisSpeed.JoystickYMargin ? -Gamepad1.getLeftY() : 0, //drive stick
 //                    avgStickY,
-                    Math.abs(-Gamepad1.getLeftX()) > 0.1 ? -Gamepad1.getLeftX() : 0, //strafe stick
+                    Math.abs(-Gamepad1.getLeftX()) > ChassisSpeed.JoystickXMargin ? -Gamepad1.getLeftX() : 0, //strafe stick
                     Gamepad1.getRightX(), //turn stick
                     Gamepad1,
                     Arm,
@@ -174,7 +175,7 @@ public class Drive extends LinearOpMode {
                 Claw.setOpenAmount(ClawPosition.Open);
             }
 
-            if (ClawPosition.AutoClose && Slide.getTicks() < SlideHeight.GroundMargin && Claw.detectedCone()) {
+            if (ClawPosition.AutoClose && Slide.getTicks() < ClawPosition.ResetOpenMargin && Claw.detectedCone()) {
                 Claw.close();
             } else {
                 if (Gamepad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) Claw.close();
