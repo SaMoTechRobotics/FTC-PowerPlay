@@ -5,9 +5,11 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
 
@@ -21,6 +23,13 @@ public class ResetSlide extends LinearOpMode {
 
         Slide Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
         Slide.resetToZero();
+
+        Claw Claw =
+                new Claw(
+                        hardwareMap.get(Servo.class, "claw"),
+                        hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
+                );
+        Claw.close();
 
         Arm Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
 
@@ -53,6 +62,13 @@ public class ResetSlide extends LinearOpMode {
             if (Gamepad2.wasJustPressed(GamepadKeys.Button.Y)) {
                 Arm.setRotation(ArmRotation.Center);
             }
+            if(Gamepad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
+                Claw.open();
+            } else
+            if(Gamepad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){
+                Claw.close();
+            }
+
             Gamepad2.readButtons();
 
             telemetry.addData("Slide Height", Slide.getInches());
