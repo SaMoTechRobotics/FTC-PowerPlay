@@ -44,5 +44,7 @@ public class ChassisSpeed {
     public static double PlaceSpeed = 0.15;
     public static double ManualPlaceSpeed = 0.2;
 
+    public static double JoystickYMargin = 0.1;
+    public static double JoystickXMargin = 0.15;
 
 }
