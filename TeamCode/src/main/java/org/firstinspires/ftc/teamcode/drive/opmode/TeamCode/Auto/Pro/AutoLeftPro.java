@@ -54,7 +54,7 @@ public class AutoLeftPro extends LinearOpMode {
     public static double B_FindPoleX = 33;
     public static double B_FindPoleY = -12;
 
-    public static double C_PoleAdjust = 1;
+    public static double C_PoleAdjust = 0.2;
 
     public static double C_LowerConeTime = 300;
 
@@ -62,9 +62,9 @@ public class AutoLeftPro extends LinearOpMode {
 
     public static double D_PickupSlideWaitMargin = 1;
     public static double D_PickupX = 56;
-    public static double D_PickupY = -13.5;
+    public static double D_PickupY = -12.5;
 
-    public static double D_PickupForward = 7.5;
+    public static double D_PickupForward = 8;
 
     public static double D_HeadingMarginToReset = 0.2;
 
@@ -280,6 +280,7 @@ public class AutoLeftPro extends LinearOpMode {
 
         int count = 0;
         while (opModeIsActive() && count < ConesToScore) {
+            Arm.setRotation(ArmRotation.Right); //Sets arm to center position
 
             Chassis.PoleAlign alignDrive = Chassis.PoleAlign.Backward;
 //            double startingAlignTime = timer.seconds();

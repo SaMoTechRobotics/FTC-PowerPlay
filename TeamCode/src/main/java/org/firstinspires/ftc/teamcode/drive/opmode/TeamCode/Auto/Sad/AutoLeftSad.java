@@ -50,7 +50,7 @@ public class AutoLeftSad extends LinearOpMode {
     public static double B_FindPoleX = 33;
     public static double B_FindPoleY = -14;
 
-    public static double C_PoleAdjust = 1;
+    public static double C_PoleAdjust = 0.7;
 
     public static double C_LowerAmount = 8;
 
@@ -60,9 +60,9 @@ public class AutoLeftSad extends LinearOpMode {
 
     public static double D_PickupSlideWaitMargin = 1;
     public static double D_PickupX = 56;
-    public static double D_PickupY = -13.5;
+    public static double D_PickupY = -13;
 
-    public static double D_PickupForward = 7.5;
+    public static double D_PickupForward = 8;
 
     public static double D_HeadingMarginToReset = 0.2;
 
@@ -207,7 +207,7 @@ public class AutoLeftSad extends LinearOpMode {
 
         for(int i = 0; i < A_DetectTries; i++) {
             FullSpeedDetectionTraj.addDisplacementMarker(A_DetectDist + (i * A_DetectTryMultiplier), () -> { //Reads signal sleeve
-                Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
+                Slide.setHeight(SlideHeight.MidPole, SlideSpeed.Max);
                 if(GotColor[0] || colorSensor.alpha() < SensorColors.AlphaDetectionMargin) {
                     if(!GotColor[0]) {
 //                        telemetry.addData("Got Color", GotColor[0]);
@@ -320,6 +320,7 @@ public class AutoLeftSad extends LinearOpMode {
                                 .build()
                 ); //Adjusts to be in perfectly lined up with high pole
 
+                sleep(200);
 //            sleep(100);
 
                 Slide.setHeight(SlideHeight.MidPole - C_LowerAmount, SlideSpeed.Mid); //Sets Slide to mid pole height slowly

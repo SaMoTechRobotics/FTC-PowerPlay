@@ -54,7 +54,7 @@ public class AutoRightSad extends LinearOpMode {
     public static double B_FindPoleX = 33;
     public static double B_FindPoleY = -14;
 
-    public static double C_PoleAdjust = 1;
+    public static double C_PoleAdjust = 0.7;
 
     public static double C_LowerAmount = 8;
 
@@ -64,7 +64,7 @@ public class AutoRightSad extends LinearOpMode {
 
     public static double D_PickupSlideWaitMargin = 1;
     public static double D_PickupX = 56;
-    public static double D_PickupY = -13.5;
+    public static double D_PickupY = -13;
 
     public static double D_PickupForward = 8;
 
@@ -323,6 +323,8 @@ public class AutoRightSad extends LinearOpMode {
                                 .back(C_PoleAdjust)
                                 .build()
                 ); //Adjusts to be in perfectly lined up with high pole
+
+                sleep(200);
 
 //            sleep(100);
 

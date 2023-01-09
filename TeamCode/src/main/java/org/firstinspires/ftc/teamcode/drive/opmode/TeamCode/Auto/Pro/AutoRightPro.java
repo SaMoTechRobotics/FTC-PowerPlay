@@ -62,7 +62,7 @@ public class AutoRightPro extends LinearOpMode {
 
     public static double D_PickupSlideWaitMargin = 1;
     public static double D_PickupX = 56;
-    public static double D_PickupY = -13.5;
+    public static double D_PickupY = -13;
 
     public static double D_PickupForward = 8;
 
@@ -280,6 +280,7 @@ public class AutoRightPro extends LinearOpMode {
 
         int count = 0;
         while (opModeIsActive() && count < ConesToScore) {
+            Arm.setRotation(ArmRotation.Left); //Sets arm to center position
 
             Chassis.PoleAlign alignDrive = Chassis.PoleAlign.Backward;
 //            double startingAlignTime = timer.seconds();
