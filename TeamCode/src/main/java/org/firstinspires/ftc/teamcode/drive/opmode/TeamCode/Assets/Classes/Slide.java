@@ -198,6 +198,7 @@ public class Slide {
             boolean left,
             boolean down,
             boolean right,
+            boolean AButton,
             Arm arm,
             Claw claw
     ) {
@@ -222,7 +223,7 @@ public class Slide {
         } else if (this.getTicks() < SlideHeight.GroundMargin) {
             if (this.Status != SlideStatus.Stopped) {
 //                this.stop();
-                if (!claw.detectedCone()) claw.open();
+                if (!claw.detectedCone() && !AButton) claw.open();
             }
         } else if (
                 this.Status != SlideStatus.Stopped &&
