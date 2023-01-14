@@ -175,7 +175,7 @@ public class Drive extends LinearOpMode {
                 Claw.setOpenAmount(ClawPosition.Open);
             }
 
-            if (ClawPosition.AutoClose && Slide.getTicks() < ClawPosition.ResetOpenMargin && Claw.detectedCone()) {
+            if (ClawPosition.AutoClose && Slide.getTicks() < ClawPosition.ResetOpenMargin && Claw.detectedCone() && !Gamepad2.getButton(GamepadKeys.Button.A)) {
                 Claw.close();
             } else {
                 if (Gamepad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) Claw.close();
@@ -226,6 +226,7 @@ public class Drive extends LinearOpMode {
                     Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_LEFT),
                     Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
                     Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT),
+                    Gamepad2.getButton(GamepadKeys.Button.A),
                     Arm,
                     Claw
             );
@@ -270,11 +271,11 @@ public class Drive extends LinearOpMode {
 
             /* EYES */
 
-            if (Gamepad1.wasJustPressed(GamepadKeys.Button.Y)) {
-                Eyes.setPosition(EyesPosition.Forward);
-            } else if (Slide.getTicks() > SlideHeight.GroundMargin) {
-                Eyes.syncWithSlide(Slide.getTicks());
-            }
+//            if (Gamepad1.wasJustPressed(GamepadKeys.Button.Y)) {
+//                Eyes.setPosition(EyesPosition.Forward);
+//            } else if (Slide.getTicks() > SlideHeight.GroundMargin) {
+//                Eyes.syncWithSlide(Slide.getTicks());
+//            }
 
 
             /* TELEMETRY */
