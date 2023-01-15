@@ -31,7 +31,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideSpeed;
 
 @Config
-@Autonomous(name = "AutoPark", group = "AutoPro")
+@Autonomous(name = "AutoPark", group = "C")
 public class AutoPark extends LinearOpMode {
 
     public static double ParkingSpeed = 60;
