@@ -25,6 +25,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Claw.ClawPosition;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.PodLift.PodLiftPosition;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorColors;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorDistances;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
@@ -117,6 +118,8 @@ public class AutoRightPro extends LinearOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
+
+
         Slide Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
         Slide.resetToZero();
 
@@ -128,6 +131,9 @@ public class AutoRightPro extends LinearOpMode {
                 hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
         );
         Claw.close();
+
+        Servo podLift = hardwareMap.get(Servo.class, "podLift");
+        podLift.setPosition(PodLiftPosition.Down);
 
         DistanceSensor LeftSensor = hardwareMap.get(DistanceSensor.class, "leftDistanceSensor");
         DistanceSensor RightSensor = hardwareMap.get(DistanceSensor.class, "rightDistanceSensor");
@@ -150,6 +156,8 @@ public class AutoRightPro extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
+
+        podLift.setPosition(PodLiftPosition.Down);
 
         Arm.setRotation(ArmRotation.Center);
         Slide.setHeight(SlideHeight.LowPole, SlideSpeed.Mid); //Sets Slide to low pole height slowly

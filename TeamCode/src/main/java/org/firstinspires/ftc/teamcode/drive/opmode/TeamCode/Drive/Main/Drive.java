@@ -22,17 +22,19 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.ChassisSpeed;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Claw.ClawPosition;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Eyes.EyesPosition;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.PodLift.PodLiftPosition;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorColors;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 
-@Config
+//@Config
 @TeleOp(name = "Drive", group = "Drive")
 public class Drive extends LinearOpMode {
 
-    public static double MoveMultiply = 0.5;
 
-    public static boolean BrakeOn = false;
+//    public static double MoveMultiply = 0.5;
+
+//    public static boolean BrakeOn = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -51,7 +53,9 @@ public class Drive extends LinearOpMode {
                 );
         Claw.close();
 
-        Eyes Eyes = new Eyes(hardwareMap.get(Servo.class, "eyesServo"));
+//        Eyes Eyes = new Eyes(hardwareMap.get(Servo.class, "eyesServo"));
+
+        Servo podLift = hardwareMap.get(Servo.class, "podLift");
 
         ColorSensor ColorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
 
@@ -97,6 +101,8 @@ public class Drive extends LinearOpMode {
         double avgStickY = 0;
 
         while (opModeIsActive()) {
+            podLift.setPosition(PodLiftPosition.Up);
+
             telemetry.addData("Color Sensor", "");
             telemetry.addData("Red", ColorSensor.red());
             telemetry.addData("Green", ColorSensor.green());
@@ -104,6 +110,7 @@ public class Drive extends LinearOpMode {
             telemetry.addData("Alpha", ColorSensor.alpha());
             telemetry.addData("ARGB", ColorSensor.argb());
             telemetry.addData("Detected Color", SensorColors.detectColor(ColorSensor.red(), ColorSensor.green(), ColorSensor.blue()));
+
 
             /* CHASSIS */
 
