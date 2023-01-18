@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideSpeed;
 
 @Config
-@Autonomous(name = "AutoSad", group = "AutoPro")
+@Autonomous(name = "AutoLeftSad", group = "AutoPro")
 public class AutoLeftSad extends LinearOpMode {
 
     public static double FastSpeed = 55;
