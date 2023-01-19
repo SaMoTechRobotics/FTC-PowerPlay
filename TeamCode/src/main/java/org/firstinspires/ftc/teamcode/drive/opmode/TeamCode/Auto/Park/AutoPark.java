@@ -25,6 +25,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Claw.ClawPosition;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.PodLift.PodLiftPosition;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorColors;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorDistances;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
@@ -77,6 +78,10 @@ public class AutoPark extends LinearOpMode {
                 hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
         );
         Claw.close();
+
+
+        Servo podLift = hardwareMap.get(Servo.class, "podLift");
+        podLift.setPosition(PodLiftPosition.Down);
 
         DistanceSensor LeftSensor = hardwareMap.get(DistanceSensor.class, "leftDistanceSensor");
         DistanceSensor RightSensor = hardwareMap.get(DistanceSensor.class, "rightDistanceSensor");
