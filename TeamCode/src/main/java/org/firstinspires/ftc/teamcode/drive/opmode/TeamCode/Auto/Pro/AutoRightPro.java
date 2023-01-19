@@ -51,6 +51,9 @@ public class AutoRightPro extends LinearOpMode {
     public static double A_DetectTries = 10;
     public static double A_DetectTryMultiplier = 0.25;
 
+    public static double A_FindPoleX = 34; //55
+    public static double A_FindPoleY = -30; //55
+
     public static double B_PushConesX = 35;
     public static double B_PushConesStrafe = 5;
 
