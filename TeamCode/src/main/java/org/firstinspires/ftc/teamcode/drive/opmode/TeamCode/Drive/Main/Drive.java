@@ -56,6 +56,7 @@ public class Drive extends LinearOpMode {
 //        Eyes Eyes = new Eyes(hardwareMap.get(Servo.class, "eyesServo"));
 
         Servo podLift = hardwareMap.get(Servo.class, "podLift");
+        podLift.setPosition(PodLiftPosition.Up);
 
         ColorSensor ColorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
 
