@@ -37,16 +37,16 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Auto.Constants.AutoS
 public class AutoRightPro extends LinearOpMode {
 
     public final static int side = AutoSide.Right;
-    public static double FastSpeed = 55;
+    public static double FastSpeed = 80;
     public static double FastTurnSpeed = 1.2;
-    public static double FastAccelSpeed = 30;
+    public static double FastAccelSpeed = 50;
 
-    public static double ParkingSpeed = 70;
-    public static double ParkingAccelSpeed = 40;
+    public static double ParkingSpeed = 100;
+    public static double ParkingAccelSpeed = 60;
 
     public static double A_LongDrive = 50; //55
-    public static double A_LongAccelSpeed = 30;
-    public static double A_LongSpeed = 55;
+    public static double A_LongAccelSpeed = 50;
+    public static double A_LongSpeed = 90;
     public static double A_DetectDist = 17;
     public static double A_DetectTries = 10;
     public static double A_DetectTryMultiplier = 0.25;
@@ -60,15 +60,16 @@ public class AutoRightPro extends LinearOpMode {
     public static double B_FindPoleX = 33;
     public static double B_FindPoleY = -12;
 
-    public static double C_PoleAdjust = 1;
+    public static double C_PoleAdjust = 0.5;
 
+    public static double C_LowerAmount = 8;
     public static double C_LowerConeTime = 300;
 
     public static double C_ClearPoleStrafe = 4.5;
 
-    public static double D_PickupSlideWaitMargin = 1;
+    public static double D_PickupSlideWaitMargin = 3;
     public static double D_PickupX = 56;
-    public static double D_PickupY = -13;
+    public static double D_PickupY = -12;
 
     public static double D_PickupForward = 8;
 
@@ -77,6 +78,9 @@ public class AutoRightPro extends LinearOpMode {
     public static boolean D_ResetPoseX = true;
 
     public static double E_PickupConeWait = 200;
+
+    public static double E_RotArmDelay = 1;
+
     public static double E_PickupResetX = 64;
     public static double E_PickupResetYOffset = 0;
 
@@ -90,7 +94,9 @@ public class AutoRightPro extends LinearOpMode {
 
     public static double G_BonusLowerConeTime = 300;
 
-    public static int ConesToScore = 3;
+    public static int ConesToScore = 4;
+    public static int ConesOnMid = 4;
+
     public static boolean BonusCone = true;
 
     public static double startX = 36;
@@ -111,7 +117,7 @@ public class AutoRightPro extends LinearOpMode {
      */
     public static double EndPos1 = 14;
     public static double EndPos2 = 36;
-    public static double EndPos3 = 58;
+    public static double EndPos3 = 59;
     private static int ParkingPosition = 2;
 
     @Override
@@ -201,7 +207,7 @@ public class AutoRightPro extends LinearOpMode {
 
         for(int i = 0; i < A_DetectTries; i++) {
             FullSpeedDetectionTraj.addDisplacementMarker(A_DetectDist + (i * A_DetectTryMultiplier), () -> { //Reads signal sleeve
-                Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
+                Slide.setHeight(SlideHeight.MidPole, SlideSpeed.Max);
                 if(GotColor[0] || colorSensor.alpha() < SensorColors.AlphaDetectionMargin) {
                     if(!GotColor[0]) {
 //                        telemetry.addData("Got Color", GotColor[0]);
@@ -277,17 +283,26 @@ public class AutoRightPro extends LinearOpMode {
         int count = 0;
         while (opModeIsActive() && count < ConesToScore) {
             if (side == AutoSide.Right) {
-                Arm.setRotation(ArmRotation.Right);
+                if (count < ConesOnMid) {
+                    Arm.setRotation(ArmRotation.Right);
+                } else {
+                    Arm.setRotation(ArmRotation.Left);
+                }
             } else {
-                Arm.setRotation(ArmRotation.Left);
+                if (count < ConesOnMid) {
+                    Arm.setRotation(ArmRotation.Left);
+                } else {
+                    Arm.setRotation(ArmRotation.Right);
+                }
             }//Sets arm to left or right depending on side
 
             Chassis.PoleAlign alignDrive = Chassis.PoleAlign.Backward;
 //            double startingAlignTime = timer.seconds();
             int switchAlign = 0;
             boolean foundPole = true;
-            while (!drive.autoPlace(Arm, LeftSensor, RightSensor, alignDrive, side == AutoSide.Right ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left) && opModeIsActive()) { //Aligns with high pole
-                telemetry.addData("Sensor", side == AutoSide.Right ? RightSensor.getDistance(DistanceUnit.INCH) : LeftSensor.getDistance(DistanceUnit.INCH));
+            while (!drive.autoPlace(Arm, LeftSensor, RightSensor, alignDrive, side == AutoSide.Right ? (count < ConesOnMid ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left) : (count < ConesOnMid ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right)) && opModeIsActive()) { //Aligns with high pole
+                telemetry.addData("Left Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
+                telemetry.addData("Right Sensor", RightSensor.getDistance(DistanceUnit.INCH));
                 telemetry.update();
                 drive.update();
 //                if(startingAlignTime - timer.seconds() > SensorDistances.FindGiveUpTime) {
@@ -319,13 +334,13 @@ public class AutoRightPro extends LinearOpMode {
             if(foundPole) {
                 drive.followTrajectory(
                         drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .back(C_PoleAdjust)
+                                .forward(C_PoleAdjust)
                                 .build()
                 ); //Adjusts to be in perfectly lined up with high pole
 
 //            sleep(100);
 
-                Slide.setHeight(SlideHeight.LowPole, SlideSpeed.Mid); //Sets Slide to mid pole height slowly
+                Slide.setHeight(count < ConesOnMid ? SlideHeight.MidPole - C_LowerAmount : SlideHeight.MidPole, SlideSpeed.Mid); //Sets Slide to mid pole height slowly
 
                 sleep((long) C_LowerConeTime); //Lets the slide descend a bit
 
@@ -339,17 +354,33 @@ public class AutoRightPro extends LinearOpMode {
 //            sleep((long) WaitForConeToDrop);
 
             if(side == AutoSide.Right) {
-                drive.followTrajectory(
-                        drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .strafeLeft(C_ClearPoleStrafe)
-                                .build()
-                ); //Drives away from high pole to clear it
+                if (count < ConesOnMid) {
+                    drive.followTrajectory(
+                            drive.trajectoryBuilder(drive.getPoseEstimate())
+                                    .strafeLeft(C_ClearPoleStrafe)
+                                    .build()
+                    ); //Drives away from high pole to clear it
+             } else {
+                    drive.followTrajectory(
+                            drive.trajectoryBuilder(drive.getPoseEstimate())
+                                    .strafeLeft(C_ClearPoleStrafe)
+                                    .build()
+                    ); //Drives away from high pole to clear it
+                }
             } else {
-                drive.followTrajectory(
-                        drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .strafeRight(C_ClearPoleStrafe)
-                                .build()
-                ); //Drives away from high pole to clear it
+                if (count < ConesOnMid) {
+                    drive.followTrajectory(
+                            drive.trajectoryBuilder(drive.getPoseEstimate())
+                                    .strafeRight(C_ClearPoleStrafe)
+                                    .build()
+                    ); //Drives away from high pole to clear it
+                } else {
+                    drive.followTrajectory(
+                            drive.trajectoryBuilder(drive.getPoseEstimate())
+                                    .strafeLeft(C_ClearPoleStrafe)
+                                    .build()
+                    ); //Drives away from high pole to clear it
+                }
             }
 //            Claw.open(); //Opens claw to drop cone
 
@@ -446,14 +477,30 @@ public class AutoRightPro extends LinearOpMode {
 //            if (count == ConesToScore) break; //If all cones have been scored, break out of loop
 
 
-            Slide.setHeight(SlideHeight.MaxHeight, SlideSpeed.Max); //Sets slide to max height
+            if(count < ConesOnMid) Slide.setHeight(SlideHeight.MidPole, SlideSpeed.Max); else Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max); //Sets slide to max height
 
+            int finalCount1 = count;
             drive.followTrajectory(
                     drive.trajectoryBuilder(drive.getPoseEstimate())
                             .lineToLinearHeading(new Pose2d(side * B_FindPoleX, B_FindPoleY, Math.toRadians(finalRot)),
                                     SampleMecanumDrive.getVelocityConstraint(FastSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                                     SampleMecanumDrive.getAccelerationConstraint(FastAccelSpeed)
                             ) //Drives to get ready to align with high pole
+                            .addTemporalMarker(E_RotArmDelay, () -> {
+                                if (side == AutoSide.Right) {
+                                    if (finalCount1 < ConesOnMid) {
+                                        Arm.setRotation(ArmRotation.Right);
+                                    } else {
+                                        Arm.setRotation(ArmRotation.Left);
+                                    }
+                                } else {
+                                    if (finalCount1 < ConesOnMid) {
+                                        Arm.setRotation(ArmRotation.Left);
+                                    } else {
+                                        Arm.setRotation(ArmRotation.Right);
+                                    }
+                                }//Sets arm to left or right depending on side
+                            })
                             .build()
             );
 
