@@ -37,15 +37,15 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Auto.Constants.AutoS
 public class AutoRightPro extends LinearOpMode {
 
     public final static int side = AutoSide.Right;
-    public static double FastSpeed = 80;
-    public static double FastTurnSpeed = 1.2;
-    public static double FastAccelSpeed = 50;
+    public static double FastSpeed = 90;
+    public static double FastTurnSpeed = 1.4;
+    public static double FastAccelSpeed = 75;
 
     public static double ParkingSpeed = 100;
-    public static double ParkingAccelSpeed = 60;
+    public static double ParkingAccelSpeed = 80;
 
     public static double A_LongDrive = 50; //55
-    public static double A_LongAccelSpeed = 50;
+    public static double A_LongAccelSpeed = 80;
     public static double A_LongSpeed = 90;
     public static double A_DetectDist = 17;
     public static double A_DetectTries = 10;
@@ -448,17 +448,21 @@ public class AutoRightPro extends LinearOpMode {
                             .build()
             );
 
-            Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - finalCount)), SlideSpeed.Max); //Sets slide to height of next cone in 5 stack
-            while(Slide.getInches() > SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - count)) + D_PickupSlideWaitMargin) {
-                Claw.open();
-                idle();
-            }
+//            Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - finalCount)), SlideSpeed.Max); //Sets slide to height of next cone in 5 stack
+//            while(Slide.getInches() > SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - count)) + D_PickupSlideWaitMargin) {
+//                Claw.open();
+//                idle();
+//            }
 
-            Claw.open(); //Opens claw to get ready to pick up cone
+//            Claw.open(); //Opens claw to get ready to pick up cone
 
             drive.followTrajectory(
                     drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .forward(D_PickupForward) //Drives forward to pick up cone and align with wall
+                            .forward(D_PickupForward,
+                                    SampleMecanumDrive.getVelocityConstraint(FastSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                                    SampleMecanumDrive.getAccelerationConstraint(FastAccelSpeed)
+                                    ) //Drives forward to pick up cone and align with wall
+                            .addDisplacementMarker(0.1, Claw::open)
                             .build()
             );
 
