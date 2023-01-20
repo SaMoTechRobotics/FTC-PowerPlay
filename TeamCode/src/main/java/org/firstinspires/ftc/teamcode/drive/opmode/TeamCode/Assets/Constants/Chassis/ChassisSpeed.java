@@ -19,19 +19,19 @@ public class ChassisSpeed {
      */
     public static double MaxDrive = 1.0;
     public static double MidDrive = 0.5;
-    public static double MinDrive = 0.3;
+    public static double MinDrive = 0.2;
     /**
      * The speed of the robot when it is turning
      */
     public static double MaxTurn = 1.0;
     public static double MidTurn = 0.5;
-    public static double MinTurn = 0.3;
+    public static double MinTurn = 0.2;
     /**
      * The speed of the robot when it is strafing
      */
     public static double MaxStrafe = 1.0;
     public static double MidStrafe = 0.5;
-    public static double MinStrafe = 0.3;
+    public static double MinStrafe = 0.25;
     /**
      * Place speed for when robot is aligning with pole
      */
