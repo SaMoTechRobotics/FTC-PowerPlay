@@ -6,6 +6,7 @@ import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_ANG_VEL;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MAX_VEL;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.MOTOR_VELO_PID;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.RUN_USING_ENCODER;
+import static org.firstinspires.ftc.teamcode.drive.DriveConstants.STOP_DELAY;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.TRACK_WIDTH;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.encoderTicksToInches;
 import static org.firstinspires.ftc.teamcode.drive.DriveConstants.kA;
@@ -101,7 +102,7 @@ public class SampleMecanumDrive extends MecanumDrive {
                         TRANSLATIONAL_PID,
                         HEADING_PID,
                         new Pose2d(0.5, 0.5, Math.toRadians(5.0)),
-                        0.5
+                        STOP_DELAY
                 );
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
@@ -488,6 +489,13 @@ public class SampleMecanumDrive extends MecanumDrive {
             } else {
                 arm.setRotation(ArmRotation.Right);
             }
+            this.followTrajectory(
+                    this.trajectoryBuilder(this.getPoseEstimate())
+                            .back(SensorDistances.DriveBackAdjust)
+                            .build()
+            );
+            double newPlaceDistance = alignStrafe == Chassis.PoleAlign.Left ? SensorDistances.LeftPlaceDistance : SensorDistances.RightPlaceDistance;
+            if (newPlaceDistance < PlaceDistance) PlaceDistance = newPlaceDistance;
             //            this.setWeightedDrivePower(
 //                    new Pose2d(
 //                            0,
@@ -502,23 +510,45 @@ public class SampleMecanumDrive extends MecanumDrive {
             New Code below
              */
             if (sensorDistance > PlaceDistance) {
-                this.followTrajectory(
-                        this.trajectoryBuilder(this.getPoseEstimate())
-                                .strafeLeft(sensorDistance - PlaceDistance,
-                                        SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                                        SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
-                                )
-                                .build()
-                );
+                if (alignStrafe == Chassis.PoleAlign.Left) {
+                    this.followTrajectory(
+                            this.trajectoryBuilder(this.getPoseEstimate())
+                                    .strafeLeft(sensorDistance - PlaceDistance,
+                                            SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                                            SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
+                                    )
+                                    .build()
+                    );
+                } else if (alignStrafe == Chassis.PoleAlign.Right) {
+                    this.followTrajectory(
+                            this.trajectoryBuilder(this.getPoseEstimate())
+                                    .strafeRight(sensorDistance - PlaceDistance,
+                                            SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                                            SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
+                                    )
+                                    .build()
+                    );
+                }
             } else if (sensorDistance < PlaceDistance) {
-                this.followTrajectory(
-                        this.trajectoryBuilder(this.getPoseEstimate())
-                                .strafeRight(PlaceDistance - sensorDistance,
-                                        SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                                        SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
-                                )
-                                .build()
-                );
+                if (alignStrafe == Chassis.PoleAlign.Left) {
+                    this.followTrajectory(
+                            this.trajectoryBuilder(this.getPoseEstimate())
+                                    .strafeRight(PlaceDistance - sensorDistance,
+                                            SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                                            SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
+                                    )
+                                    .build()
+                    );
+                } else if (alignStrafe == Chassis.PoleAlign.Right) {
+                    this.followTrajectory(
+                            this.trajectoryBuilder(this.getPoseEstimate())
+                                    .strafeLeft(PlaceDistance - sensorDistance,
+                                            SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                                            SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
+                                    )
+                                    .build()
+                    );
+                }
             }
 
             return true;
