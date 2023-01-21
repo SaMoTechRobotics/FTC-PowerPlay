@@ -488,16 +488,40 @@ public class SampleMecanumDrive extends MecanumDrive {
             } else {
                 arm.setRotation(ArmRotation.Right);
             }
-            this.setWeightedDrivePower(
-                    new Pose2d(
-                            0,
-                            sensorDistance > PlaceDistance ?
-                                    ((alignStrafe == Chassis.PoleAlign.Left) ? ChassisSpeed.PlaceSpeed : -ChassisSpeed.PlaceSpeed) :
-                                    ((alignStrafe == Chassis.PoleAlign.Left) ? -ChassisSpeed.PlaceSpeed : ChassisSpeed.PlaceSpeed),
-                            0
-                    )
-            );
-            return false;
+            //            this.setWeightedDrivePower(
+//                    new Pose2d(
+//                            0,
+//                            sensorDistance > PlaceDistance ?
+//                                    ((alignStrafe == Chassis.PoleAlign.Left) ? ChassisSpeed.PlaceSpeed : -ChassisSpeed.PlaceSpeed) :
+//                                    ((alignStrafe == Chassis.PoleAlign.Left) ? -ChassisSpeed.PlaceSpeed : ChassisSpeed.PlaceSpeed),
+//                            0
+//                    )
+//            );
+
+            /*
+            New Code below
+             */
+            if (sensorDistance > PlaceDistance) {
+                this.followTrajectory(
+                        this.trajectoryBuilder(this.getPoseEstimate())
+                                .strafeLeft(sensorDistance - PlaceDistance,
+                                        SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                                        SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
+                                )
+                                .build()
+                );
+            } else if (sensorDistance < PlaceDistance) {
+                this.followTrajectory(
+                        this.trajectoryBuilder(this.getPoseEstimate())
+                                .strafeRight(PlaceDistance - sensorDistance,
+                                        SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                                        SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
+                                )
+                                .build()
+                );
+            }
+
+            return true;
         } else {
             this.setWeightedDrivePower(
                     new Pose2d(
