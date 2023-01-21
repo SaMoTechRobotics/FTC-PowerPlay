@@ -38,6 +38,10 @@ public class ChassisSpeed {
     public static double AlignSpeed = 0.12;
     public static double ManualAlignSpeed = 0.2;
 
+    public static double QuickPlaceSpeed = 20;
+
+    public static double QuickPlaceAccel = 10;
+
     /**
      * Place speed for when robot is driving toward pole to place cone
      */
