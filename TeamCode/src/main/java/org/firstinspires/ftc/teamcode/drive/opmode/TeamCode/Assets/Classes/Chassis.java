@@ -57,7 +57,7 @@ public class Chassis {
         this.Wheels.BackLeft.setDirection(DcMotor.Direction.REVERSE);
 
         this.MecanumDrive = new SampleMecanumDrive(hardwareMap);
-        this.MecanumDrive.setPoseEstimate(PoseStorage.currentPose);
+        this.MecanumDrive.setPoseEstimate(PoseStorage.CurrentPose);
         this.MecanumDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 

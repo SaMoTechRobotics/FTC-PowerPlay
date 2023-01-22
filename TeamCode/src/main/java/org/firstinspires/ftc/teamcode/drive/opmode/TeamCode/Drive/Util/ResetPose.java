@@ -11,7 +11,7 @@ public class ResetPose extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         telemetry.addData("Status", "Ready to reset pose");
-        telemetry.addData("Current Pose", PoseStorage.currentPose);
+        telemetry.addData("Current Pose", PoseStorage.CurrentPose);
         telemetry.update();
 
         waitForStart();
@@ -20,7 +20,7 @@ public class ResetPose extends LinearOpMode {
         PoseStorage.reset();
 
         telemetry.addData("Status", "Reset pose complete");
-        telemetry.addData("Current Pose", PoseStorage.currentPose);
+        telemetry.addData("Current Pose", PoseStorage.CurrentPose);
         telemetry.update();
     }
 }
