@@ -494,8 +494,8 @@ public class SampleMecanumDrive extends MecanumDrive {
                             .back(SensorDistances.DriveBackAdjust)
                             .build()
             );
-            double newPlaceDistance = alignStrafe == Chassis.PoleAlign.Left ? SensorDistances.LeftPlaceDistance : SensorDistances.RightPlaceDistance;
-            if (newPlaceDistance < PlaceDistance) PlaceDistance = newPlaceDistance;
+//            double newPlaceDistance = alignStrafe == Chassis.PoleAlign.Left ? SensorDistances.LeftPlaceDistance : SensorDistances.RightPlaceDistance;
+//            if (newPlaceDistance < PlaceDistance) PlaceDistance = newPlaceDistance;
             //            this.setWeightedDrivePower(
 //                    new Pose2d(
 //                            0,
@@ -509,47 +509,47 @@ public class SampleMecanumDrive extends MecanumDrive {
             /*
             New Code below
              */
-            if (sensorDistance > PlaceDistance) {
-                if (alignStrafe == Chassis.PoleAlign.Left) {
-                    this.followTrajectory(
-                            this.trajectoryBuilder(this.getPoseEstimate())
-                                    .strafeLeft(sensorDistance - PlaceDistance,
-                                            SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                                            SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
-                                    )
-                                    .build()
-                    );
-                } else if (alignStrafe == Chassis.PoleAlign.Right) {
-                    this.followTrajectory(
-                            this.trajectoryBuilder(this.getPoseEstimate())
-                                    .strafeRight(sensorDistance - PlaceDistance,
-                                            SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                                            SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
-                                    )
-                                    .build()
-                    );
-                }
-            } else if (sensorDistance < PlaceDistance) {
-                if (alignStrafe == Chassis.PoleAlign.Left) {
-                    this.followTrajectory(
-                            this.trajectoryBuilder(this.getPoseEstimate())
-                                    .strafeRight(PlaceDistance - sensorDistance,
-                                            SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                                            SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
-                                    )
-                                    .build()
-                    );
-                } else if (alignStrafe == Chassis.PoleAlign.Right) {
-                    this.followTrajectory(
-                            this.trajectoryBuilder(this.getPoseEstimate())
-                                    .strafeLeft(PlaceDistance - sensorDistance,
-                                            SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                                            SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
-                                    )
-                                    .build()
-                    );
-                }
-            }
+//            if (sensorDistance > PlaceDistance) {
+//                if (alignStrafe == Chassis.PoleAlign.Left) {
+//                    this.followTrajectory(
+//                            this.trajectoryBuilder(this.getPoseEstimate())
+//                                    .strafeLeft(sensorDistance - PlaceDistance,
+//                                            SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                                            SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
+//                                    )
+//                                    .build()
+//                    );
+//                } else if (alignStrafe == Chassis.PoleAlign.Right) {
+//                    this.followTrajectory(
+//                            this.trajectoryBuilder(this.getPoseEstimate())
+//                                    .strafeRight(sensorDistance - PlaceDistance,
+//                                            SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                                            SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
+//                                    )
+//                                    .build()
+//                    );
+//                }
+//            } else if (sensorDistance < PlaceDistance) {
+//                if (alignStrafe == Chassis.PoleAlign.Left) {
+//                    this.followTrajectory(
+//                            this.trajectoryBuilder(this.getPoseEstimate())
+//                                    .strafeRight(PlaceDistance - sensorDistance,
+//                                            SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                                            SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
+//                                    )
+//                                    .build()
+//                    );
+//                } else if (alignStrafe == Chassis.PoleAlign.Right) {
+//                    this.followTrajectory(
+//                            this.trajectoryBuilder(this.getPoseEstimate())
+//                                    .strafeLeft(PlaceDistance - sensorDistance,
+//                                            SampleMecanumDrive.getVelocityConstraint(ChassisSpeed.QuickPlaceSpeed, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+//                                            SampleMecanumDrive.getAccelerationConstraint(ChassisSpeed.QuickPlaceAccel)
+//                                    )
+//                                    .build()
+//                    );
+//                }
+//            }
 
             return true;
         } else {
