@@ -152,10 +152,10 @@ public class AutoRightPro extends LinearOpMode {
      * Parking Vars --------------------------------------------------------------------------------
      */
     private static class ParkingPositions {
-        public static double Pos1 = (SIDE == AutoSide.Right ? 12 : 59);
-        public static double Pos2 = 36;
+        public static double Pos1 = (SIDE == AutoSide.Right ? 12 : 59); //Red Signal Sleeve Position
+        public static double Pos2 = 36; //Green Signal Sleeve Position
 
-        public static double Pos3 = (SIDE == AutoSide.Right ? 59 : 12);
+        public static double Pos3 = (SIDE == AutoSide.Right ? 59 : 12); //Blue Signal Sleeve Position
 
         public static double Y = -12;
     }
@@ -184,7 +184,7 @@ public class AutoRightPro extends LinearOpMode {
         public static TargetPole Pole4 = TargetPole.CloseMid;
         public static TargetPole Pole5 = TargetPole.CloseMid;
 
-        public static TargetPole[] getPoles() {
+        public static TargetPole[] getPoles() { //Returns an array of the poles to score on
             return new TargetPole[]{
                     Pole1,
                     Pole2,
@@ -193,8 +193,6 @@ public class AutoRightPro extends LinearOpMode {
                     Pole5
             };
         }
-
-        ;
     }
 
     public static ConesToScore CONES_TO_SCORE = new ConesToScore();
@@ -384,7 +382,6 @@ public class AutoRightPro extends LinearOpMode {
             /*
              * Score Cone --------------------------------------------------------------------------
              */
-//            TrajectoryLocations.PolePos TargetPolePos;
             switch (TargetPoles[ConesScored]) {
 
                 /*
