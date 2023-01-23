@@ -11,7 +11,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.ChassisSpeed;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.PoseStorage;
-import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorDistances;
 
 /**
  * Chassis class which contains all the methods for the chassis of the robot
@@ -112,39 +111,95 @@ public class Chassis {
         }
     }
 
+//    /**
+//     * Sets the power of all the motors based of the joysticks
+//     *
+//     * @param driveStick  The joystick for moving forward and backward, ex: left y
+//     * @param strafeStick The joystick for strafing, ex: left x
+//     * @param turnStick   The joystick for turning, ex: right x
+//     */
+//    public void updateWithControls(
+//            double driveStick,
+//            double strafeStick,
+//            double turnStick,
+//            GamepadEx gamepad,
+//            Arm arm,
+//            Claw claw
+//    ) {
+//        if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_UP))
+//            this.driveAlign = PoleAlign.Backward;
+//        if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN))
+//            this.driveAlign = PoleAlign.Forward;
+//        if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT))
+//            this.strafeAlign = PoleAlign.Right;
+//        if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT))
+//            this.strafeAlign = PoleAlign.Left;
+//
+////        boolean align = gamepad.wasJustPressed(GamepadKeys.Button.A);
+//        boolean align = false;
+//
+//        if (align)
+//            this.Mode = ChassisMode.AutoPlace; // If align button is pressed, set mode to auto place
+//        else if (driveStick != 0 || strafeStick != 0 || turnStick != 0) // If any of the sticks are not 0, set mode to manual
+//            this.Mode = ChassisMode.Manual;
+//        if (this.Mode == ChassisMode.Manual) {
+//            this.MecanumDrive.breakFollowing(); // If in manual mode, end current autonomous movement
+//            /*
+//             * The different powers of the motors based of the joysticks
+//             */
+//            double frontLeftPower =
+//                    (driveStick * this.DriveSpeed) +
+//                            (turnStick * this.TurnSpeed) +
+//                            (strafeStick * this.StrafeSpeed);
+//            double frontRightPower =
+//                    (driveStick * this.DriveSpeed) -
+//                            (turnStick * this.TurnSpeed) -
+//                            (strafeStick * this.StrafeSpeed);
+//            double backLeftPower =
+//                    (driveStick * this.DriveSpeed) +
+//                            (turnStick * this.TurnSpeed) -
+//                            (strafeStick * this.StrafeSpeed);
+//            double backRightPower =
+//                    (driveStick * this.DriveSpeed) -
+//                            (turnStick * this.TurnSpeed) +
+//                            (strafeStick * this.StrafeSpeed);
+//
+//            /*
+//             * Sets the power of all the motors for manual drive
+//             */
+//            this.setPower(this.Wheels.FrontLeft, frontLeftPower);
+//            this.setPower(this.Wheels.FrontRight, frontRightPower);
+//            this.setPower(this.Wheels.BackLeft, backLeftPower);
+//            this.setPower(this.Wheels.BackRight, backRightPower);
+//        } else if (this.Mode == ChassisMode.AutoPlace) { // If in auto place mode, update autonomous movement
+//            this.autoPlace(arm, claw, this.driveAlign, this.strafeAlign);
+//        } else { // If something goes wrong, set mode to manual and stop all movement
+//            this.Mode = ChassisMode.Manual;
+//            this.setPower(this.Wheels.FrontLeft, 0);
+//            this.setPower(this.Wheels.FrontRight, 0);
+//            this.setPower(this.Wheels.BackLeft, 0);
+//            this.setPower(this.Wheels.BackRight, 0);
+//        }
+//    }
+
     /**
-     * Sets the power of all the motors based of the joysticks
+     * Drives the robot based on the input from gamepad 1 and if auto drive is enabled
      *
-     * @param driveStick  The joystick for moving forward and backward, ex: left y
-     * @param strafeStick The joystick for strafing, ex: left x
-     * @param turnStick   The joystick for turning, ex: right x
+     * @param gamepad1  The gamepad to use for input, (gamepad1)
+     * @param autoDrive Whether or not auto drive is enabled
      */
     public void updateWithControls(
-            double driveStick,
-            double strafeStick,
-            double turnStick,
-            GamepadEx gamepad,
-            Arm arm,
-            Claw claw
+            GamepadEx gamepad1,
+            boolean autoDrive
     ) {
-        if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_UP))
-            this.driveAlign = PoleAlign.Backward;
-        if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_DOWN))
-            this.driveAlign = PoleAlign.Forward;
-        if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_LEFT))
-            this.strafeAlign = PoleAlign.Right;
-        if (gamepad.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT))
-            this.strafeAlign = PoleAlign.Left;
+        if (gamepad1.getLeftX() != 0 || gamepad1.getLeftY() != 0 || gamepad1.getRightX() != 0) {
+            double driveStick = gamepad1.getLeftY();
+            double strafeStick = gamepad1.getLeftX();
+            double turnStick = gamepad1.getRightX();
 
-//        boolean align = gamepad.wasJustPressed(GamepadKeys.Button.A);
-        boolean align = false;
-
-        if (align)
-            this.Mode = ChassisMode.AutoPlace; // If align button is pressed, set mode to auto place
-        else if (driveStick != 0 || strafeStick != 0 || turnStick != 0) // If any of the sticks are not 0, set mode to manual
             this.Mode = ChassisMode.Manual;
-        if (this.Mode == ChassisMode.Manual) {
-            this.MecanumDrive.breakFollowing(); // If in manual mode, end current autonomous movement
+            this.MecanumDrive.breakFollowing();
+
             /*
              * The different powers of the motors based of the joysticks
              */
@@ -172,9 +227,14 @@ public class Chassis {
             this.setPower(this.Wheels.FrontRight, frontRightPower);
             this.setPower(this.Wheels.BackLeft, backLeftPower);
             this.setPower(this.Wheels.BackRight, backRightPower);
-        } else if (this.Mode == ChassisMode.AutoPlace) { // If in auto place mode, update autonomous movement
-            this.autoPlace(arm, claw, this.driveAlign, this.strafeAlign);
-        } else { // If something goes wrong, set mode to manual and stop all movement
+        } else if (autoDrive && !gamepad1.getButton(GamepadKeys.Button.A) && // If auto drive is enabled and the escape auto button is not pressed
+                (gamepad1.getButton(GamepadKeys.Button.DPAD_UP) || gamepad1.getButton(GamepadKeys.Button.DPAD_DOWN) ||
+                        gamepad1.getButton(GamepadKeys.Button.DPAD_LEFT) || gamepad1.getButton(GamepadKeys.Button.DPAD_RIGHT))) { // If any of the dpad buttons are pressed
+            this.Mode = ChassisMode.AutoDrive;
+            this.autoDrive(gamepad1);
+        } else if (autoDrive && !gamepad1.getButton(GamepadKeys.Button.A) && this.Mode == ChassisMode.AutoDrive) { // If already auto driving
+            // Let the robot auto drive
+        } else {
             this.Mode = ChassisMode.Manual;
             this.setPower(this.Wheels.FrontLeft, 0);
             this.setPower(this.Wheels.FrontRight, 0);
@@ -183,45 +243,10 @@ public class Chassis {
         }
     }
 
-    /**
-     * Auto places the cone to the pole, aligns robot and handles autonomous actions
-     *
-     * @param arm         The arm to use
-     * @param claw        The claw to use
-     * @param alignDrive  The direction to drive to align with the pole
-     * @param alignStrafe The direction to strafe to align with the pole
-     */
-    public final void autoPlace(Arm arm, Claw claw, PoleAlign alignDrive, PoleAlign alignStrafe) {
-//        this.MecanumDrive.followTrajectoryAsync(
-//                this.MecanumDrive.trajectoryBuilder(this.MecanumDrive.getPoseEstimate())
-//                        .strafeTo(new Vector2d(0, 0))
-//                        .build()
-//        );
+    private void autoDrive(
+            GamepadEx gamepad1
+    ) {
 
-        double sensorDistance = alignStrafe == PoleAlign.Left ? this.LeftSensor.getDistance(DistanceUnit.INCH) : this.RightSensor.getDistance(DistanceUnit.INCH);
-
-        if (sensorDistance > SensorDistances.DetectAmount) {
-            this.MecanumDrive.setWeightedDrivePower(
-                    new Pose2d(
-                            alignDrive == PoleAlign.Forward ? ChassisSpeed.ManualAlignSpeed : -ChassisSpeed.ManualAlignSpeed,
-                            0,
-                            0
-                    )
-            );
-        } else if (sensorDistance > SensorDistances.LeftPlaceDistance + SensorDistances.PlaceMargin || sensorDistance < SensorDistances.LeftPlaceDistance - SensorDistances.PlaceMargin) {
-            this.MecanumDrive.setWeightedDrivePower(
-                    new Pose2d(
-                            0,
-                            sensorDistance > SensorDistances.LeftPlaceDistance ?
-                                    ((alignStrafe == PoleAlign.Left) ? ChassisSpeed.ManualPlaceSpeed : -ChassisSpeed.ManualPlaceSpeed) :
-                                    ((alignStrafe == PoleAlign.Left) ? -ChassisSpeed.ManualPlaceSpeed : ChassisSpeed.ManualPlaceSpeed),
-                            0
-                    )
-            );
-        } else {
-            this.MecanumDrive.setWeightedDrivePower(new Pose2d(0, 0, 0));
-            this.Mode = ChassisMode.Manual;
-        }
     }
 
     /**
@@ -263,7 +288,7 @@ public class Chassis {
      */
     public enum ChassisMode {
         Manual, //Manual control, takes input from the joysticks
-        AutoPlace, //Autonomous control, does current autonomous path or action, can be interrupted by manual control
+        AutoDrive, //Autonomous control, does current autonomous path or action, can be interrupted by manual control
     }
 
     /**
