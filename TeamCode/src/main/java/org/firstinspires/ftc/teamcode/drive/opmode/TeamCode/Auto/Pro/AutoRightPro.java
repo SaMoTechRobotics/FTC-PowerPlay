@@ -620,11 +620,12 @@ public class AutoRightPro extends LinearOpMode {
 
             Arm.setRotation(ArmRotation.Center);
 
-            ConesScored++;
+            ConesScored++; // Increment cones scored
 
-            if (ConesScored >= ConesToScore.Count) break;
+            if (ConesScored >= ConesToScore.Count)
+                break; // If all cones have been scored, break out of loop
 
-            updatedNextSlideHeight();
+            updatedNextSlideHeight(); // Update the next slide height
 
             Slide.setHeight(NextSlideHeightForStack, SlideSpeed.Max);
 
@@ -679,6 +680,10 @@ public class AutoRightPro extends LinearOpMode {
         }
         Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max); //Sets slide to ground height
         Claw.close(); //Closes claw to lower slide
+
+        /*
+         * End of auto -----------------------------------------------------------------------------
+         */
 
         telemetry.addData("Time Remaining", 30 - timer.seconds());
         telemetry.update();
