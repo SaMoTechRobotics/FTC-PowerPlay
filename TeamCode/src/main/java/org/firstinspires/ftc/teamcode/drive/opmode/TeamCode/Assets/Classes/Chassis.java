@@ -228,8 +228,8 @@ public class Chassis {
             this.setPower(this.Wheels.BackLeft, backLeftPower);
             this.setPower(this.Wheels.BackRight, backRightPower);
         } else if (autoDrive && !gamepad1.getButton(GamepadKeys.Button.A) && // If auto drive is enabled and the escape auto button is not pressed
-                (gamepad1.getButton(GamepadKeys.Button.DPAD_UP) || gamepad1.getButton(GamepadKeys.Button.DPAD_DOWN) ||
-                        gamepad1.getButton(GamepadKeys.Button.DPAD_LEFT) || gamepad1.getButton(GamepadKeys.Button.DPAD_RIGHT))) { // If any of the dpad buttons are pressed
+                (gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_UP) || gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_DOWN) ||
+                        gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_LEFT) || gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_RIGHT))) { // If any of the dpad buttons are pressed
             this.Mode = ChassisMode.AutoDrive;
             this.autoDrive(gamepad1);
         } else if (autoDrive && !gamepad1.getButton(GamepadKeys.Button.A) && this.Mode == ChassisMode.AutoDrive) { // If already auto driving
@@ -246,7 +246,8 @@ public class Chassis {
     private void autoDrive(
             GamepadEx gamepad1
     ) {
-
+        if (gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_UP)) {
+        }
     }
 
     /**
