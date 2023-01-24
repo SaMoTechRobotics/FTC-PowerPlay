@@ -434,7 +434,7 @@ public class AutoLeft extends LinearOpMode {
 
 //            drive.followTrajectory(forwardTraj);
 
-            Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - count)), SlideSpeed.Mid); //Sets slide to height of next cone in 5 stack
+            Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeightMultiplier * (5 + 1 - count)), SlideSpeed.Mid); //Sets slide to height of next cone in 5 stack
 
             Claw.setOpenAmount(ClawPosition.PickupOpen);
 
@@ -450,7 +450,7 @@ public class AutoLeft extends LinearOpMode {
                             ) //Drives to 5 stack
 //                            .addTemporalMarker(0.1, Claw::close) //Closes claw while slide is lowering
                             .addTemporalMarker(0.5, () -> {
-                                Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeight * (5 + 1 - finalCount)), SlideSpeed.Max); //Sets slide to height of next cone in 5 stack
+                                Slide.setHeight(SlideHeight.Ground + (SlideHeight.StackConeHeightMultiplier * (5 + 1 - finalCount)), SlideSpeed.Max); //Sets slide to height of next cone in 5 stack
                             })
                             .build()
             );
