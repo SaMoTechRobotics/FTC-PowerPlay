@@ -327,6 +327,14 @@ public class Chassis {
         Back
     }
 
+    public enum PoleAlign {
+        Forward,
+        
+        Backward,
+        Left,
+        Right
+    }
+
     /**
      * The motors of the chassis
      */
