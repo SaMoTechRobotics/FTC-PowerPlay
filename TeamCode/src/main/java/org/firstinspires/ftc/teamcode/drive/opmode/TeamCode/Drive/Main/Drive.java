@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Chassis;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Field.Field;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Claw.ClawPosition;
@@ -110,8 +111,13 @@ public class Drive extends LinearOpMode {
             telemetry.addLine("");
             telemetry.addData("Left Distance", Chassis.getLeftDistance());
             telemetry.addData("Right Distance", Chassis.getRightDistance());
-//            telemetry.addData("Current Row", Field.getCurrentRow(Chassis.getPosition()));
-//            telemetry.addData("Current Column", Field.getCurrentColumn(Chassis.getPosition()));
+            if (AutoDrive) {
+                telemetry.addLine("");
+                telemetry.addLine("Auto Chassis Info");
+                telemetry.addData("Current Row", Field.getCurrentRow(Chassis.getPosition()));
+                telemetry.addData("Current Column", Field.getCurrentColumn(Chassis.getPosition()));
+                telemetry.addData("Current Rounded Heading", Chassis.getRoundedHeading());
+            }
 
             /*
              * Claw --------------------------------------------------------------------------------

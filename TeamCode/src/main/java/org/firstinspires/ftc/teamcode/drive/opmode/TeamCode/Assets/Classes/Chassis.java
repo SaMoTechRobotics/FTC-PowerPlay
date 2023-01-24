@@ -30,8 +30,7 @@ public class Chassis {
      */
     public SampleMecanumDrive MecanumDrive;
     public ChassisMode Mode = ChassisMode.Manual;
-    private PoleAlign strafeAlign = PoleAlign.Left;
-    private PoleAlign driveAlign = PoleAlign.Backward;
+
 
     /**
      * Creates a new chassis with 4 motors
@@ -246,7 +245,36 @@ public class Chassis {
     private void autoDrive(
             GamepadEx gamepad1
     ) {
+        this.Mode = ChassisMode.AutoDrive;
         if (gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_UP)) {
+            this.MecanumDrive.followTrajectoryAsync(
+                    this.MecanumDrive.trajectoryBuilder(this.MecanumDrive.getPoseEstimate())
+                            .forward(12)
+                            .build()
+            );
+        }
+    }
+
+    /**
+     * Returns the heading of the chassis rounded to the nearest 90 degrees
+     *
+     * @return The enum heading of the chassis
+     */
+    public ChassisHeading getRoundedHeading() {
+        int roundedHeading = (int) Math.round(this.MecanumDrive.getPoseEstimate().getHeading() / 90) * 90;
+        switch (roundedHeading) {
+            case 270:
+                //noinspection DuplicateBranchesInSwitch
+                return ChassisHeading.Forward;
+            case 90:
+                return ChassisHeading.Back;
+            case 180:
+                return ChassisHeading.Left;
+            case 0:
+            case 360:
+                return ChassisHeading.Right;
+            default:
+                return ChassisHeading.Forward;
         }
     }
 
@@ -292,14 +320,11 @@ public class Chassis {
         AutoDrive, //Autonomous control, does current autonomous path or action, can be interrupted by manual control
     }
 
-    /**
-     * Enum for the parameters of the chassis aligning with pole
-     */
-    public enum PoleAlign {
-        Left, //Align with the left sensor
-        Right, //Align with the right sensor
-        Forward, //Drive forward to align
-        Backward,  //Drive backward to align
+    public enum ChassisHeading {
+        Forward,
+        Left,
+        Right,
+        Back
     }
 
     /**
