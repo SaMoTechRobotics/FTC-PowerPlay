@@ -9,55 +9,22 @@ public class MeepMeepTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
-        Pose2d startPose = new Pose2d(36, -63, Math.toRadians(270));
+        Pose2d startPose = new Pose2d(36, -27, Math.toRadians(270));
+
 
         RoadRunnerBotEntity bot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
                 .setConstraints(90, 75, Math.toRadians(90), Math.toRadians(180), 13.63)
                 .setDimensions(13, 15)
                 .followTrajectorySequence(drive ->
-                        drive.trajectorySequenceBuilder(startPose)
-                                .back(35)
-                                .addDisplacementMarker(22, () -> {
-                                    //Reading signal sleeve
-                                })
-                                .waitSeconds(0.5)
-                                .lineToLinearHeading(new Pose2d(34, -25, Math.toRadians(270)))
-                                .waitSeconds(0.8)
-                                .lineToLinearHeading(new Pose2d(40, -12, Math.toRadians(0)))
-                                .waitSeconds(0.5)
-                                .lineToLinearHeading(new Pose2d(56, -12, Math.toRadians(0)))
-                                .waitSeconds(0.5) //start of 2 cone
-                                .forward(7.5)
-                                .waitSeconds(0.5)
-                                .lineToLinearHeading(new Pose2d(5, -14, Math.toRadians(0)))
-                                .waitSeconds(0.5)
-                                .back(5) //auto align
-                                .waitSeconds(0.8)
-                                .strafeLeft(3)
-                                .waitSeconds(0.5)
-                                .lineToLinearHeading(new Pose2d(56, -12, Math.toRadians(0))) //end of 2 cone
-                                .waitSeconds(0.5) //start of 3 cone
-                                .forward(7.5)
-                                .waitSeconds(0.5)
-                                .lineToLinearHeading(new Pose2d(5, -14, Math.toRadians(0)))
-                                .waitSeconds(0.5)
-                                .back(5) //auto align
-                                .waitSeconds(0.8)
-                                .strafeLeft(3)
-                                .waitSeconds(0.5)
-                                .lineToLinearHeading(new Pose2d(56, -12, Math.toRadians(0))) //end of 3 cone
-                                .waitSeconds(0.5) //start of 4 cone
-                                .forward(7.5)
-                                .waitSeconds(0.5)
-                                .lineToLinearHeading(new Pose2d(30, -10, Math.toRadians(0)))
-                                .waitSeconds(0.5)
-                                .back(5) //auto align
-                                .waitSeconds(0.8)
-                                .strafeRight(3)
-                                .waitSeconds(0.5)
-                                .lineToLinearHeading(new Pose2d(56, -12, Math.toRadians(0))) //end of 4 cone
-                                .build()
+                                drive.trajectorySequenceBuilder(startPose)
+//                                .splineTo(new Vector2d(36, 0), Math.toRadians(270))
+//                                .splineTo(new Vector2d(40, -11), Math.toRadians(315))
+//                                .splineTo(new Vector2d(50, -12), Math.toRadians(0))
+                                        .splineToLinearHeading(new Pose2d(36, -5, Math.toRadians(270)), Math.toRadians(270))
+//                                        .splineToLinearHeading(new Pose2d(40, -11, Math.toRadians(315)), Math.toRadians(315))
+                                        .splineToLinearHeading(new Pose2d(50, -12, Math.toRadians(0)), Math.toRadians(0))
+                                        .build()
                 );
 
         /**
