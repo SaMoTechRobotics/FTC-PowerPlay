@@ -191,10 +191,10 @@ public class Chassis {
             GamepadEx gamepad1,
             boolean autoDrive
     ) {
-        if (gamepad1.getLeftX() != 0 || gamepad1.getLeftY() != 0 || gamepad1.getRightX() != 0) {
-            double driveStick = gamepad1.getLeftY();
-            double strafeStick = gamepad1.getLeftX();
-            double turnStick = gamepad1.getRightX();
+        double driveStick = Math.abs(-gamepad1.getLeftY()) > ChassisSpeed.JoystickYMargin ? -gamepad1.getLeftY() : 0;
+        double strafeStick = Math.abs(-gamepad1.getLeftX()) > ChassisSpeed.JoystickXMargin ? -gamepad1.getLeftX() : 0;
+        double turnStick = gamepad1.getRightX();
+        if (driveStick != 0 || strafeStick != 0 || turnStick != 0) {
 
             this.Mode = ChassisMode.Manual;
             this.MecanumDrive.breakFollowing();
@@ -235,6 +235,7 @@ public class Chassis {
             // Let the robot auto drive
         } else {
             this.Mode = ChassisMode.Manual;
+            this.MecanumDrive.breakFollowing();
             this.setPower(this.Wheels.FrontLeft, 0);
             this.setPower(this.Wheels.FrontRight, 0);
             this.setPower(this.Wheels.BackLeft, 0);
@@ -329,7 +330,7 @@ public class Chassis {
 
     public enum PoleAlign {
         Forward,
-        
+
         Backward,
         Left,
         Right
