@@ -26,7 +26,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 @TeleOp(name = "Drive", group = "Drive")
 public class Drive extends LinearOpMode {
 
-    public static boolean AutoDrive = true;
+    public static boolean AutoDrive = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
