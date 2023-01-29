@@ -31,6 +31,10 @@ public class Chassis {
     public SampleMecanumDrive MecanumDrive;
     public ChassisMode Mode = ChassisMode.Manual;
 
+    public static boolean CustomDrive = false;
+
+    public static double AutoDriveDist = 24;
+
 
     /**
      * Creates a new chassis with 4 motors
@@ -199,6 +203,27 @@ public class Chassis {
             this.Mode = ChassisMode.Manual;
             this.MecanumDrive.breakFollowing();
 
+            this.setManualPower(driveStick, strafeStick, turnStick);
+
+        } else if (autoDrive && !gamepad1.getButton(GamepadKeys.Button.A) && // If auto drive is enabled and the escape auto button is not pressed
+                (gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_UP) || gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_DOWN) ||
+                        gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_LEFT) || gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_RIGHT))) { // If any of the dpad buttons are pressed
+            this.Mode = ChassisMode.AutoDrive;
+            this.autoDrive(gamepad1);
+        } else if (autoDrive && !gamepad1.getButton(GamepadKeys.Button.A) && this.Mode == ChassisMode.AutoDrive) { // If already auto driving
+            // Let the robot auto drive
+        } else {
+            this.Mode = ChassisMode.Manual;
+            this.MecanumDrive.breakFollowing();
+            this.setPower(this.Wheels.FrontLeft, 0);
+            this.setPower(this.Wheels.FrontRight, 0);
+            this.setPower(this.Wheels.BackLeft, 0);
+            this.setPower(this.Wheels.BackRight, 0);
+        }
+    }
+
+    private void setManualPower(double driveStick, double strafeStick, double turnStick) {
+        if (CustomDrive) {
             /*
              * The different powers of the motors based of the joysticks
              */
@@ -226,20 +251,14 @@ public class Chassis {
             this.setPower(this.Wheels.FrontRight, frontRightPower);
             this.setPower(this.Wheels.BackLeft, backLeftPower);
             this.setPower(this.Wheels.BackRight, backRightPower);
-        } else if (autoDrive && !gamepad1.getButton(GamepadKeys.Button.A) && // If auto drive is enabled and the escape auto button is not pressed
-                (gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_UP) || gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_DOWN) ||
-                        gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_LEFT) || gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_RIGHT))) { // If any of the dpad buttons are pressed
-            this.Mode = ChassisMode.AutoDrive;
-            this.autoDrive(gamepad1);
-        } else if (autoDrive && !gamepad1.getButton(GamepadKeys.Button.A) && this.Mode == ChassisMode.AutoDrive) { // If already auto driving
-            // Let the robot auto drive
         } else {
-            this.Mode = ChassisMode.Manual;
-            this.MecanumDrive.breakFollowing();
-            this.setPower(this.Wheels.FrontLeft, 0);
-            this.setPower(this.Wheels.FrontRight, 0);
-            this.setPower(this.Wheels.BackLeft, 0);
-            this.setPower(this.Wheels.BackRight, 0);
+            this.MecanumDrive.setWeightedDrivePower(
+                    new Pose2d(
+                            driveStick * this.DriveSpeed,
+                            -strafeStick * this.StrafeSpeed,
+                            -turnStick * this.TurnSpeed
+                    )
+            );
         }
     }
 
@@ -250,7 +269,13 @@ public class Chassis {
         if (gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_UP)) {
             this.MecanumDrive.followTrajectoryAsync(
                     this.MecanumDrive.trajectoryBuilder(this.MecanumDrive.getPoseEstimate())
-                            .forward(12)
+                            .back(AutoDriveDist)
+                            .build()
+            );
+        } else if (gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_DOWN)) {
+            this.MecanumDrive.followTrajectoryAsync(
+                    this.MecanumDrive.trajectoryBuilder(this.MecanumDrive.getPoseEstimate())
+                            .forward(AutoDriveDist)
                             .build()
             );
         }

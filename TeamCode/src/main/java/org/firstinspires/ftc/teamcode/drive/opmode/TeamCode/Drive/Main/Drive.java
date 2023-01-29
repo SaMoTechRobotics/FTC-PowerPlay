@@ -27,6 +27,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 public class Drive extends LinearOpMode {
 
     public static boolean AutoDrive = false;
+    public static boolean Debug = false;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -188,8 +189,8 @@ public class Drive extends LinearOpMode {
 
             Gamepad1.readButtons();
             Gamepad2.readButtons();
-            Chassis.updatePosition();
-            telemetry.update();
+            if (AutoDrive) Chassis.updatePosition();
+            if (Debug) telemetry.update();
         }
     }
 }
