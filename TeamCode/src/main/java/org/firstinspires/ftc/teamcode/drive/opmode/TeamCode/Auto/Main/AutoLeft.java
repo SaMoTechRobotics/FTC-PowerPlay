@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Auto.Constants.AutoSide;
 
 @Config
-@Autonomous(name = "AutoLeft", group = "A")
+@Autonomous(name = "AutoLeft", group = "AB")
 public class AutoLeft extends LinearOpMode {
 
     public final static int side = AutoSide.Left;

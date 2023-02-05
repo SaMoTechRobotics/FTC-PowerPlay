@@ -33,7 +33,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Auto.Constants.Vec2;
 
 import java.util.Arrays;
 
-@SuppressWarnings({"ConstantConditions", "InstantiationOfUtilityClass"})
+@SuppressWarnings("ALL")
 @Config
 @Autonomous(name = "AutoRightPro", group = "A")
 public class AutoRightPro extends LinearOpMode {
@@ -99,9 +99,12 @@ public class AutoRightPro extends LinearOpMode {
 
         public static Vec2 FirstFindStackPos = new Vec2(35, -13);
 
-        public static Vec2 StackPos = new Vec2(56, -13);
+        public static Vec2 StackPos = SIDE == AutoSide.Right ? new Vec2(56, -13) : new Vec2(56, -13);
 
-        public static Vec2 FirstMidPolePos = new Vec2(34.5, -28.5);
+        public static Vec2 FirstMidPolePos =
+                SIDE == AutoSide.Right ?
+                        new Vec2(32.5, -28.5) :
+                        new Vec2(33, -27.5);
 
         public static class PolePos {
             public double X;
@@ -120,10 +123,18 @@ public class AutoRightPro extends LinearOpMode {
             }
         }
 
-        public static PolePos FarHighPolePos = new PolePos(8, 4, 0, -13, 0);
-        public static PolePos CloseHighPolePos = new PolePos(32.5, 31, 31, -10, 0);
-        public static PolePos CloseMidPolePos = new PolePos(32, 31, 31, -13, 0);
-
+        public static PolePos FarHighPolePos =
+                SIDE == AutoSide.Right ?
+                        new PolePos(8, 4, 0, -14, 0) :
+                        new PolePos(8, 4, 0, -14, 0);
+        public static PolePos CloseHighPolePos =
+                SIDE == AutoSide.Right ?
+                        new PolePos(32.5, 31, 31, -8, 0) :
+                        new PolePos(32.5, 31, 31, -11, 0);
+        public static PolePos CloseMidPolePos =
+                SIDE == AutoSide.Right ?
+                        new PolePos(32, 31, 31, -13, 0) :
+                        new PolePos(32, 31, 31, -13, 0);
 
     }
 
@@ -170,7 +181,7 @@ public class AutoRightPro extends LinearOpMode {
 
         public static double Y = -13.5;
 
-        public static double Rot = 0;
+        public static double Rot = FINAL_ROT;
     }
 
     public static ParkingPositions PARKING_POSITIONS = new ParkingPositions();
@@ -189,7 +200,7 @@ public class AutoRightPro extends LinearOpMode {
         public static int Count = 3;
 
 
-        public static TargetPole Pole1 = TargetPole.CloseHigh;
+        public static TargetPole Pole1 = TargetPole.FarHigh;
         public static TargetPole Pole2 = TargetPole.CloseHigh;
         public static TargetPole Pole3 = TargetPole.CloseHigh;
 

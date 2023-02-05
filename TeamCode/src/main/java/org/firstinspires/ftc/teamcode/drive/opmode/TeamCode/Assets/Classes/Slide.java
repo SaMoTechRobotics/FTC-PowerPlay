@@ -231,8 +231,10 @@ public class Slide {
         ) {
             this.holdHeight(); // Slide set to hold height if no dpad buttons are pressed and the slide is not moving
         }
-        if (this.SlideMotor.getMode() != DcMotor.RunMode.RUN_TO_POSITION && this.getTicks() <= 0 && this.SlideMotor.getPower() < 0) this.setPower(0);
-        else if(this.getTicks() <= -10 && this.SlideMotor.getPower() != 0) this.setPower(0);
+        if (up || down || left || right) return;
+        if (this.SlideMotor.getMode() != DcMotor.RunMode.RUN_TO_POSITION && this.getTicks() <= 0 && this.SlideMotor.getPower() < 0)
+            this.setPower(0);
+        else if (this.getTicks() <= -10 && this.SlideMotor.getPower() != 0) this.setPower(0);
     }
 
     public final void waitForArm(double armRotation) {

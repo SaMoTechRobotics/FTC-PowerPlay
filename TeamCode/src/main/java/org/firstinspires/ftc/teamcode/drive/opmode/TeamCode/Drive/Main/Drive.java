@@ -191,6 +191,11 @@ public class Drive extends LinearOpMode {
             Gamepad2.readButtons();
             if (AutoDrive) Chassis.updatePosition();
             if (Debug) telemetry.update();
+            else {
+                telemetry.clear();
+                telemetry.addData("Slide Height (Inches)", Slide.getInches());
+                telemetry.addData("Claw Open", Claw.isOpen());
+            }
         }
     }
 }
