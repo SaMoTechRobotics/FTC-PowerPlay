@@ -99,12 +99,12 @@ public class AutoRightPro extends LinearOpMode {
 
         public static Vec2 FirstFindStackPos = new Vec2(35, -13);
 
-        public static Vec2 StackPos = SIDE == AutoSide.Right ? new Vec2(56, -13) : new Vec2(56, -13);
+        public static Vec2 StackPos = SIDE == AutoSide.Right ? new Vec2(56, -12.5) : new Vec2(56, -12);
 
         public static Vec2 FirstMidPolePos =
                 SIDE == AutoSide.Right ?
-                        new Vec2(32.5, -28.5) :
-                        new Vec2(33, -27.5);
+                        new Vec2(33.5, -28.5) :
+                        new Vec2(33, -27.5); //left
 
         public static class PolePos {
             public double X;
@@ -125,16 +125,16 @@ public class AutoRightPro extends LinearOpMode {
 
         public static PolePos FarHighPolePos =
                 SIDE == AutoSide.Right ?
-                        new PolePos(8, 4, 0, -14, 0) :
-                        new PolePos(8, 4, 0, -14, 0);
+                        new PolePos(8, 4, 0, -13.5, 0) :
+                        new PolePos(8, 4, 0, -14, 0); //left
         public static PolePos CloseHighPolePos =
                 SIDE == AutoSide.Right ?
-                        new PolePos(32.5, 31, 31, -8, 0) :
-                        new PolePos(32.5, 31, 31, -11, 0);
+                        new PolePos(32.5, 31, 31, -10, 0) :
+                        new PolePos(32.5, 31, 31, -10, 0); //left
         public static PolePos CloseMidPolePos =
                 SIDE == AutoSide.Right ?
-                        new PolePos(32, 31, 31, -13, 0) :
-                        new PolePos(32, 31, 31, -13, 0);
+                        new PolePos(32, 31, 31, -13.5, 0) :
+                        new PolePos(32, 31, 31, -13.5, 0); //left
 
     }
 
@@ -153,6 +153,8 @@ public class AutoRightPro extends LinearOpMode {
     }
 
     private static class UtilAndDelays {
+
+        public static double GiveUpDelay = 4;
         public static double FirstPoleWait = 300;
         public static double PoleWait = 200;
         public static double LowerSlideAmount = 8;
@@ -174,10 +176,10 @@ public class AutoRightPro extends LinearOpMode {
      * Parking Vars --------------------------------------------------------------------------------
      */
     private static class ParkingPositions {
-        public static double Pos1 = (SIDE == AutoSide.Right ? 12 : 58); //Red Signal Sleeve Position
+        public static double Pos1 = (SIDE == AutoSide.Right ? 12 : 59); //Red Signal Sleeve Position
         public static double Pos2 = 36; //Green Signal Sleeve Position
 
-        public static double Pos3 = (SIDE == AutoSide.Right ? 58 : 12); //Blue Signal Sleeve Position
+        public static double Pos3 = (SIDE == AutoSide.Right ? 59 : 12); //Blue Signal Sleeve Position
 
         public static double Y = -13.5;
 
@@ -452,7 +454,20 @@ public class AutoRightPro extends LinearOpMode {
                     );
 
                     boolean FoundPole = true;
+                    ElapsedTime findTimer = new ElapsedTime();
                     while (!drive.autoPlace(Arm, LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right) && opModeIsActive()) {
+                        if (findTimer.seconds() > UtilAndDelays.GiveUpDelay) {
+                            FoundPole = false;
+                            drive.followTrajectory(
+                                    drive.trajectoryBuilder(drive.getPoseEstimate())
+                                            .lineToLinearHeading(new Pose2d(SIDE * TargetPolePos.X, TargetPolePos.Y, Math.toRadians(FINAL_ROT)),
+                                                    SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.NormalSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
+                                                    SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.NormalAccel)
+                                            )
+                                            .build()
+                            );
+                            break;
+                        }
                         if (SIDE == AutoSide.Right ? (drive.getPoseEstimate().getX() < SIDE * TargetPolePos.GiveUpX) : (drive.getPoseEstimate().getX() > SIDE * TargetPolePos.GiveUpX)) {
                             FoundPole = false;
 
@@ -536,7 +551,20 @@ public class AutoRightPro extends LinearOpMode {
                     );
 
                     boolean FoundPole = true;
+                    ElapsedTime findTimer = new ElapsedTime();
                     while (!drive.autoPlace(Arm, LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left) && opModeIsActive()) {
+                        if (findTimer.seconds() > UtilAndDelays.GiveUpDelay) {
+                            FoundPole = false;
+                            drive.followTrajectory(
+                                    drive.trajectoryBuilder(drive.getPoseEstimate())
+                                            .lineToLinearHeading(new Pose2d(SIDE * TargetPolePos.X, TargetPolePos.Y, Math.toRadians(FINAL_ROT)),
+                                                    SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.NormalSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
+                                                    SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.NormalAccel)
+                                            )
+                                            .build()
+                            );
+                            break;
+                        }
                         if (SIDE == AutoSide.Right ? (drive.getPoseEstimate().getX() < SIDE * TargetPolePos.GiveUpX) : (drive.getPoseEstimate().getX() > SIDE * TargetPolePos.GiveUpX)) {
                             FoundPole = false;
 
@@ -619,7 +647,20 @@ public class AutoRightPro extends LinearOpMode {
                     );
 
                     boolean FoundPole = true;
+                    ElapsedTime findTimer = new ElapsedTime();
                     while (!drive.autoPlace(Arm, LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left) && opModeIsActive()) {
+                        if (findTimer.seconds() > UtilAndDelays.GiveUpDelay) {
+                            FoundPole = false;
+                            drive.followTrajectory(
+                                    drive.trajectoryBuilder(drive.getPoseEstimate())
+                                            .lineToLinearHeading(new Pose2d(SIDE * TargetPolePos.X, TargetPolePos.Y, Math.toRadians(FINAL_ROT)),
+                                                    SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.NormalSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
+                                                    SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.NormalAccel)
+                                            )
+                                            .build()
+                            );
+                            break;
+                        }
                         if (SIDE == AutoSide.Right ? (drive.getPoseEstimate().getX() < SIDE * TargetPolePos.GiveUpX) : (drive.getPoseEstimate().getX() > SIDE * TargetPolePos.GiveUpX)) {
                             FoundPole = false;
 
