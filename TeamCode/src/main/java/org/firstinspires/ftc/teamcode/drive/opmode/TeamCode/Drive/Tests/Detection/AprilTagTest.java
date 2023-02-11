@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Drive.Tests.Detection;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -13,7 +12,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 
 import java.util.ArrayList;
 
-@Disabled
+//@Disabled
 @TeleOp
 public class AprilTagTest extends LinearOpMode {
     OpenCvCamera camera;

@@ -1,138 +1,92 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes;
 
-import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer.CameraDirection;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.drive.AprilTagDetectionPipeline;
+import org.openftc.apriltag.AprilTagDetection;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
 
-import java.util.List;
+import java.util.ArrayList;
 
 @Config
 public class Camera {
 
-    public static final String TFOD_MODEL_ASSET = "PowerPlay.tflite";
-    // private static final String TFOD_MODEL_FILE  = "/sdcard/FIRST/tflitemodels/CustomTeamModel.tflite";
+    OpenCvCamera camera;
 
-    private static final String[] LABELS = {"1 Bolt", "2 Bulb", "3 Panel"};
+    AprilTagDetectionPipeline aprilTagDetectionPipeline;
 
-    private static final String VUFORIA_KEY =
-            "Abp0NU7/////AAABmQedb7TAVUQatPEi5Nz7wMISMvR04YthYTgVl234gSVsQt8WS71fidOvJDcokKxADcc2bb8Qy44vEOU8YMM6lwH3wYBMF3fFG49XWRHU1MYUDsx93i1rwmSYt0SOehFf3dsnN5QBHJRrb0gYHPVV9rOal3ZdvXHS8pnAgnWxueyo5Ctsn4pU3qUox9lEgM8ZpKnKJHeYGWoLV+zuerA+dr+SpQj4CCSv9qsAc9vCS+iI46cKTuzgBG8navGrn8r9LO9yKuXOVkjD3l0rxLNH54FNfKWvmxTsJR3jKGzW8fCuMdEpHESGwQeMr34KZ9tyaeB12fdnZI+XjgjIlKRv6aSWSP0BQJPK1fZIUkWdsOID";
-    private static final double ZOOM_FACTOR = 2.5;
-    private static final double ASPECT_RATIO = 16.0 / 9.0;
-    private static final float MIN_CONFIDENCE = 0.65f;
-    /**
-     * {@link #vuforia} is the variable we will use to store our instance of the Vuforia
-     * localization engine.
-     */
-    private VuforiaLocalizer vuforia;
-    /**
-     * {@link #tfod} is the variable we will use to store our instance of the TensorFlow Object
-     * Detection engine.
-     */
-    private TFObjectDetector tfod;
 
-    public Camera(HardwareMap hardwareMap, FtcDashboard dashboard) {
-        initVuforia();
-        initTfod(hardwareMap, dashboard);
+    // Lens intrinsics
+    // UNITS ARE PIXELS
+    // NOTE: this calibration is for the C920 webcam at 800x448.
+    // You will need to do your own calibration for other configurations!
+    double fx = 578.272;
+    double fy = 578.272;
+    double cx = 402.145;
+    double cy = 221.506;
 
-        if (tfod != null) {
-            tfod.activate();
+    // UNITS ARE METERS
+    public static double TagSize = 0.166;
 
-            tfod.setZoom(ZOOM_FACTOR, ASPECT_RATIO);
-        }
-    }
+    //Tag IDs, from the 36h11 family
+    public static int AprilTag1 = 219;
+    public static int AprilTag2 = 220;
+    public static int AprilTag3 = 221;
 
-    public final void update(Telemetry telemetry) {
-        if (tfod != null) {
-            // getUpdatedRecognitions() will return null if no new information is available since
-            // the last time that call was made.
-            List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-            if (updatedRecognitions != null) {
-                telemetry.addData("# Objects Detected", updatedRecognitions.size());
+    private int DetectedTag = AprilTag2;
 
-                // step through the list of recognitions and display image position/size information for each one
-                // Note: "Image number" refers to the randomized image orientation/number
-                for (Recognition recognition : updatedRecognitions) {
-                    double col = (recognition.getLeft() + recognition.getRight()) / 2;
-                    double row = (recognition.getTop() + recognition.getBottom()) / 2;
-                    double width = Math.abs(
-                            recognition.getRight() - recognition.getLeft()
-                    );
-                    double height = Math.abs(
-                            recognition.getTop() - recognition.getBottom()
-                    );
+    public Camera(HardwareMap hardwareMap) {
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        aprilTagDetectionPipeline = new AprilTagDetectionPipeline(TagSize, fx, fy, cx, cy);
 
-                    telemetry.addData("", " ");
-                    telemetry.addData(
-                            "Image",
-                            "%s (%.0f %% Conf.)",
-                            recognition.getLabel(),
-                            recognition.getConfidence() * 100
-                    );
-                    telemetry.addData("- Position (Row/Col)", "%.0f / %.0f", row, col);
-                    telemetry.addData(
-                            "- Size (Width/Height)",
-                            "%.0f / %.0f",
-                            width,
-                            height
-                    );
-                }
-                telemetry.update();
+        camera.setPipeline(aprilTagDetectionPipeline);
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                camera.startStreaming(800, 448, OpenCvCameraRotation.UPRIGHT);
             }
+
+            @Override
+            public void onError(int errorCode) {
+
+            }
+        });
+
+//        telemetry.setMsTransmissionInterval(50)
+    }
+
+    public final void scanForTags() {
+        ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
+
+        if (currentDetections.size() != 0) {
+            boolean tagFound = false;
+            AprilTagDetection detectedTag = null;
+
+            for (AprilTagDetection tag : currentDetections) {
+                if (tag.id == AprilTag1) {
+                    this.DetectedTag = 1;
+                    tagFound = true;
+                    break;
+                } else if (tag.id == AprilTag2) {
+                    this.DetectedTag = 2;
+                    tagFound = true;
+                    break;
+                } else if (tag.id == AprilTag3) {
+                    this.DetectedTag = 3;
+                    tagFound = true;
+                    break;
+                }
+            }
+
         }
     }
 
-    public final void getResults() {
-    }
-
-    /**
-     * Initialize the Vuforia localization engine.
-     */
-    private void initVuforia() {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraDirection = CameraDirection.BACK;
-
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-    }
-
-    /**
-     * Initialize the TensorFlow Object Detection engine.
-     */
-    private void initTfod(HardwareMap hardwareMap, FtcDashboard dashboard) {
-        int tfodMonitorViewId = hardwareMap.appContext
-                .getResources()
-                .getIdentifier(
-                        "tfodMonitorViewId",
-                        "id",
-                        hardwareMap.appContext.getPackageName()
-                );
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(
-                tfodMonitorViewId
-        );
-        tfodParameters.minResultConfidence = MIN_CONFIDENCE; //0.75f
-        tfodParameters.isModelTensorFlow2 = true;
-        tfodParameters.inputSize = 300;
-        tfod =
-                ClassFactory
-                        .getInstance()
-                        .createTFObjectDetector(tfodParameters, vuforia);
-
-        // Use loadModelFromAsset() if the TF Model is built in as an asset by Android Studio
-        // Use loadModelFromFile() if you have downloaded a custom team model to the Robot Controller's FLASH.
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABELS);
-        // tfod.loadModelFromFile(TFOD_MODEL_FILE, LABELS);
-        dashboard.startCameraStream(vuforia, 0);
+    public final int getDetectedTag() {
+        return this.DetectedTag;
     }
 }
