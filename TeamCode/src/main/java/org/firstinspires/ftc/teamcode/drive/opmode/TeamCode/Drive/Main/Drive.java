@@ -47,7 +47,8 @@ public class Drive extends LinearOpMode {
         Claw Claw =
                 new Claw(
                         hardwareMap.get(Servo.class, "claw"),
-                        hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
+                        hardwareMap.get(DistanceSensor.class, "clawDistanceSensor"),
+                        hardwareMap.get(Servo.class, "poleBrace")
                 );
         Claw.close();
 
@@ -135,6 +136,11 @@ public class Drive extends LinearOpMode {
             } else {
                 if (Gamepad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) Claw.close();
                 else if (Gamepad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) Claw.open();
+            }
+
+            if (Slide.getInches() > SlideHeight.LowPole) {
+                if (Gamepad1.wasJustPressed(GamepadKeys.Button.A)) Claw.enablePoleBrace(true);
+                else if (Gamepad1.wasJustPressed(GamepadKeys.Button.Y)) Claw.enablePoleBrace(false);
             }
 
             telemetry.addLine("");

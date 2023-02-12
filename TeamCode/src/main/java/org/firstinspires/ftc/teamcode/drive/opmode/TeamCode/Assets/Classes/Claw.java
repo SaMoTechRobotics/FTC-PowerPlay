@@ -12,6 +12,8 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Cla
 public class Claw {
 
     private final Servo ClawServo;
+
+    private Servo PoleBraceServo;
     private final DistanceSensor ClawDistanceSensor;
 
     private boolean open = false;
@@ -24,10 +26,16 @@ public class Claw {
      *
      * @param ClawServo The servo that will be used for the claw
      */
-    public Claw(Servo ClawServo, DistanceSensor ClawDistanceSensor) {
+    public Claw(Servo ClawServo, DistanceSensor ClawDistanceSensor, Servo PoleBraceServo) {
         this.ClawServo = ClawServo;
         this.ClawDistanceSensor = ClawDistanceSensor;
+        this.PoleBraceServo = PoleBraceServo;
     }
+
+//    public Claw(Servo ClawServo, DistanceSensor ClawDistanceSensor) {
+//        this.ClawServo = ClawServo;
+//        this.ClawDistanceSensor = ClawDistanceSensor;
+//    }
 
     public final double getPosition() {
         return this.ClawServo.getPosition();
@@ -99,6 +107,14 @@ public class Claw {
             this.detectedCone = false;
         }
         return false;
+    }
+
+    public final void enablePoleBrace(boolean enable) {
+        if (enable) {
+            this.PoleBraceServo.setPosition(ClawPosition.PoleBraceDown);
+        } else {
+            this.PoleBraceServo.setPosition(ClawPosition.PoleBraceUp);
+        }
     }
 
     /**

@@ -29,6 +29,9 @@ public class ClawPosition {
     public static double ConeDistance = 2;
 
     public static double ResetOpenMargin = 20;
+
+    public static double PoleBraceDown = 0;
+    public static double PoleBraceUp = 1;
 }
 
 

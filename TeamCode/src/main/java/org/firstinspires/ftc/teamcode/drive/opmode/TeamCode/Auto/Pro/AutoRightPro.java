@@ -240,7 +240,8 @@ public class AutoRightPro extends LinearOpMode {
 
         Claw Claw = new Claw(
                 hardwareMap.get(Servo.class, "claw"),
-                hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
+                hardwareMap.get(DistanceSensor.class, "clawDistanceSensor"),
+                hardwareMap.get(Servo.class, "poleBrace")
         );
         Claw.close();
 

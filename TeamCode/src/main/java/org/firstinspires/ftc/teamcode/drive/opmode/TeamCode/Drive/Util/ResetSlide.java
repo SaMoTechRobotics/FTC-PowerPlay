@@ -27,7 +27,8 @@ public class ResetSlide extends LinearOpMode {
         Claw Claw =
                 new Claw(
                         hardwareMap.get(Servo.class, "claw"),
-                        hardwareMap.get(DistanceSensor.class, "clawDistanceSensor")
+                        hardwareMap.get(DistanceSensor.class, "clawDistanceSensor"),
+                        hardwareMap.get(Servo.class, "poleBrace")
                 );
         Claw.close();
 
@@ -62,10 +63,9 @@ public class ResetSlide extends LinearOpMode {
             if (Gamepad2.wasJustPressed(GamepadKeys.Button.Y)) {
                 Arm.setRotation(ArmRotation.Center);
             }
-            if(Gamepad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)){
+            if (Gamepad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) {
                 Claw.open();
-            } else
-            if(Gamepad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)){
+            } else if (Gamepad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) {
                 Claw.close();
             }
 
