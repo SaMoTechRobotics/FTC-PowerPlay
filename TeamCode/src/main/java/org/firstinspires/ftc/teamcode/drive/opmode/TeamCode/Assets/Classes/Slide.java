@@ -217,6 +217,7 @@ public class Slide {
             this.GoingDown = true;
             arm.setRotation(ArmRotation.Center);
             claw.close();
+            claw.raisePoleBrace();
 //            this.setHeight(SlideHeight.Ground, this.Speed); // Slide set to ground height if dpad right is pressed
         } else if (power != 0) {
             this.manualPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed

@@ -30,8 +30,21 @@ public class ClawPosition {
 
     public static double ResetOpenMargin = 20;
 
-    public static double PoleBraceDown = 0;
-    public static double PoleBraceUp = 1;
+    public static double PoleBraceUp = 0.9;
+
+
+    public static double PoleBraceDown = 0.5;
+    public static double PoleBraceDownRight = 0.1;
+    public static double PoleBraceDownLeft = 0.17;
+
+    public static double PoleBraceDownSensor = 0.5;
+
+    public static boolean ReversePoleBrace = false;
+
+    public enum PoleBraceAlignDirection {
+        Forward,
+        Backward,
+    }
 }
 
 

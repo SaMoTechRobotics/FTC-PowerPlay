@@ -51,6 +51,7 @@ public class Drive extends LinearOpMode {
                         hardwareMap.get(Servo.class, "poleBrace")
                 );
         Claw.close();
+        Claw.raisePoleBrace();
 
         Servo podLift = hardwareMap.get(Servo.class, "podLift");
         if (AutoDrive) podLift.setPosition(PodLiftPosition.Down);
@@ -138,10 +139,19 @@ public class Drive extends LinearOpMode {
                 else if (Gamepad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) Claw.open();
             }
 
-            if (Slide.getInches() > SlideHeight.LowPole) {
-                if (Gamepad1.wasJustPressed(GamepadKeys.Button.A)) Claw.enablePoleBrace(true);
-                else if (Gamepad1.wasJustPressed(GamepadKeys.Button.Y)) Claw.enablePoleBrace(false);
+            if (Slide.getInches() < SlideHeight.PoleBraceSafetyHeight) Claw.raisePoleBrace();
+            else {
+                if (Gamepad1.wasJustPressed(GamepadKeys.Button.X)) Claw.raisePoleBrace();
+                else if (Gamepad1.wasJustPressed(GamepadKeys.Button.Y))
+                    Claw.lowerPoleBrace(Arm.getRotation(), ClawPosition.PoleBraceAlignDirection.Backward);
+                else if (Gamepad1.wasJustPressed(GamepadKeys.Button.A))
+                    Claw.lowerPoleBrace(Arm.getRotation(), ClawPosition.PoleBraceAlignDirection.Forward);
             }
+
+//            if (Slide.getInches() > SlideHeight.LowPole) {
+//                if (Gamepad1.wasJustPressed(GamepadKeys.Button.A)) Claw.enablePoleBrace(true);
+//                else if (Gamepad1.wasJustPressed(GamepadKeys.Button.Y)) Claw.enablePoleBrace(false);
+//            }
 
             telemetry.addLine("");
             telemetry.addData("CLAW OPEN", Claw.isOpen() ? "YES!!!!!!" : "NO!!!!!!!");

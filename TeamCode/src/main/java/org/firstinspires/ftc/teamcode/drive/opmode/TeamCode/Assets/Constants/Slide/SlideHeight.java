@@ -50,4 +50,6 @@ public class SlideHeight {
     public static double SafetyMargin = 15;
 
     public static double ClawOpenMargin = 13;
+
+    public static double PoleBraceSafetyHeight = 20;
 }

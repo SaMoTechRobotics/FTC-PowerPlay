@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Claw.ClawPosition;
 
 /**
@@ -13,13 +14,14 @@ public class Claw {
 
     private final Servo ClawServo;
 
-    private Servo PoleBraceServo;
+    private final Servo PoleBraceServo;
     private final DistanceSensor ClawDistanceSensor;
 
     private boolean open = false;
     private boolean detectedCone = false;
 
     private double OpenAmount = ClawPosition.PickupOpen;
+
 
     /**
      * Creates a new claw with 1 servo
@@ -109,11 +111,28 @@ public class Claw {
         return false;
     }
 
-    public final void enablePoleBrace(boolean enable) {
-        if (enable) {
-            this.PoleBraceServo.setPosition(ClawPosition.PoleBraceDown);
+
+    public final void setPoleBracePosition(double position) {
+        this.PoleBraceServo.setPosition(position);
+    }
+
+    public final void raisePoleBrace() {
+        this.PoleBraceServo.setPosition(ClawPosition.PoleBraceUp);
+    }
+
+    public final void lowerPoleBrace(double armRotation, ClawPosition.PoleBraceAlignDirection direction) {
+        if (direction == ClawPosition.PoleBraceAlignDirection.Backward) {
+            if (!ClawPosition.ReversePoleBrace ? armRotation > ArmRotation.Center : armRotation < ArmRotation.Center) {
+                this.setPoleBracePosition(ClawPosition.PoleBraceDownLeft);
+            } else {
+                this.setPoleBracePosition(ClawPosition.PoleBraceDownRight);
+            }
         } else {
-            this.PoleBraceServo.setPosition(ClawPosition.PoleBraceUp);
+            if (ClawPosition.ReversePoleBrace ? armRotation > ArmRotation.Center : armRotation < ArmRotation.Center) {
+                this.setPoleBracePosition(ClawPosition.PoleBraceDownLeft);
+            } else {
+                this.setPoleBracePosition(ClawPosition.PoleBraceDownRight);
+            }
         }
     }
 
