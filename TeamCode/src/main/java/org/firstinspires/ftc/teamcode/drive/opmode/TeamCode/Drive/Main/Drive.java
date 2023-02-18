@@ -142,6 +142,7 @@ public class Drive extends LinearOpMode {
             if (Slide.getInches() < SlideHeight.PoleBraceSafetyHeight) Claw.raisePoleBrace();
             else {
                 if (Gamepad1.wasJustPressed(GamepadKeys.Button.X)) Claw.raisePoleBrace();
+                else if (Gamepad1.wasJustPressed(GamepadKeys.Button.B)) Claw.raisePoleBraceBack();
                 else if (Gamepad1.wasJustPressed(GamepadKeys.Button.Y))
                     Claw.lowerPoleBrace(Arm.getRotation(), ClawPosition.PoleBraceAlignDirection.Backward);
                 else if (Gamepad1.wasJustPressed(GamepadKeys.Button.A))

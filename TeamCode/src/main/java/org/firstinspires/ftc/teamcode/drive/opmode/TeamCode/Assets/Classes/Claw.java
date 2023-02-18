@@ -120,6 +120,10 @@ public class Claw {
         this.PoleBraceServo.setPosition(ClawPosition.PoleBraceUp);
     }
 
+    public final void raisePoleBraceBack() {
+        this.PoleBraceServo.setPosition(ClawPosition.PoleBraceUpBack);
+    }
+
     public final void lowerPoleBrace(double armRotation, ClawPosition.PoleBraceAlignDirection direction) {
         if (direction == ClawPosition.PoleBraceAlignDirection.Backward) {
             if (!ClawPosition.ReversePoleBrace ? armRotation > ArmRotation.Center : armRotation < ArmRotation.Center) {
