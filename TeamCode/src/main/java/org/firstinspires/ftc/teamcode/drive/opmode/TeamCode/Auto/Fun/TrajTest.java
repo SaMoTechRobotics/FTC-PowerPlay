@@ -47,7 +47,7 @@ public class TrajTest extends LinearOpMode {
         ElapsedTime timer = new ElapsedTime();
 
         drive.followTrajectorySequence(
-                drive.trajectorySequenceBuilder(new Pose2d(40.5, -64, Math.toRadians(270)))
+                drive.trajectorySequenceBuilder(new Pose2d(40.5, -63, Math.toRadians(270)))
                         .setReversed(true) //reverse splines
                         .splineToLinearHeading(new Pose2d(35, -60, Math.toRadians(270)), Math.toRadians(90)) //clear the wall
                         .splineTo(new Vector2d(35, -46), Math.toRadians(90)) //drive around ground junction
