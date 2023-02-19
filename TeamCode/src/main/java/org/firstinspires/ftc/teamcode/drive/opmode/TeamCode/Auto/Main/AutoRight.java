@@ -456,7 +456,7 @@ public class AutoRight extends LinearOpMode {
 
                     boolean FoundPole = true;
                     ElapsedTime findTimer = new ElapsedTime();
-                    while (!drive.autoPlace(Arm, LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right) && opModeIsActive()) {
+                    while (!drive.autoPlace(LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right) && opModeIsActive()) {
                         if (findTimer.seconds() > UtilAndDelays.GiveUpDelay) {
                             FoundPole = false;
                             drive.followTrajectory(
@@ -553,7 +553,7 @@ public class AutoRight extends LinearOpMode {
 
                     boolean FoundPole = true;
                     ElapsedTime findTimer = new ElapsedTime();
-                    while (!drive.autoPlace(Arm, LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left) && opModeIsActive()) {
+                    while (!drive.autoPlace(LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left) && opModeIsActive()) {
                         if (findTimer.seconds() > UtilAndDelays.GiveUpDelay) {
                             FoundPole = false;
                             drive.followTrajectory(
@@ -649,7 +649,7 @@ public class AutoRight extends LinearOpMode {
 
                     boolean FoundPole = true;
                     ElapsedTime findTimer = new ElapsedTime();
-                    while (!drive.autoPlace(Arm, LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left) && opModeIsActive()) {
+                    while (!drive.autoPlace(LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left) && opModeIsActive()) {
                         if (findTimer.seconds() > UtilAndDelays.GiveUpDelay) {
                             FoundPole = false;
                             drive.followTrajectory(
