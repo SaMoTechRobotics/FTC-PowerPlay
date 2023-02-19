@@ -41,9 +41,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Chassis;
-import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.ChassisSpeed;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorDistances;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
@@ -471,12 +469,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 //                )
 //        );
 //    }
-    public final boolean autoPlace(Arm arm, DistanceSensor leftSensor, DistanceSensor rightSensor, Chassis.PoleAlign alignDrive, Chassis.PoleAlign alignStrafe) {
-        if (alignStrafe == Chassis.PoleAlign.Left) {
-            arm.setRotation(ArmRotation.Left);
-        } else {
-            arm.setRotation(ArmRotation.Right);
-        }
+    public final boolean autoPlace(DistanceSensor leftSensor, DistanceSensor rightSensor, Chassis.PoleAlign alignDrive, Chassis.PoleAlign alignStrafe) {
         double sensorDistance = alignStrafe == Chassis.PoleAlign.Left ? leftSensor.getDistance(DistanceUnit.INCH) : rightSensor.getDistance(DistanceUnit.INCH);
         double PlaceDistance = alignStrafe == Chassis.PoleAlign.Left ? SensorDistances.LeftPlaceDistance : SensorDistances.RightPlaceDistance;
         if (sensorDistance > SensorDistances.DetectAmount) {

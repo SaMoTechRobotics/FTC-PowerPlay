@@ -11,7 +11,7 @@ public class SensorDistances {
     /**
      * The maximum distance the robot will detect a pole
      */
-    public static double DetectAmount = 14;
+    public static double DetectAmount = 9.5;
 
     public static double ManualDetectAmount = 12;
 
@@ -21,7 +21,7 @@ public class SensorDistances {
     public static double LeftPlaceDistance = 4;
     public static double RightPlaceDistance = 4;
 
-    public static double DriveBackAdjust = 1;
+    public static double DriveBackAdjust = 0.5;
 
     public static double ManualPlaceDistance = 4.75;
 
