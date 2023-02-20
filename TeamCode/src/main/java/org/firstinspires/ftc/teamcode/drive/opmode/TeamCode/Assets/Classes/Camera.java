@@ -37,7 +37,7 @@ public class Camera {
     public static int AprilTag2 = 220;
     public static int AprilTag3 = 221;
 
-    private int DetectedTag = AprilTag2;
+    private int DetectedTag = 2;
 
     public Camera(HardwareMap hardwareMap) {
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
@@ -48,7 +48,7 @@ public class Camera {
         camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
             @Override
             public void onOpened() {
-                camera.startStreaming(800, 448, OpenCvCameraRotation.UPRIGHT);
+                camera.startStreaming(800, 448, OpenCvCameraRotation.UPSIDE_DOWN);
             }
 
             @Override

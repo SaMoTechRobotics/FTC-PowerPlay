@@ -35,6 +35,7 @@ public class MeepMeepTesting {
 //                                        .splineTo(new Vector2d(44, -12.7), Math.toRadians(-11)) //drive away from high pole
 //                                        .splineTo(new Vector2d(59, -12), Math.toRadians(2)) //drive around ground junction
 //                                        .splineTo(new Vector2d(64, -12), Math.toRadians(0)) //drive to stack
+                                        .splineToLinearHeading(new Pose2d(30, -13, Math.toRadians(0)), Math.toRadians(0))
                                         .splineTo(new Vector2d(48, -12), Math.toRadians(0))
                                         .splineTo(new Vector2d(64, -12), Math.toRadians(0))
 
