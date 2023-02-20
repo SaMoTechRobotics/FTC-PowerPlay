@@ -65,10 +65,13 @@ public class AlignTest extends LinearOpMode {
 
         Arm.setRotation(SIDE == AutoSide.Right ? ArmRotation.Left : ArmRotation.Right);
 
-        while (!drive.autoPlace(LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right) && opModeIsActive()) {
+        drive.smartAlignReset();
+        while (!drive.smartAlign(LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right) && opModeIsActive()) {
             telemetry.addData("Left Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
             telemetry.addLine("");
             telemetry.addData("Right Sensor", RightSensor.getDistance(DistanceUnit.INCH));
+            telemetry.addLine("");
+            telemetry.addData("Smart Align Data", drive.getSmartAlignData());
             telemetry.update();
         }
 

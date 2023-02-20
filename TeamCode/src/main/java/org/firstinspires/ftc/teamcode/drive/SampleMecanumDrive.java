@@ -22,6 +22,7 @@ import com.acmerobotics.roadrunner.drive.MecanumDrive;
 import com.acmerobotics.roadrunner.followers.HolonomicPIDVAFollower;
 import com.acmerobotics.roadrunner.followers.TrajectoryFollower;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.constraints.AngularVelocityConstraint;
@@ -543,6 +544,108 @@ public class SampleMecanumDrive extends MecanumDrive {
             );
             return true;
         }
+    } //end of autoplace
+
+    private static class SmartAlignData {
+        public ArrayList<AlignPos> distances = new ArrayList<>();
+
+        public boolean sawPole = false;
+        public boolean gotData = false;
+    }
+
+    private static class AlignPos {
+        public double X;
+        public double Y;
+        public double SensorDistance;
+
+        public AlignPos(double x, double y, double sensorDistance) {
+            this.X = x;
+            this.Y = y;
+            this.SensorDistance = sensorDistance;
+        }
+    }
+
+    private SmartAlignData smartAlignData = new SmartAlignData();
+
+    public final void smartAlignReset() {
+        this.smartAlignData = new SmartAlignData();
+    }
+
+    public final SmartAlignData getSmartAlignData() {
+        return this.smartAlignData;
+    }
+
+    /**
+     * @param leftSensor  left distance sensor
+     * @param rightSensor right distance sensor
+     * @param alignDrive  direction to align with pole
+     * @param alignStrafe side pole is on
+     * @return true if aligned, false if not
+     * <p>
+     * Aligns with pole using distance sensors, does this in order:
+     * 1. Drive forward/backward until distance sensor detects pole
+     * 2. Keep driving forward/backward until distance sensors loses pole
+     * 3. Keep track of each distance when detecting pole and the x value of the robot when it read that distance
+     * 4. Use the x values and the distance to calculate the distance the robot needs to drive to align with the pole
+     * 5. Drive to the calculated distance
+     * 6. Return true because it is aligned
+     */
+    public final boolean smartAlign(DistanceSensor leftSensor, DistanceSensor rightSensor, Chassis.PoleAlign alignDrive, Chassis.PoleAlign alignStrafe) {
+        double sensorDistance = alignStrafe == Chassis.PoleAlign.Left ? leftSensor.getDistance(DistanceUnit.INCH) : rightSensor.getDistance(DistanceUnit.INCH);
+
+        if (smartAlignData.sawPole && smartAlignData.gotData) { // if we have seen the pole and have the data
+            //get the calculated distance by taking the vec2 with the lowest y value
+
+            this.followTrajectory( // drive to calculated position
+                    this.trajectoryBuilder(this.getPoseEstimate())
+                            .strafeTo(new Vector2d(
+                                    smartAlignData.distances.get(0).X,
+                                    smartAlignData.distances.get(0).Y
+                            ))
+                            .build()
+            );
+            this.smartAlignReset();
+        } else if (smartAlignData.sawPole) {
+            if (sensorDistance > smartAlignData.distances.get(smartAlignData.distances.size() - 1).Y) {
+                this.setWeightedDrivePower(
+                        new Pose2d(
+                                alignDrive == Chassis.PoleAlign.Forward ? ChassisSpeed.AlignSpeed : -ChassisSpeed.AlignSpeed,
+                                0,
+                                0
+                        )
+                );
+                smartAlignData.distances.add(new AlignPos(this.getPoseEstimate().getX(), this.getPoseEstimate().getY(), sensorDistance));
+            } else {
+                this.setWeightedDrivePower(
+                        new Pose2d(
+                                0,
+                                0,
+                                0
+                        )
+                );
+                smartAlignData.gotData = true;
+            }
+        } else if (sensorDistance < SensorDistances.DetectAmount) {
+            this.setWeightedDrivePower(
+                    new Pose2d(
+                            alignDrive == Chassis.PoleAlign.Forward ? ChassisSpeed.AlignSpeed : -ChassisSpeed.AlignSpeed,
+                            0,
+                            0
+                    )
+            );
+            smartAlignData.sawPole = true;
+            smartAlignData.distances.add(new AlignPos(this.getPoseEstimate().getX(), this.getPoseEstimate().getY(), sensorDistance));
+        } else {
+            this.setWeightedDrivePower(
+                    new Pose2d(
+                            alignDrive == Chassis.PoleAlign.Forward ? ChassisSpeed.AlignSpeed : -ChassisSpeed.AlignSpeed,
+                            0,
+                            0
+                    )
+            );
+        }
+
+        return false;
     }
 }
 
