@@ -56,7 +56,7 @@ public class AutoRightPro extends LinearOpMode {
         public static double NormalSpeed = 55;
 
         public static double MaxAccel = 60;
-        public static double FastAccel = 50;
+        public static double FastAccel = 45;
         public static double NormalAccel = 35;
 
         public static double MaxTurn = 180;
@@ -71,7 +71,7 @@ public class AutoRightPro extends LinearOpMode {
      */
 
     private static class TrajectoryDistances {
-        public static double ClearPole = 3;
+        public static double ClearPole = 2.5;
     }
 
     public static TrajectoryDistances TRAJECTORY_DISTANCES = new TrajectoryDistances();
@@ -84,9 +84,9 @@ public class AutoRightPro extends LinearOpMode {
     private static class TrajectoryLocations {
 
         // Stack pos                                                right                       left
-        public static Vec2 StackPos = SIDE == AutoSide.Right ? new Vec2(64, -12) : new Vec2(64, -12);
+        public static Vec2 StackPos = SIDE == AutoSide.Right ? new Vec2(64, -13) : new Vec2(64, -12);
 
-        public static Vec2 AvoidByStackPos = SIDE == AutoSide.Right ? new Vec2(48, -12) : new Vec2(48, -12);
+        public static Vec2 AvoidByStackPos = SIDE == AutoSide.Right ? new Vec2(48, -13) : new Vec2(48, -12);
 
         public static class PolePos {
             public double X;
@@ -111,7 +111,7 @@ public class AutoRightPro extends LinearOpMode {
                         new PolePos(8, 4, 0, -14, 0); //left
         public static PolePos CloseHighPolePos =
                 SIDE == AutoSide.Right ?
-                        new PolePos(29.5, 28, 26.5, -10, 0) : //right
+                        new PolePos(30, 28, 24, -11.2, 1) : //right
                         new PolePos(29.5, 28, 26.5, -10, 0); //left
 
         public static PolePos CloseMidPolePos =
@@ -137,9 +137,8 @@ public class AutoRightPro extends LinearOpMode {
 
     private static class UtilAndDelays {
 
-        public static double GiveUpDelay = 4;
-        public static double FirstPoleWait = 300;
-        public static double PoleWait = 200;
+        public static double GiveUpDelay = 8;
+        public static double PoleWait = 0;
         public static double LowerSlideAmount = 8;
 
         public static double LowerSlideDelay = 300;
@@ -182,7 +181,7 @@ public class AutoRightPro extends LinearOpMode {
      * 1 + ConesToScore.Cones (3) = 4 total cones
      */
     private static class ConesToScore {
-        public static int Count = 5;
+        public static int Count = 4;
 
         public static TargetPole Pole0 = TargetPole.CloseHigh;
         public static TargetPole Pole1 = TargetPole.CloseHigh;
@@ -278,6 +277,8 @@ public class AutoRightPro extends LinearOpMode {
 
         waitForStart();
 
+        Claw.close();
+
         if (isStopRequested()) return;
 
         ParkingPosition = Camera.getDetectedTag();
@@ -295,6 +296,7 @@ public class AutoRightPro extends LinearOpMode {
          */
         int ConesScored = 0;
         TargetPole[] TargetPoles;
+        scoreCones:
         while (ConesScored < ConesToScore.Count) {
             TargetPoles = ConesToScore.getPoles();
 
@@ -311,6 +313,7 @@ public class AutoRightPro extends LinearOpMode {
                     Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max);
                     Arm.setRotation(SIDE == AutoSide.Right ? ArmRotation.Left : ArmRotation.Right);
 
+                    boolean FoundPole = true;
                     ElapsedTime findTimer = new ElapsedTime();
                     while (!drive.autoPlace(LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right) && opModeIsActive()) {
                         telemetry.addData("Left Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
@@ -318,10 +321,11 @@ public class AutoRightPro extends LinearOpMode {
                         telemetry.addData("Right Sensor", RightSensor.getDistance(DistanceUnit.INCH));
                         telemetry.update();
 
-                        if ((findTimer.seconds() > UtilAndDelays.GiveUpDelay)
-                                || (SIDE == AutoSide.Right ?
-                                (drive.getPoseEstimate().getX() < SIDE * TargetPolePos.GiveUpX) :
-                                (drive.getPoseEstimate().getX() > SIDE * TargetPolePos.GiveUpX))
+                        if (
+                                (findTimer.seconds() > UtilAndDelays.GiveUpDelay)
+                                        || (SIDE == AutoSide.Right ?
+                                        (drive.getPoseEstimate().getX() < SIDE * TargetPolePos.GiveUpX) :
+                                        (drive.getPoseEstimate().getX() > SIDE * TargetPolePos.GiveUpX))
                         ) { //if took too long or went too far, give up
                             drive.followTrajectory(
                                     drive.trajectoryBuilder(drive.getPoseEstimate())
@@ -331,8 +335,17 @@ public class AutoRightPro extends LinearOpMode {
                                             ) //drive to pole estimate location
                                             .build()
                             );
+                            FoundPole = false;
                             break;
                         }
+                    }
+
+                    if (TargetPolePos.Adjust > 0 && FoundPole) {
+                        drive.followTrajectory(
+                                drive.trajectoryBuilder(drive.getPoseEstimate())
+                                        .back(TargetPolePos.Adjust)
+                                        .build()
+                        );
                     }
 
                     if (UtilAndDelays.PoleWait > 0) sleep((long) UtilAndDelays.PoleWait);
@@ -354,8 +367,22 @@ public class AutoRightPro extends LinearOpMode {
 
                     ConesScored++; // Increment cones scored
 
-                    if (ConesScored >= ConesToScore.Count)
-                        break; // If all cones have been scored, break out of loop
+                    if (ConesScored >= ConesToScore.Count) {
+                        if (SIDE == AutoSide.Right) {
+                            drive.followTrajectory(
+                                    drive.trajectoryBuilder(drive.getPoseEstimate())
+                                            .strafeRight(TrajectoryDistances.ClearPole)
+                                            .build()
+                            );
+                        } else {
+                            drive.followTrajectory(
+                                    drive.trajectoryBuilder(drive.getPoseEstimate())
+                                            .strafeLeft(TrajectoryDistances.ClearPole)
+                                            .build()
+                            );
+                        }
+                        break scoreCones; // If all cones have been scored, break out of loop
+                    }
 
                     updateNextSlideHeight(); // Update the next slide height
                     Claw.setOpenAmount(ClawPosition.PickupOpen);
@@ -445,7 +472,7 @@ public class AutoRightPro extends LinearOpMode {
                 break;
             } //end of drive to pole case
 
-            
+
         } //end of loop
 
         /*

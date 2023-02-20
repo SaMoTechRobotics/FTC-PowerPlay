@@ -487,10 +487,10 @@ public class SampleMecanumDrive extends MecanumDrive {
                             .back(SensorDistances.DriveBackAdjust)
                             .build()
             );
-            double newPlaceDistance = alignStrafe == Chassis.PoleAlign.Left ? SensorDistances.LeftPlaceDistance : SensorDistances.RightPlaceDistance;
-            if (newPlaceDistance < PlaceDistance) PlaceDistance = newPlaceDistance;
+            double newSensorDistance = alignStrafe == Chassis.PoleAlign.Left ? leftSensor.getDistance(DistanceUnit.INCH) : rightSensor.getDistance(DistanceUnit.INCH);
+            if (newSensorDistance < sensorDistance) sensorDistance = newSensorDistance;
 
-            if (sensorDistance > PlaceDistance) {
+            if (sensorDistance > PlaceDistance && sensorDistance - PlaceDistance > 0.01) {
                 if (alignStrafe == Chassis.PoleAlign.Left) {
                     this.followTrajectory(
                             this.trajectoryBuilder(this.getPoseEstimate())
@@ -510,7 +510,7 @@ public class SampleMecanumDrive extends MecanumDrive {
                                     .build()
                     );
                 }
-            } else if (sensorDistance < PlaceDistance) {
+            } else if (sensorDistance < PlaceDistance && PlaceDistance - sensorDistance > 0.01) {
                 if (alignStrafe == Chassis.PoleAlign.Left) {
                     this.followTrajectory(
                             this.trajectoryBuilder(this.getPoseEstimate())

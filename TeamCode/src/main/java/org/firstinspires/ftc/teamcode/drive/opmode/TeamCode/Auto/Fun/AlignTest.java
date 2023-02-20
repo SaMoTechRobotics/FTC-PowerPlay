@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Auto.Fun;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -77,7 +76,7 @@ public class AlignTest extends LinearOpMode {
 
         drive.followTrajectory(
                 drive.trajectoryBuilder(drive.getPoseEstimate())
-                        .strafeTo(new Vector2d(0, 0))
+                        .strafeRight(4)
                         .build()
         );
 
