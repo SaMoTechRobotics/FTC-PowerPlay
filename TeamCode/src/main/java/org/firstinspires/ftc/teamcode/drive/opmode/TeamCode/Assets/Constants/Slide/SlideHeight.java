@@ -20,10 +20,12 @@ public class SlideHeight {
     /**
      * Heights of slide to line up with heights of different poles or ground as inches
      */
-    public static double HighPole = 40; //4000
-    public static double MidPole = 29; //2800
-    public static double LowPole = 17; //2000
+    public static double HighPole = 40;
+    public static double MidPole = 29;
+    public static double LowPole = 17;
+
     public static double Ground = 0;
+    
     /**
      * Ticks of margin to consider the slide at 0
      */
