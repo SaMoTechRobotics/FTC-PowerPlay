@@ -105,7 +105,7 @@ public class Chassis {
             this.DriveSpeed = ChassisSpeed.MinDrive;
             this.TurnSpeed = ChassisSpeed.MinTurn;
             this.StrafeSpeed = ChassisSpeed.MinStrafe;
-            this.toggleBrake(false);
+            this.toggleBrake(true);
         } else { // No bumper is mid speeds
             this.DriveSpeed = ChassisSpeed.MidDrive;
             this.TurnSpeed = ChassisSpeed.MidTurn;
