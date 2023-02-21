@@ -54,6 +54,7 @@ import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /*
@@ -595,27 +596,37 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         if (smartAlignData.sawPole && smartAlignData.gotData) { // if we have seen the pole and have the data
             //get the calculated distance by taking the vec2 with the lowest y value
+            ArrayList<Double> sensorDistances = new ArrayList<>(); //new array list to get max sensor distances
+            smartAlignData.distances.forEach(alignPos -> sensorDistances.add(alignPos.SensorDistance)); //adds all sensor distances to new array list
+            int index = sensorDistances.indexOf(Collections.max(sensorDistances)); //gets the max sensor distance align pos
+
+            AlignPos bestAlignPos = smartAlignData.distances.get(index); //best align pos to take data from
+
+            double PlaceDistance = alignStrafe == Chassis.PoleAlign.Left ? SensorDistances.LeftPlaceDistance : SensorDistances.RightPlaceDistance;
+
+            Vector2d calculatedAlignPos = new Vector2d(
+                    bestAlignPos.X,
+                    alignStrafe == Chassis.PoleAlign.Left ? bestAlignPos.Y + (bestAlignPos.SensorDistance - PlaceDistance) : bestAlignPos.Y - (bestAlignPos.SensorDistance - PlaceDistance)
+            );
 
             this.followTrajectory( // drive to calculated position
                     this.trajectoryBuilder(this.getPoseEstimate())
-                            .strafeTo(new Vector2d(
-                                    smartAlignData.distances.get(0).X,
-                                    smartAlignData.distances.get(0).Y
-                            ))
+                            .strafeTo(calculatedAlignPos)
                             .build()
             );
             this.smartAlignReset();
+            return true; //finished aligning
         } else if (smartAlignData.sawPole) {
-            if (sensorDistance > smartAlignData.distances.get(smartAlignData.distances.size() - 1).Y) {
+            if (sensorDistance > smartAlignData.distances.get(smartAlignData.distances.size() - 1).SensorDistance) { //continue data collection if still finding pole
                 this.setWeightedDrivePower(
                         new Pose2d(
-                                alignDrive == Chassis.PoleAlign.Forward ? ChassisSpeed.AlignSpeed : -ChassisSpeed.AlignSpeed,
+                                alignDrive == Chassis.PoleAlign.Forward ? ChassisSpeed.FineAlignSpeed : -ChassisSpeed.FineAlignSpeed,
                                 0,
                                 0
                         )
                 );
                 smartAlignData.distances.add(new AlignPos(this.getPoseEstimate().getX(), this.getPoseEstimate().getY(), sensorDistance));
-            } else {
+            } else { //stop moving if all data collected
                 this.setWeightedDrivePower(
                         new Pose2d(
                                 0,
@@ -623,18 +634,18 @@ public class SampleMecanumDrive extends MecanumDrive {
                                 0
                         )
                 );
-                smartAlignData.gotData = true;
+                smartAlignData.gotData = true; //got data
             }
-        } else if (sensorDistance < SensorDistances.DetectAmount) {
+        } else if (sensorDistance < SensorDistances.DetectAmount) { //looking for pole
             this.setWeightedDrivePower(
                     new Pose2d(
-                            alignDrive == Chassis.PoleAlign.Forward ? ChassisSpeed.AlignSpeed : -ChassisSpeed.AlignSpeed,
+                            alignDrive == Chassis.PoleAlign.Forward ? ChassisSpeed.FineAlignSpeed : -ChassisSpeed.FineAlignSpeed,
                             0,
                             0
                     )
             );
-            smartAlignData.sawPole = true;
-            smartAlignData.distances.add(new AlignPos(this.getPoseEstimate().getX(), this.getPoseEstimate().getY(), sensorDistance));
+            smartAlignData.sawPole = true; //found pole
+            smartAlignData.distances.add(new AlignPos(this.getPoseEstimate().getX(), this.getPoseEstimate().getY(), sensorDistance)); //log first pole position
         } else {
             this.setWeightedDrivePower(
                     new Pose2d(
@@ -645,7 +656,7 @@ public class SampleMecanumDrive extends MecanumDrive {
             );
         }
 
-        return false;
+        return false; //didn't finish aligning yet
     }
 }
 

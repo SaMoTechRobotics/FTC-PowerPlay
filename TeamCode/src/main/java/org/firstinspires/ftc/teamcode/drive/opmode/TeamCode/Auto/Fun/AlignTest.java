@@ -51,7 +51,7 @@ public class AlignTest extends LinearOpMode {
         Servo podLift = hardwareMap.get(Servo.class, "podLift");
         podLift.setPosition(PodLiftPosition.Down);
 
-        Pose2d startPose = new Pose2d(0, 0, Math.toRadians(0));
+        Pose2d startPose = new Pose2d(30, -12, Math.toRadians(0));
 
         drive.setPoseEstimate(startPose);
 
