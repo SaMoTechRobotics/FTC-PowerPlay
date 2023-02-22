@@ -547,14 +547,14 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
     } //end of autoplace
 
-    private static class SmartAlignData {
+    public static class SmartAlignData {
         public ArrayList<AlignPos> distances = new ArrayList<>();
 
         public boolean sawPole = false;
         public boolean gotData = false;
     }
 
-    private static class AlignPos {
+    public static class AlignPos {
         public Pose2d Position;
         public double SensorDistance;
 
@@ -590,6 +590,8 @@ public class SampleMecanumDrive extends MecanumDrive {
      * 6. Return true because it is aligned
      */
     public final boolean smartAlign(DistanceSensor leftSensor, DistanceSensor rightSensor, Chassis.PoleAlign alignDrive, Chassis.PoleAlign alignStrafe) {
+        this.update(); //updates the auto position
+        
         double sensorDistance = alignStrafe == Chassis.PoleAlign.Left ? leftSensor.getDistance(DistanceUnit.INCH) : rightSensor.getDistance(DistanceUnit.INCH); //gets the distance from the sensor
 
         if (smartAlignData.sawPole && smartAlignData.gotData) { // if we have seen the pole and have the data
@@ -607,8 +609,9 @@ public class SampleMecanumDrive extends MecanumDrive {
             //calculates the distance to align to the pole, positive means driving to left, negative means driving to right
             double dist = alignStrafe == Chassis.PoleAlign.Left ? (bestAlignPos.SensorDistance - PlaceDistance) : -(bestAlignPos.SensorDistance - PlaceDistance);
 
-            double headingSin = Math.sin(bestAlignPos.Position.getHeading() + Math.toRadians(90)); //gets the sin of the heading
-            double headingCos = Math.cos(bestAlignPos.Position.getHeading() + Math.toRadians(90)); //gets the cos of the heading
+            double rotationalOffset = alignStrafe == Chassis.PoleAlign.Left ? 90 : -90; //gets the rotational offset depending on aligning direction
+            double headingSin = Math.sin(bestAlignPos.Position.getHeading() + Math.toRadians(rotationalOffset)); //gets the sin of the heading
+            double headingCos = Math.cos(bestAlignPos.Position.getHeading() + Math.toRadians(rotationalOffset)); //gets the cos of the heading
             Pose2d calculatedAlignPos = new Pose2d( //calculates the position to align to
                     bestAlignPos.Position.getX() + dist * headingCos, //calculates the x value
                     bestAlignPos.Position.getY() + dist * headingSin, //calculates the y value
@@ -621,11 +624,11 @@ public class SampleMecanumDrive extends MecanumDrive {
                             .build()
             );
 
-            this.smartAlignReset(); //reset smart align data for next time
-
+//            this.smartAlignReset(); //reset smart align data for next time
             return true; //finished aligning
         } else if (smartAlignData.sawPole) {
-            if (sensorDistance > smartAlignData.distances.get(smartAlignData.distances.size() - 1).SensorDistance) { //continue data collection if still finding pole
+//            if (sensorDistance > smartAlignData.distances.get(0).SensorDistance) { //continue data collection if still finding pole
+            if (sensorDistance < SensorDistances.DetectAmount) {
                 this.setWeightedDrivePower(
                         new Pose2d(
                                 alignDrive == Chassis.PoleAlign.Forward ? ChassisSpeed.FineAlignSpeed : -ChassisSpeed.FineAlignSpeed,

@@ -35,7 +35,7 @@ public class ChassisSpeed {
     /**
      * Place speed for when robot is aligning with pole
      */
-    public static double AlignSpeed = 0.1;
+    public static double AlignSpeed = 0.16;
     public static double FineAlignSpeed = 0.07;
 
     public static double ManualAlignSpeed = 0.2;
