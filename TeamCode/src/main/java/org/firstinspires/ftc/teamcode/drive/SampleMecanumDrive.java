@@ -642,7 +642,7 @@ public class SampleMecanumDrive extends MecanumDrive {
             return true; //finished aligning
         } else if (smartAlignData.sawPole) {
             if (
-                    (smartAlignData.distances.size() >= 2 && //if there are at least 2 distances
+                    (smartAlignData.distances.size() > 2 && //if there are at least 2 distances (also prevents index out of bounds)
                             sensorDistance < smartAlignData.distances.get(smartAlignData.distances.size() - 1).SensorDistance + SensorDistances.LosingPoleMargin //if sensor distance is decreasing
                             && smartAlignData.distances.get(smartAlignData.distances.size() - 1).SensorDistance > smartAlignData.distances.get(smartAlignData.distances.size() - 2).SensorDistance - SensorDistances.LosingPoleMargin //if sensor distance was previously decreasing
                     )
