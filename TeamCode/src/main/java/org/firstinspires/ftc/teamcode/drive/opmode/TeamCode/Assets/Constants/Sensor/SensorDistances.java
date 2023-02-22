@@ -30,6 +30,8 @@ public class SensorDistances {
      */
     public static double PlaceMargin = 0.25;
 
+    public static double OutlierMargin = 2;
+
     public static double ManualPlaceMargin = 0.25;
 
     /**

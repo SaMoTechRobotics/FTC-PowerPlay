@@ -53,7 +53,7 @@ import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -548,15 +548,29 @@ public class SampleMecanumDrive extends MecanumDrive {
     } //end of autoplace
 
     public static class SmartAlignData {
-        public ArrayList<AlignPos> distances = new ArrayList<>();
+        public ArrayList<AlignPos> distances = new ArrayList<>(); //list of distances and positions from the sensors
 
-        public boolean sawPole = false;
-        public boolean gotData = false;
+        public boolean sawPole = false; //if the robot saw the pole
+        public boolean gotData = false; //if the robot finished getting data from the sensors
+
+        public static int getBestIndex(ArrayList<AlignPos> sortedAlignData) {
+            List<Double> sortedSensorDistances = sortedAlignData.stream() //streams the list of AlignPos
+                    .map(alignPos -> alignPos.SensorDistance) //makes the list all the sensor distances
+                    .collect(Collectors.toList()); //collects the list
+
+            for (int i = 0; i < sortedSensorDistances.size() - 1; i++) { //iterates from min to max distances
+                if (sortedSensorDistances.get(i + 1) - sortedSensorDistances.get(i) < SensorDistances.OutlierMargin) { //if the next distance is within the margin of the current distance
+                    return i; //return the index of the current distance (the best distance)
+                }
+                //continue if found outlier
+            }
+            return 0; //if no outliers or best pos not found, return the first index
+        }
     }
 
     public static class AlignPos {
-        public Pose2d Position;
-        public double SensorDistance;
+        public Pose2d Position; //position of the robot when the sensor detected the pole
+        public double SensorDistance; //distance the sensor detected the pole
 
         public AlignPos(Pose2d position, double sensorDistance) {
             this.Position = position;
@@ -591,18 +605,18 @@ public class SampleMecanumDrive extends MecanumDrive {
      */
     public final boolean smartAlign(DistanceSensor leftSensor, DistanceSensor rightSensor, Chassis.PoleAlign alignDrive, Chassis.PoleAlign alignStrafe) {
         this.update(); //updates the auto position
-        
+
         double sensorDistance = alignStrafe == Chassis.PoleAlign.Left ? leftSensor.getDistance(DistanceUnit.INCH) : rightSensor.getDistance(DistanceUnit.INCH); //gets the distance from the sensor
 
         if (smartAlignData.sawPole && smartAlignData.gotData) { // if we have seen the pole and have the data
             // Create a new list of sensor distances
-            List<Double> sensorDistances = smartAlignData.distances.stream() //creates a stream of align pos that can be processed
-                    .map(alignPos -> alignPos.SensorDistance) //adds all sensor distances to the stream
-                    .collect(Collectors.toList()); //collects the list and puts it into a list
+            ArrayList<AlignPos> sortedAlignData = smartAlignData.distances.stream() //streams the list of AlignPos
+                    .sorted(Comparator.comparingDouble(alignPos -> alignPos.SensorDistance)) //compares the sensor distances to sort list
+                    .collect(Collectors.toCollection(ArrayList::new)); //back to list
 
-            AlignPos bestAlignPos = smartAlignData.distances.get( //gets the align pos with the smallest sensor distance
-                    sensorDistances.indexOf(Collections.min(sensorDistances)) //finds the index of the smallest sensor distance
-            ); //best align pos to take data from
+            AlignPos bestAlignPos = sortedAlignData.get(
+                    SmartAlignData.getBestIndex(sortedAlignData) //gets the best align position
+            ); //gets the best align position
 
             double PlaceDistance = alignStrafe == Chassis.PoleAlign.Left ? SensorDistances.LeftPlaceDistance : SensorDistances.RightPlaceDistance; //gets the place distance depending on aligning direction
 
