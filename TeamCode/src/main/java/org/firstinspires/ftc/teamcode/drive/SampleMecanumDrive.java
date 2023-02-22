@@ -641,8 +641,12 @@ public class SampleMecanumDrive extends MecanumDrive {
 //            this.smartAlignReset(); //reset smart align data for next time
             return true; //finished aligning
         } else if (smartAlignData.sawPole) {
-//            if (sensorDistance > smartAlignData.distances.get(0).SensorDistance) { //continue data collection if still finding pole
-            if (sensorDistance < SensorDistances.DetectAmount) {
+            if (
+                    (smartAlignData.distances.size() >= 2 && //if there are at least 2 distances
+                            sensorDistance < smartAlignData.distances.get(smartAlignData.distances.size() - 1).SensorDistance + SensorDistances.LosingPoleMargin //if sensor distance is decreasing
+                            && smartAlignData.distances.get(smartAlignData.distances.size() - 1).SensorDistance > smartAlignData.distances.get(smartAlignData.distances.size() - 2).SensorDistance - SensorDistances.LosingPoleMargin //if sensor distance was previously decreasing
+                    )
+                            || sensorDistance < SensorDistances.DetectAmount) { //if the sensor completely loses the pole
                 this.setWeightedDrivePower(
                         new Pose2d(
                                 alignDrive == Chassis.PoleAlign.Forward ? ChassisSpeed.FineAlignSpeed : -ChassisSpeed.FineAlignSpeed,

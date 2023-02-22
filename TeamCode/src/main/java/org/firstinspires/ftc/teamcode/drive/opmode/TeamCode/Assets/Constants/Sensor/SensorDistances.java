@@ -32,6 +32,8 @@ public class SensorDistances {
 
     public static double OutlierMargin = 2;
 
+    public static double LosingPoleMargin = 1;
+
     public static double ManualPlaceMargin = 0.25;
 
     /**
