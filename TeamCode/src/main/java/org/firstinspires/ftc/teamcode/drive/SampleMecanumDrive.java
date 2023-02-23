@@ -43,6 +43,7 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Chassis;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.ChassisSpeed;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.AlignDataParams;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorDistances;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
@@ -559,7 +560,7 @@ public class SampleMecanumDrive extends MecanumDrive {
                     .collect(Collectors.toList()); //collects the list
 
             for (int i = 0; i < sortedSensorDistances.size() - 1; i++) { //iterates from min to max distances
-                if (sortedSensorDistances.get(i + 1) - sortedSensorDistances.get(i) < SensorDistances.OutlierMargin) { //if the next distance is within the margin of the current distance
+                if (sortedSensorDistances.get(i + 1) - sortedSensorDistances.get(i) < AlignDataParams.OutlierMargin) { //if the next distance is within the margin of the current distance
                     return i; //return the index of the current distance (the best distance)
                 }
                 //continue if found outlier
@@ -641,12 +642,19 @@ public class SampleMecanumDrive extends MecanumDrive {
 //            this.smartAlignReset(); //reset smart align data for next time
             return true; //finished aligning
         } else if (smartAlignData.sawPole) {
-            if (
-                    (smartAlignData.distances.size() > 2 && //if there are at least 2 distances (also prevents index out of bounds)
-                            sensorDistance < smartAlignData.distances.get(smartAlignData.distances.size() - 1).SensorDistance + SensorDistances.LosingPoleMargin //if sensor distance is decreasing
-                            && smartAlignData.distances.get(smartAlignData.distances.size() - 1).SensorDistance < smartAlignData.distances.get(smartAlignData.distances.size() - 2).SensorDistance + SensorDistances.StillLosingPoleMargin //if sensor distance was previously decreasing
-                    )
-                            || sensorDistance < SensorDistances.DetectAmount) { //if the sensor completely loses the pole
+            boolean finishedDataCollection = false; //temp var to check if data collection is finished, starts as false
+            for (int i = 0; i < AlignDataParams.LosingPoleDataAmount; i++) { //checks if the sensor is losing the pole
+                if (smartAlignData.distances.size() > i + 1) { //if the distance list is long enough
+                    if (smartAlignData.distances.get(smartAlignData.distances.size() - 1 - i).SensorDistance < //if the current distance is less than the previous distance
+                            smartAlignData.distances.get(smartAlignData.distances.size() - 2 - i).SensorDistance + AlignDataParams.LosingPoleMargin) { //if the current distance is less than the previous distance plus the margin
+                        finishedDataCollection = true; //data collection is finished because the sensor is losing the pole
+                        break;
+                    }
+                }
+            }
+
+            if ((!finishedDataCollection && smartAlignData.distances.size() > AlignDataParams.MinimumDataAmount)
+                    || sensorDistance < SensorDistances.DetectAmount) { //if the sensor completely loses the pole
                 this.setWeightedDrivePower(
                         new Pose2d(
                                 alignDrive == Chassis.PoleAlign.Forward ? ChassisSpeed.FineAlignSpeed : -ChassisSpeed.FineAlignSpeed,

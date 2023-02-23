@@ -35,6 +35,8 @@ public class SensorDistances {
     public static double LosingPoleMargin = 1; //if the robot is losing the pole check
     public static double StillLosingPoleMargin = 1; //if the robot is still losing the pole check
 
+    public static int MinimumDataAmount = 3; //how long the robot has to be losing the pole to check if it is still losing the pole
+
     public static double ManualPlaceMargin = 0.25;
 
     /**
