@@ -315,12 +315,37 @@ public class AutoRightPro extends LinearOpMode {
 
                     boolean FoundPole = true;
                     ElapsedTime findTimer = new ElapsedTime();
-                    while (!drive.autoPlace(LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right) && opModeIsActive()) {
+//                    while (!drive.autoPlace(LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right) && opModeIsActive()) {
+//                        telemetry.addData("Left Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
+//                        telemetry.addLine("");
+//                        telemetry.addData("Right Sensor", RightSensor.getDistance(DistanceUnit.INCH));
+//                        telemetry.update();
+//
+//                        if (
+//                                (findTimer.seconds() > UtilAndDelays.GiveUpDelay)
+//                                        || (SIDE == AutoSide.Right ?
+//                                        (drive.getPoseEstimate().getX() < SIDE * TargetPolePos.GiveUpX) :
+//                                        (drive.getPoseEstimate().getX() > SIDE * TargetPolePos.GiveUpX))
+//                        ) { //if took too long or went too far, give up
+//                            drive.followTrajectory(
+//                                    drive.trajectoryBuilder(drive.getPoseEstimate())
+//                                            .lineToLinearHeading(new Pose2d(SIDE * TargetPolePos.X, TargetPolePos.Y, Math.toRadians(FINAL_ROT)),
+//                                                    SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.NormalSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
+//                                                    SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.NormalAccel)
+//                                            ) //drive to pole estimate location
+//                                            .build()
+//                            );
+//                            FoundPole = false;
+//                            break;
+//                        }
+//                    }
+
+                    drive.smartAlignReset();
+                    while (!drive.smartAlign(LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right) && opModeIsActive()) {
                         telemetry.addData("Left Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
                         telemetry.addLine("");
                         telemetry.addData("Right Sensor", RightSensor.getDistance(DistanceUnit.INCH));
                         telemetry.update();
-
                         if (
                                 (findTimer.seconds() > UtilAndDelays.GiveUpDelay)
                                         || (SIDE == AutoSide.Right ?
