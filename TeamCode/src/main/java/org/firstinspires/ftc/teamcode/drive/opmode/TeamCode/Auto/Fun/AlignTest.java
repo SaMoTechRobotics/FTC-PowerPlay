@@ -21,10 +21,6 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideSpeed;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Auto.Constants.AutoSide;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Config
 @Autonomous(name = "AlignTest", group = "Fun")
 public class AlignTest extends LinearOpMode {
@@ -79,18 +75,11 @@ public class AlignTest extends LinearOpMode {
         }
 
         drive.getSmartAlignData().distances.forEach(pos -> {
-            telemetry.addLine("Position (" + pos.SensorDistance + ")");
+            telemetry.addLine("At (X: " + pos.Position.getX() + ", Y: " + pos.Position.getY() + ", R: " + pos.Position.getHeading() + ") sensor was: " + pos.SensorDistance);
         });
-        List<Double> sensorDistances = drive.getSmartAlignData().distances.stream() //creates a stream of align pos that can be processed
-                .map(alignPos -> alignPos.SensorDistance) //adds all sensor distances to the stream
-                .collect(Collectors.toList()); //collects the list and puts it into a list
-
-        SampleMecanumDrive.AlignPos bestAlignPos = drive.getSmartAlignData().distances.get( //gets the align pos with the smallest sensor distance
-                sensorDistances.indexOf(Collections.min(sensorDistances)) //finds the index of the smallest sensor distance
-        ); //best align pos to take data from
 
         telemetry.addLine("");
-        telemetry.addLine("Final Position (" + bestAlignPos.SensorDistance + ")");
+        telemetry.addData("Calculated Position", drive.getCalculatedPosition());
         telemetry.update();
 
         Claw.open();
