@@ -111,7 +111,7 @@ public class AutoRightPro extends LinearOpMode {
                         new PolePos(8, 4, 0, -14, 0); //left
         public static PolePos CloseHighPolePos =
                 SIDE == AutoSide.Right ?
-                        new PolePos(30, 28, 24, -11.2, 1) : //right
+                        new PolePos(31, 28, 24, -11.2, 0) : //right
                         new PolePos(29.5, 28, 26.5, -10, 0); //left
 
         public static PolePos CloseMidPolePos =
@@ -363,14 +363,6 @@ public class AutoRightPro extends LinearOpMode {
                             FoundPole = false;
                             break;
                         }
-                    }
-
-                    if (TargetPolePos.Adjust > 0 && FoundPole) {
-                        drive.followTrajectory(
-                                drive.trajectoryBuilder(drive.getPoseEstimate())
-                                        .back(TargetPolePos.Adjust)
-                                        .build()
-                        );
                     }
 
                     if (UtilAndDelays.PoleWait > 0) sleep((long) UtilAndDelays.PoleWait);
