@@ -22,7 +22,7 @@ public class ClawPosition {
     /**
      * The open and close positions of the claw
      */
-    public static double Open = 100;
+    public static double Open = 90;
     public static double PickupOpen = 65; //old claw: 86
     public static double Close = 25; //old claw: 70
 
