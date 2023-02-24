@@ -13,12 +13,18 @@ public class TrajectoryTesting {
 
         double dist = 20;
 
+        double forwardOffset = 10;
+
         // Calculate the end pose by transforming to the left by dist relative to heading, make it work with any heading
-        double headingSin = Math.sin(startPose.getHeading() + Math.toRadians(90));
-        double headingCos = Math.cos(startPose.getHeading() + Math.toRadians(90));
+        double perpendicularHeadingSin = Math.sin(startPose.getHeading() + Math.toRadians(90));
+        double perpendicularHeadingCos = Math.cos(startPose.getHeading() + Math.toRadians(90));
+
+        double headingSin = Math.sin(startPose.getHeading());
+        double headingCos = Math.cos(startPose.getHeading());
+
         Pose2d endPose = new Pose2d(
-                startPose.getX() + dist * headingCos,
-                startPose.getY() + dist * headingSin,
+                startPose.getX() + (dist * perpendicularHeadingCos) + (forwardOffset * headingCos),
+                startPose.getY() + (dist * perpendicularHeadingSin) + (forwardOffset * headingSin),
                 startPose.getHeading()
         );
 
