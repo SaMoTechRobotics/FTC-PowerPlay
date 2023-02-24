@@ -9,4 +9,5 @@ public class AlignDataParams {
 
     public static double FindGiveUpTime = 5;
 
+    public static double ForwardOffset = 1; //the amount the robot must drive forward to get the pole in the claw
 }
