@@ -468,21 +468,29 @@ public class AutoRightPro extends LinearOpMode {
                 case CloseHigh: {
                     TrajectoryLocations.PolePos TargetPolePos = TrajectoryLocations.CloseHighPolePos;
                     Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max); //set slide height to high pole
-                    drive.followTrajectorySequence(
-                            drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                                    .setReversed(true)
-                                    .splineTo(new Vector2d(SIDE * TrajectoryLocations.AvoidByStackPos.X, TrajectoryLocations.AvoidByStackPos.Y), Math.toRadians(FINAL_ROT + 180),
+//                    drive.followTrajectorySequence(
+//                            drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+//                                    .setReversed(true)
+//                                    .splineTo(new Vector2d(SIDE * TrajectoryLocations.AvoidByStackPos.X, TrajectoryLocations.AvoidByStackPos.Y), Math.toRadians(FINAL_ROT + 180),
+//                                            SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.FastSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
+//                                            SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
+//                                    )
+//                                    .addDisplacementMarker(() -> {
+//                                        Arm.setRotation(SIDE == AutoSide.Right ? ArmRotation.Left : ArmRotation.Right); //rotate arm to pole
+//                                    })
+//                                    .splineTo(new Vector2d(SIDE * TargetPolePos.FindX, TargetPolePos.Y), Math.toRadians(FINAL_ROT + 180),
+//                                            SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.FastSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
+//                                            SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
+//                                    ) //drive to stack
+//                                    .setReversed(false)
+//                                    .build()
+//                    );
+                    drive.followTrajectory(
+                            drive.trajectoryBuilder(drive.getPoseEstimate())
+                                    .lineToLinearHeading(new Pose2d(SIDE * TargetPolePos.FindX, TargetPolePos.Y, Math.toRadians(FINAL_ROT)),
                                             SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.FastSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
                                             SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
                                     )
-                                    .addDisplacementMarker(() -> {
-                                        Arm.setRotation(SIDE == AutoSide.Right ? ArmRotation.Left : ArmRotation.Right); //rotate arm to pole
-                                    })
-                                    .splineTo(new Vector2d(SIDE * TargetPolePos.FindX, TargetPolePos.Y), Math.toRadians(FINAL_ROT + 180),
-                                            SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.FastSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
-                                            SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
-                                    ) //drive to stack
-                                    .setReversed(false)
                                     .build()
                     );
                 } //end of close high
