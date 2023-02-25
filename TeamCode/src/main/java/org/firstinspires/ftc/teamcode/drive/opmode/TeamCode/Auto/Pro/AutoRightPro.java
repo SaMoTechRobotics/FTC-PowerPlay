@@ -111,7 +111,7 @@ public class AutoRightPro extends LinearOpMode {
                         new PolePos(8, 4, 0, -14, 0); //left
         public static PolePos CloseHighPolePos =
                 SIDE == AutoSide.Right ?
-                        new PolePos(31, 28, 24, -11.2, 0) : //right
+                        new PolePos(31, 28, 20, -12, 0) : //right
                         new PolePos(29.5, 28, 26.5, -10, 0); //left
 
         public static PolePos CloseMidPolePos =
@@ -244,15 +244,15 @@ public class AutoRightPro extends LinearOpMode {
 
         TrajectorySequence firstTraj = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .setReversed(true) //reverse splines
-                .splineToLinearHeading(new Pose2d(35, -60, Math.toRadians(270)), Math.toRadians(90),
+                .splineToLinearHeading(new Pose2d(34, -60, Math.toRadians(270)), Math.toRadians(90),
                         SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.FastSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
                 ) //clear the wall
-                .splineTo(new Vector2d(35, -46), Math.toRadians(90),
+                .splineTo(new Vector2d(34, -46), Math.toRadians(90),
                         SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.FastSpeed, TrajectorySpeeds.FastTurn, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.NormalAccel)
                 ) //drive around ground junction
-                .splineTo(new Vector2d(28, -10), Math.toRadians(FINAL_ROT + 180),
+                .splineTo(new Vector2d(28, -12), Math.toRadians(FINAL_ROT + 180),
                         SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.NormalSpeed, TrajectorySpeeds.FastTurn, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.NormalAccel)
                 ) //drive to first high pole and turn
