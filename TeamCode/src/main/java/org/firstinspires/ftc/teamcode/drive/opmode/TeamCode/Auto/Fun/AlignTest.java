@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Auto.Fun;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -51,6 +53,8 @@ public class AlignTest extends LinearOpMode {
         Servo podLift = hardwareMap.get(Servo.class, "podLift");
         podLift.setPosition(PodLiftPosition.Down);
 
+        GamepadEx Gamepad2 = new GamepadEx(gamepad2);
+
         Pose2d startPose = new Pose2d(30, -12, Math.toRadians(0));
 
         drive.setPoseEstimate(startPose);
@@ -81,6 +85,11 @@ public class AlignTest extends LinearOpMode {
         telemetry.addLine("");
         telemetry.addData("Calculated Position", drive.getCalculatedPosition());
         telemetry.update();
+
+        while (opModeIsActive()) {
+            if (Gamepad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) break;
+            idle();
+        }
 
         Claw.open();
 
