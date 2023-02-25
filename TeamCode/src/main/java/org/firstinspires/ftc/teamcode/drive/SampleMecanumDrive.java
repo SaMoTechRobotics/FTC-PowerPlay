@@ -580,12 +580,14 @@ public class SampleMecanumDrive extends MecanumDrive {
             double perpendicularHeadingSin = Math.sin(bestAlignPos.Position.getHeading() + Math.toRadians(rotationalOffset)); //gets the sin of the heading with the offset
             double perpendicularHeadingCos = Math.cos(bestAlignPos.Position.getHeading() + Math.toRadians(rotationalOffset)); //gets the cos of the heading with the offset
 
+            double offset = alignStrafe == Chassis.PoleAlign.Left ? AlignDataParams.LeftForwardOffset : AlignDataParams.RightForwardOffset; //gets the offset depending on aligning direction
+
             double headingSin = Math.sin(bestAlignPos.Position.getHeading()); //gets the sin of the heading
             double headingCos = Math.cos(bestAlignPos.Position.getHeading()); //gets the cos of the heading
 
             return new Pose2d( //calculates the position to align to
-                    bestAlignPos.Position.getX() + (dist * perpendicularHeadingCos) + (AlignDataParams.ForwardOffset * headingCos), //calculates the x value
-                    bestAlignPos.Position.getY() + (dist * perpendicularHeadingSin) + (AlignDataParams.ForwardOffset * headingSin), //calculates the y value
+                    bestAlignPos.Position.getX() + (dist * perpendicularHeadingCos) + (offset * headingCos), //calculates the x value
+                    bestAlignPos.Position.getY() + (dist * perpendicularHeadingSin) + (offset * headingSin), //calculates the y value
                     bestAlignPos.Position.getHeading() //keeps the same heading
             );
         }
