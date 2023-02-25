@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
-import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,11 +22,17 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sli
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideSpeed;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Auto.Constants.AutoSide;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.stream.Collectors;
+
 @Config
 @Autonomous(name = "AlignTest", group = "Fun")
 public class AlignTest extends LinearOpMode {
 
     public static int SIDE = AutoSide.Right;
+
+    public static double WaitForDrop = 1000;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -84,12 +89,24 @@ public class AlignTest extends LinearOpMode {
 
         telemetry.addLine("");
         telemetry.addData("Calculated Position", drive.getCalculatedPosition());
+
+        ArrayList<SampleMecanumDrive.AlignPos> sortedAlignData = drive.getSmartAlignData().distances.stream() //streams the list of AlignPos
+                .sorted(Comparator.comparingDouble(alignPos -> alignPos.SensorDistance)) //compares the sensor distances to sort list
+                .collect(Collectors.toCollection(ArrayList::new)); //back to list
+
+        SampleMecanumDrive.AlignPos bestAlignPos = sortedAlignData.get(
+                SampleMecanumDrive.SmartAlignData.getBestIndex(sortedAlignData) //gets the best align position
+        ); //gets the best align position
+
+        telemetry.addData("Best sensor dist", bestAlignPos.SensorDistance);
         telemetry.update();
 
-        while (opModeIsActive()) {
-            if (Gamepad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) break;
-            idle();
-        }
+//        while (opModeIsActive()) {
+//            if (Gamepad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) break;
+//            idle();
+//        }
+
+        sleep((long) WaitForDrop);
 
         Claw.open();
 
