@@ -4,14 +4,15 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
-import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
 
 @Config
@@ -30,6 +31,17 @@ public class ArmTest extends LinearOpMode {
         org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm Arm = new Arm(hardwareMap.get(Servo.class, "arm"));
         Arm.setRotation(ArmRotation.Center);
 
+        Slide Slide = new Slide(hardwareMap.get(DcMotor.class, "slide"));
+        Slide.resetToZero();
+
+        Claw Claw =
+                new Claw(
+                        hardwareMap.get(Servo.class, "claw"),
+                        hardwareMap.get(DistanceSensor.class, "clawDistanceSensor"),
+                        hardwareMap.get(Servo.class, "poleBrace")
+                );
+        Claw.close();
+
         // Initialize the gamepad
         GamepadEx Gamepad1 = new GamepadEx(gamepad1);
         GamepadEx Gamepad2 = new GamepadEx(gamepad2);
@@ -39,6 +51,18 @@ public class ArmTest extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
+
+            Slide.updateWithControls(
+                    Gamepad2.getLeftY(),
+                    Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_UP),
+                    Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_LEFT),
+                    Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
+                    Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT),
+                    Gamepad2.getButton(GamepadKeys.Button.A),
+                    Arm,
+                    Claw
+            );
+
 
 //            if(Gamepad2.wasJustPressed(GamepadKeys.Button.X)) {
 //                ArmTargetPos = ArmRotation.Left;
@@ -56,16 +80,15 @@ public class ArmTest extends LinearOpMode {
 //            }
 
 
-
-            if(Gamepad2.wasJustPressed(GamepadKeys.Button.X)) {
+            if (Gamepad2.wasJustPressed(GamepadKeys.Button.X)) {
                 Arm.setTargetRotation(ArmRotation.Left);
-            } else if(Gamepad2.wasJustPressed(GamepadKeys.Button.B)) {
+            } else if (Gamepad2.wasJustPressed(GamepadKeys.Button.B)) {
                 Arm.setTargetRotation(ArmRotation.Right);
-            } else if(Gamepad2.wasJustPressed(GamepadKeys.Button.Y)) {
+            } else if (Gamepad2.wasJustPressed(GamepadKeys.Button.Y)) {
                 Arm.setTargetRotation(ArmRotation.Center);
             }
 
-            if(Gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
+            if (Gamepad2.getButton(GamepadKeys.Button.RIGHT_BUMPER)) {
                 telemetry.addData("Arm Speed (Default)", ArmRotation.MaxSpeed);
                 Arm.runToTargetRotation(ArmRotation.MaxSpeed);
             } else {
