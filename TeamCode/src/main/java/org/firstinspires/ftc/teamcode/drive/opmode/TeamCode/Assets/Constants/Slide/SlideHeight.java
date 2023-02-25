@@ -25,7 +25,7 @@ public class SlideHeight {
     public static double LowPole = 17;
 
     public static double Ground = 0;
-    
+
     /**
      * Ticks of margin to consider the slide at 0
      */
@@ -51,7 +51,7 @@ public class SlideHeight {
      */
     public static double SafetyMargin = 15;
 
-    public static double ClawOpenMargin = 13;
+    public static double ClawOpenMargin = 18; //13
 
     public static double PoleBraceSafetyHeight = 20;
 }
