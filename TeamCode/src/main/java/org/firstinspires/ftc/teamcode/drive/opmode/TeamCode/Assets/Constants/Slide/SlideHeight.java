@@ -20,7 +20,7 @@ public class SlideHeight {
     /**
      * Heights of slide to line up with heights of different poles or ground as inches
      */
-    public static double HighPole = 40;
+    public static double HighPole = 41;
     public static double MidPole = 29;
     public static double LowPole = 17;
 
@@ -31,7 +31,7 @@ public class SlideHeight {
      */
     public static int GroundMargin = 10;
     public static double PlaceMargin = 3;
-    public static double[] StackConeHeights = {0, 0.8, 2.3, 3.8, 5.6};
+    public static double[] StackConeHeights = {0, 1, 2.5, 4, 5.8};
     public static double StackConeHeightMultiplier = 1.2;
     /**
      * Max and min heights of slide as percentages
