@@ -1,8 +1,10 @@
 package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Claw.ClawPosition;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideSpeed;
 
@@ -18,6 +20,8 @@ public class Slide {
     private SlideStatus Status = SlideStatus.Stopped;
     private double LastSpeed = 0;
     private boolean GoingDown = false;
+
+    private ElapsedTime GoingDownTimer = null;
 
     /**
      * Creates a new slide with only 1 motor
@@ -158,7 +162,7 @@ public class Slide {
      */
     public final void holdHeight() {
         if (this.Status == SlideStatus.Holding) return;
-        if (this.getTicks() < SlideHeight.GroundMargin) {
+        if (this.getTicks() < SlideHeight.GoingDownGroundMargin) {
             return;
         }
 
@@ -204,8 +208,13 @@ public class Slide {
     ) {
         if (up | down | left | power != 0) this.GoingDown = false;
 //        if (this.GoingDown && (arm.getRotation() > ArmRotation.Center - ArmRotation.Margin && arm.getRotation() < ArmRotation.Center + ArmRotation.Margin)) {
-        if (this.GoingDown && arm.getRotation() == ArmRotation.Center) {
+        if (this.GoingDown && this.GoingDownTimer != null && this.GoingDownTimer.seconds() > ClawPosition.GoingDownTimeout) {
+            this.GoingDownTimer = null;
             this.setHeight(SlideHeight.Ground, this.Speed);
+            claw.close();
+        } else if (this.GoingDown && this.GoingDownTimer == null) {
+            if (this.getTicks() < SlideHeight.GoingDownGroundMargin) claw.open();
+            this.GoingDown = false;
         }
         if (up)
             this.setHeight(SlideHeight.HighPole, this.Speed); // Slide set to high pole height if dpad up is pressed
@@ -216,16 +225,18 @@ public class Slide {
         else if (right) {
             this.GoingDown = true;
             arm.setRotation(ArmRotation.Center);
-            claw.close();
-            claw.raisePoleBrace();
+            this.GoingDownTimer = new ElapsedTime();
+//            claw.close();
+//            claw.raisePoleBrace();
 //            this.setHeight(SlideHeight.Ground, this.Speed); // Slide set to ground height if dpad right is pressed
         } else if (power != 0) {
             this.manualPower(power); // Slide set to power from gamepad2 left stick y if no dpad buttons are pressed
-        } else if (this.getTicks() < SlideHeight.GroundMargin) {
-            if (this.Status != SlideStatus.Stopped) {
-//                this.stop();
-                if (!claw.detectedCone() && !AButton) claw.open();
-            }
+//        } else if (this.getTicks() < SlideHeight.GroundMargin) {
+//            if (this.Status != SlideStatus.Stopped) {
+//            this.stop();
+        } else if (this.getTicks() < SlideHeight.AutoClawMargin) {
+            if (!claw.detectedCone() && !AButton) claw.open();
+//            }
         } else if (
                 this.Status != SlideStatus.Stopped &&
                         (this.Status == SlideStatus.ManualPower || this.atTargetPosition())
