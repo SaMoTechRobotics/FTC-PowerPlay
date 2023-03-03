@@ -21,8 +21,8 @@ public class SlideHeight {
      * Heights of slide to line up with heights of different poles or ground as inches
      */
     public static double HighPole = 41;
-    public static double MidPole = 29;
-    public static double LowPole = 17;
+    public static double MidPole = 30;
+    public static double LowPole = 18;
 
     public static double Ground = 0;
 
@@ -30,6 +30,11 @@ public class SlideHeight {
      * Ticks of margin to consider the slide at 0
      */
     public static int GroundMargin = 10;
+
+    public static int AutoClawMargin = 100;
+
+    public static int GoingDownGroundMargin = 70;
+
     public static double PlaceMargin = 3;
     public static double[] StackConeHeights = {0, 1, 2.5, 4, 5.8};
     public static double StackConeHeightMultiplier = 1.2;
@@ -45,7 +50,7 @@ public class SlideHeight {
     /**
      * The minimum height for the arm to be allowed to rotate
      */
-    public static double SafetyHeight = 13;
+    public static double SafetyHeight = 14;
     /**
      * The safety margin to move arm to center preventing failure in robot
      */
