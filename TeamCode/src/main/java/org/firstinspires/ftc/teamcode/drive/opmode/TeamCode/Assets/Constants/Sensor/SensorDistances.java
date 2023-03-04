@@ -22,8 +22,8 @@ public class SensorDistances {
     public static double RightPlaceDistance = 2.5;
 
 
-    public static double LeftCenterDistance = 2.5;
-    public static double RightCenterDistance = 2.5;
+    public static double LeftCenterDistance = 5.5;
+    public static double RightCenterDistance = 5.5;
 
     public static double DriveBackAdjust = 1;
 
