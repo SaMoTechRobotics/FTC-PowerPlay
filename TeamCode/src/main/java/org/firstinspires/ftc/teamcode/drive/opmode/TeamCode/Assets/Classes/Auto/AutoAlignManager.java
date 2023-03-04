@@ -44,7 +44,7 @@ public class AutoAlignManager {
             double PlaceDistance = alignStrafe == Chassis.PoleAlign.Left ? SensorDistances.LeftPlaceDistance : SensorDistances.RightPlaceDistance; //gets the place distance depending on aligning direction
 
             //calculates the distance to align to the pole, positive means driving to left, negative means driving to right
-            double dist = alignStrafe == Chassis.PoleAlign.Left ? (bestAlignPos.SensorDistance - PlaceDistance) : -(bestAlignPos.SensorDistance - PlaceDistance);
+            double dist = (bestAlignPos.SensorDistance - PlaceDistance);
 
             double rotationalOffset = alignStrafe == Chassis.PoleAlign.Left ? 90 : -90; //gets the rotational offset depending on aligning direction
             double perpendicularHeadingSin = Math.sin(bestAlignPos.Position.getHeading() + Math.toRadians(rotationalOffset)); //gets the sin of the heading with the offset
@@ -66,7 +66,7 @@ public class AutoAlignManager {
             double PlaceDistance = alignStrafe == Chassis.PoleAlign.Left ? SensorDistances.LeftCenterDistance : SensorDistances.RightCenterDistance; //gets the place distance depending on aligning direction
 
             //calculates the distance to align to the pole, positive means driving to left, negative means driving to right
-            double dist = alignStrafe == Chassis.PoleAlign.Left ? (bestAlignPos.SensorDistance - PlaceDistance) : -(bestAlignPos.SensorDistance - PlaceDistance);
+            double dist = (bestAlignPos.SensorDistance - PlaceDistance);
 
             double rotationalOffset = alignStrafe == Chassis.PoleAlign.Left ? 90 : -90; //gets the rotational offset depending on aligning direction
             double perpendicularHeadingSin = Math.sin(bestAlignPos.Position.getHeading() + Math.toRadians(rotationalOffset)); //gets the sin of the heading with the offset

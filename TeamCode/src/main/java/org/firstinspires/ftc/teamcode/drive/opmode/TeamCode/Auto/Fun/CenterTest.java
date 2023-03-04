@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 public class CenterTest extends LinearOpMode {
 
     public static int SIDE = AutoSide.Right;
-    public static double ForwardAmount = 5;
+    public static double ForwardAmount = 11;
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -73,7 +73,7 @@ public class CenterTest extends LinearOpMode {
         sleep(1000);
 
         AutoAlignManager.smartAlignReset();
-        while (!AutoAlignManager.smartAlign(drive, LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right, true) && opModeIsActive()) {
+        while (!AutoAlignManager.smartAlign(drive, LeftSensor, RightSensor, Chassis.PoleAlign.Forward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left, true) && opModeIsActive()) {
             telemetry.addData("Left Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
             telemetry.addLine("");
             telemetry.addData("Right Sensor", RightSensor.getDistance(DistanceUnit.INCH));
