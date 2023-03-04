@@ -17,6 +17,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Auto.AutoAlignManager;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Camera;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Chassis;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
@@ -373,8 +374,8 @@ public class AutoRightPro extends LinearOpMode {
                         );
                         TempPolePos = null;
                     } else {
-                        drive.smartAlignReset();
-                        while (!drive.smartAlign(LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right) && opModeIsActive()) {
+                        AutoAlignManager.smartAlignReset();
+                        while (!AutoAlignManager.smartAlign(drive, LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right) && opModeIsActive()) {
                             telemetry.addData("Left Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
                             telemetry.addLine("");
                             telemetry.addData("Right Sensor", RightSensor.getDistance(DistanceUnit.INCH));
@@ -397,7 +398,7 @@ public class AutoRightPro extends LinearOpMode {
                                 break;
                             }
                         }
-                        TempPolePos = drive.getCalculatedPosition();
+                        TempPolePos = AutoAlignManager.getCalculatedPosition();
                     }
 
                     if (UtilAndDelays.PoleWait > 0) sleep((long) UtilAndDelays.PoleWait);
