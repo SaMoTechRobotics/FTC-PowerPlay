@@ -10,12 +10,12 @@ public class TrajectoryTesting {
     public static void main(String[] args) {
         MeepMeep meepMeep = new MeepMeep(800);
 
-        Pose2d startPose = new Pose2d(-40.5, -63, Math.toRadians(270));
-
-//        double dist = 20;
+        Pose2d startPose = new Pose2d(36, -24, Math.toRadians(90));
 //
-//        double forwardOffset = 10;
-//
+//        double dist = 4;
+////
+//        double forwardOffset = 0;
+////
 //        // Calculate the end pose by transforming to the left by dist relative to heading, make it work with any heading
 //        double perpendicularHeadingSin = Math.sin(startPose.getHeading() + Math.toRadians(90));
 //        double perpendicularHeadingCos = Math.cos(startPose.getHeading() + Math.toRadians(90));
@@ -29,6 +29,34 @@ public class TrajectoryTesting {
 //                startPose.getHeading()
 //        );
 
+// Define the angle of rotation in radians
+        double rotationAngle = Math.toRadians(-90); // 45 degrees clockwise
+
+// Define the current point
+        Vector2d currentPoint = new Vector2d(startPose.getX(), startPose.getY());
+
+// Define the pivot point as a Pose2d object
+        Pose2d centerPoint = new Pose2d(52, -16, 0);
+
+// Calculate the distance between the current point and the pivot point
+        double dist = currentPoint.minus(centerPoint.vec()).norm();
+
+// Translate the current point relative to the pivot point
+        Vector2d translatedPoint = currentPoint.minus(centerPoint.vec());
+
+// Calculate the normalized vector
+        double mag = translatedPoint.norm();
+        Vector2d normalizedPoint = new Vector2d(translatedPoint.getX() / mag, translatedPoint.getY() / mag);
+
+// Multiply the normalized vector by the desired distance
+        Vector2d scaledPoint = normalizedPoint.times(dist);
+
+// Apply the rotation transformation
+        Vector2d rotatedPoint = scaledPoint.rotated(rotationAngle);
+
+// Translate the rotated point back to the original coordinate system
+        Pose2d finalPoint = new Pose2d(rotatedPoint.plus(centerPoint.vec()), startPose.getHeading() + rotationAngle);
+
         int SIDE = -1; //-1 for left, 1 for right
 
         double FINAL_ROT = 180; //180 for left, 0 for right
@@ -39,16 +67,10 @@ public class TrajectoryTesting {
                 .setDimensions(13, 15)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(startPose)
-                                .setReversed(true) //reverse splines
-                                .splineToLinearHeading(new Pose2d(SIDE * 35, -60, Math.toRadians(270)), Math.toRadians(90)
-                                ) //clear the wall
-                                .splineTo(new Vector2d(SIDE * 35, -46), Math.toRadians(90)
-                                ) //drive around ground junction
-                                .splineTo(new Vector2d(SIDE * 35, -10), Math.toRadians(90)) //drive to first high pole and turn
-                                .setReversed(false)
-                                .lineToLinearHeading(new Pose2d(SIDE * 28, -13, Math.toRadians(FINAL_ROT)))
+                                .lineToLinearHeading(finalPoint)
                                 .build()
                 );
+
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
                 .setDarkMode(false)
