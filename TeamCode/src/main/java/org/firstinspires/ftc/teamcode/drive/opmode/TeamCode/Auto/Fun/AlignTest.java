@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 @Autonomous(name = "AlignTest", group = "Fun")
 public class AlignTest extends LinearOpMode {
 
-    public static int SIDE = AutoSide.Right;
+    public static int SIDE = AutoSide.Left;
 
     public static double WaitForDrop = 1000;
 
@@ -76,7 +76,7 @@ public class AlignTest extends LinearOpMode {
         Arm.setRotation(SIDE == AutoSide.Right ? ArmRotation.Left : ArmRotation.Right);
 
         AutoAlignManager.smartAlignReset();
-        while (!AutoAlignManager.smartAlign(drive, LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right) && opModeIsActive()) {
+        while (!AutoAlignManager.smartAlign(drive, LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left) && opModeIsActive()) {
             telemetry.addData("Left Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
             telemetry.addLine("");
             telemetry.addData("Right Sensor", RightSensor.getDistance(DistanceUnit.INCH));
