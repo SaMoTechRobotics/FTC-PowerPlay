@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Auto.AutoAlignManager;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Chassis;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
@@ -74,8 +75,8 @@ public class AlignTest extends LinearOpMode {
 
         Arm.setRotation(SIDE == AutoSide.Right ? ArmRotation.Left : ArmRotation.Right);
 
-        drive.smartAlignReset();
-        while (!drive.smartAlign(LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right) && opModeIsActive()) {
+        AutoAlignManager.smartAlignReset();
+        while (!AutoAlignManager.smartAlign(drive, LeftSensor, RightSensor, Chassis.PoleAlign.Backward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Left : Chassis.PoleAlign.Right) && opModeIsActive()) {
             telemetry.addData("Left Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
             telemetry.addLine("");
             telemetry.addData("Right Sensor", RightSensor.getDistance(DistanceUnit.INCH));
@@ -83,19 +84,19 @@ public class AlignTest extends LinearOpMode {
             telemetry.update();
         }
 
-        drive.getSmartAlignData().distances.forEach(pos -> {
+        AutoAlignManager.getSmartAlignData().distances.forEach(pos -> {
             telemetry.addLine("At (X: " + pos.Position.getX() + ", Y: " + pos.Position.getY() + ", R: " + pos.Position.getHeading() + ") sensor was: " + pos.SensorDistance);
         });
 
         telemetry.addLine("");
-        telemetry.addData("Calculated Position", drive.getCalculatedPosition());
+        telemetry.addData("Calculated Position", AutoAlignManager.getCalculatedPosition());
 
-        ArrayList<SampleMecanumDrive.AlignPos> sortedAlignData = drive.getSmartAlignData().distances.stream() //streams the list of AlignPos
+        ArrayList<AutoAlignManager.AlignPos> sortedAlignData = AutoAlignManager.getSmartAlignData().distances.stream() //streams the list of AlignPos
                 .sorted(Comparator.comparingDouble(alignPos -> alignPos.SensorDistance)) //compares the sensor distances to sort list
                 .collect(Collectors.toCollection(ArrayList::new)); //back to list
 
-        SampleMecanumDrive.AlignPos bestAlignPos = sortedAlignData.get(
-                SampleMecanumDrive.SmartAlignData.getBestIndex(sortedAlignData) //gets the best align position
+        AutoAlignManager.AlignPos bestAlignPos = sortedAlignData.get(
+                AutoAlignManager.SmartAlignData.getBestIndex(sortedAlignData) //gets the best align position
         ); //gets the best align position
 
         telemetry.addData("Best sensor dist", bestAlignPos.SensorDistance);
