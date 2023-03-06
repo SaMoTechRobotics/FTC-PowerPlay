@@ -199,7 +199,7 @@ public class AutoRightPro extends LinearOpMode {
      * 1 + ConesToScore.Cones (3) = 4 total cones
      */
     private static class ConesToScore {
-        public static int Count = 4;
+        public static int Count = 3;
 
         public static TargetPole Pole0 = TargetPole.CloseHigh;
         public static TargetPole Pole1 = TargetPole.CloseHigh;
@@ -222,9 +222,18 @@ public class AutoRightPro extends LinearOpMode {
         }
     }
 
+    private static class AlignmentTimes {
+        public static boolean[] AlignStack = {true, true, true, true, true, true, true};
+        public static boolean[] AlignPole = {true, true, true, true, true, true, true};
+    }
+
     public static ConesToScore CONES_TO_SCORE = new ConesToScore();
 
+    private int AlignStackIndex = 0;
+    private int AlignPole = 0;
     private Pose2d TempPolePos = null;
+
+    private Pose2d TempStackPos = new Pose2d(TrajectoryLocations.StackPos.X, TrajectoryLocations.StackPos.Y, FINAL_ROT);
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -504,25 +513,44 @@ public class AutoRightPro extends LinearOpMode {
 
                     //Line up with stack using alignment with low pole
 
+                    if (AlignmentTimes.AlignStack[AlignStackIndex]) {
 
-                    AutoAlignManager.smartAlignReset();
-                    while (!AutoAlignManager.smartAlign(drive, LeftSensor, RightSensor, Chassis.PoleAlign.Forward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left, true) && opModeIsActive()) {
-                        telemetry.addData("Left Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
-                        telemetry.addLine("");
-                        telemetry.addData("Right Sensor", RightSensor.getDistance(DistanceUnit.INCH));
-                        telemetry.addLine("");
-                        telemetry.update();
-                    }
+                        AutoAlignManager.smartAlignReset();
+                        while (!AutoAlignManager.smartAlign(drive, LeftSensor, RightSensor, Chassis.PoleAlign.Forward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left, true) && opModeIsActive()) {
+                            telemetry.addData("Left Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
+                            telemetry.addLine("");
+                            telemetry.addData("Right Sensor", RightSensor.getDistance(DistanceUnit.INCH));
+                            telemetry.addLine("");
+                            telemetry.update();
+                        }
+
+                        TempStackPos = AutoAlignManager.getCalculatedPosition();
 
 //                    TempPolePos.plus(new Pose2d(0, AutoAlignManager.getCalculatedPosition().getY() - TrajectoryDistances.StackY, 0));
 
 //                    drive.setPoseEstimate(new Pose2d(drive.getPoseEstimate().getX(), TrajectoryDistances.StackY, drive.getPoseEstimate().getHeading()));
 
-                    drive.followTrajectory(
-                            drive.trajectoryBuilder(drive.getPoseEstimate())
-                                    .forward(TrajectoryDistances.ForwardPickup)
-                                    .build()
-                    );
+                        drive.followTrajectory(
+                                drive.trajectoryBuilder(drive.getPoseEstimate())
+                                        .forward(TrajectoryDistances.ForwardPickup)
+                                        .build()
+                        );
+
+                    } else {
+                        drive.followTrajectory(
+                                drive.trajectoryBuilder(drive.getPoseEstimate())
+                                        .lineToLinearHeading(TempStackPos)
+                                        .build()
+                        );
+
+                        drive.followTrajectory(
+                                drive.trajectoryBuilder(drive.getPoseEstimate())
+                                        .forward(TrajectoryDistances.ForwardPickup)
+                                        .build()
+                        );
+
+                    }
+                    AlignStackIndex++;
 
 
 //                    drive.followTrajectory(
