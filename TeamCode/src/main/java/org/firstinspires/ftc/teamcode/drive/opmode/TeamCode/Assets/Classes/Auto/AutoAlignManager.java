@@ -197,21 +197,33 @@ public class AutoAlignManager {
 //            this.smartAlignReset(); //reset smart align data for next time
             return true; //finished aligning
         } else if (smartAlignData.sawPole) {
-            boolean finishedDataCollection = smartAlignData.distances.get(smartAlignData.distances.size() - 1).SensorDistance > SensorDistances.DetectAmount; //temp var to check if data collection is finished, starts as false
-            if (!finishedDataCollection) {
-                for (int i = 0; i < AlignDataParams.LosingPoleDataAmount; i++) { //checks if the sensor is losing the pole
-                    if (smartAlignData.distances.size() > i + 1) { //if the distance list is long enough
-                        if (smartAlignData.distances.get(smartAlignData.distances.size() - 1 - i).SensorDistance < //if the current distance is less than the previous distance
-                                smartAlignData.distances.get(smartAlignData.distances.size() - 2 - i).SensorDistance + AlignDataParams.LosingPoleMargin) { //if the current distance is less than the previous distance plus the margin
-                            finishedDataCollection = true; //data collection is finished because the sensor is losing the pole
-                            break;
-                        }
-                    }
-                }
-            }
+//            boolean finishedDataCollection = smartAlignData.distances.get(smartAlignData.distances.size() - 1).SensorDistance > SensorDistances.DetectAmount; //temp var to check if data collection is finished, starts as false
+//            if (!finishedDataCollection) {
+//                for (int i = 0; i < AlignDataParams.LosingPoleDataAmount; i++) { //checks if the sensor is losing the pole
+//                    if (smartAlignData.distances.size() > i + 1) { //if the distance list is long enough
+//                        if (smartAlignData.distances.get(smartAlignData.distances.size() - 1 - i).SensorDistance < //if the current distance is less than the previous distance
+//                                smartAlignData.distances.get(smartAlignData.distances.size() - 2 - i).SensorDistance + AlignDataParams.LosingPoleMargin) { //if the current distance is less than the previous distance plus the margin
+//                            finishedDataCollection = true; //data collection is finished because the sensor is losing the pole
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//            if ((!finishedDataCollection && smartAlignData.distances.size() > AlignDataParams.MinimumDataAmount)
+//                    || sensorDistance < SensorDistances.DetectAmount) { //if the sensor completely loses the pole
 
-            if ((!finishedDataCollection && smartAlignData.distances.size() > AlignDataParams.MinimumDataAmount)
-                    || sensorDistance < SensorDistances.DetectAmount) { //if the sensor completely loses the pole
+            if (smartAlignData.distances.size() > AlignDataParams.MinimumDataAmount && //collected enough data
+                    (sensorDistance < SensorDistances.DetectAmount || //sensor lost pole completely
+                            sensorDistance - AlignDataParams.LosingPoleMargin > smartAlignData.distances.get(smartAlignData.distances.size() - 1).SensorDistance)) { //if the sensor is losing the pole
+                drive.setWeightedDrivePower( //stop moving
+                        new Pose2d(
+                                0,
+                                0,
+                                0
+                        )
+                );
+                smartAlignData.gotData = true; //got data
+            } else { // continue driving
                 drive.setWeightedDrivePower(
                         new Pose2d(
                                 alignDrive == Chassis.PoleAlign.Forward ? ChassisSpeed.FineAlignSpeed : -ChassisSpeed.FineAlignSpeed,
@@ -221,15 +233,6 @@ public class AutoAlignManager {
                 );
                 smartAlignData.distances.add(new AlignPos(drive.getPoseEstimate(), sensorDistance));
                 RobotLog.d("SensorDistance: " + sensorDistance);
-            } else { //stop moving if all data collected
-                drive.setWeightedDrivePower(
-                        new Pose2d(
-                                0,
-                                0,
-                                0
-                        )
-                );
-                smartAlignData.gotData = true; //got data
             }
         } else if (sensorDistance < SensorDistances.DetectAmount) { //looking for pole
             drive.setWeightedDrivePower(
