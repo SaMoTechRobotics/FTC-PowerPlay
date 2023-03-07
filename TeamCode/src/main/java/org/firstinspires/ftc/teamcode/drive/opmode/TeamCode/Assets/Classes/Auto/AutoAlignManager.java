@@ -25,6 +25,7 @@ public class AutoAlignManager {
         public boolean gotData = false; //if the robot finished getting data from the sensors
 
         public Pose2d calculatedPosition = new Pose2d(); //the calculated position of the robot
+        public Pose2d calculatedCenterPosition = new Pose2d(); //the calculated position of the robot
 
         public static int getBestIndex(ArrayList<AlignPos> sortedAlignData) {
             List<Double> sortedSensorDistances = sortedAlignData.stream() //streams the list of AlignPos
@@ -151,6 +152,10 @@ public class AutoAlignManager {
         return smartAlignData.calculatedPosition;
     }
 
+    public static Pose2d getCalculatedCenterPosition() {
+        return smartAlignData.calculatedCenterPosition;
+    }
+
     /**
      * @param leftSensor  left distance sensor
      * @param rightSensor right distance sensor
@@ -181,15 +186,15 @@ public class AutoAlignManager {
                     SmartAlignData.getBestIndex(sortedAlignData) //gets the best align position
             ); //gets the best align position
 
-            smartAlignData.calculatedPosition =
-                    (isCenter.length > 0 && isCenter[0]) ? //if isCenter is true
-                            SmartAlignData.getCalculatedCenterPosition(bestAlignPos, alignStrafe, drive.getPoseEstimate()) : //gets the calculated position to align with center of tile
-                            SmartAlignData.getCalculatedPosition(bestAlignPos, alignStrafe); //gets the calculated position to align with the pole
+            smartAlignData.calculatedPosition = SmartAlignData.getCalculatedPosition(bestAlignPos, alignStrafe); //gets the calculated position to align with the pole
+            smartAlignData.calculatedCenterPosition = SmartAlignData.getCalculatedCenterPosition(bestAlignPos, alignStrafe, drive.getPoseEstimate()); //gets the calculated position to align with center of tile
 
             drive.followTrajectory( // drive to calculated position
                     drive.trajectoryBuilder(drive.getPoseEstimate())
                             .lineToLinearHeading(
-                                    smartAlignData.calculatedPosition
+                                    (isCenter.length > 0 && isCenter[0]) ? //if isCenter is true
+                                            smartAlignData.calculatedCenterPosition :
+                                            smartAlignData.calculatedPosition
                             )
                             .build()
             );
