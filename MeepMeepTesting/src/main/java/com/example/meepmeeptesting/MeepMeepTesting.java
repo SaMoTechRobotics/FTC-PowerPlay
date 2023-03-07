@@ -25,9 +25,11 @@ public class MeepMeepTesting {
                                         .setReversed(true) //reverse splines
                                         .splineToLinearHeading(new Pose2d(35, -60, Math.toRadians(270)), Math.toRadians(90)) //clear the wall
                                         .splineTo(new Vector2d(35, -46), Math.toRadians(90)) //drive around ground junction
-//                                        .splineTo(new Vector2d(36, -10), Math.toRadians(90)) //drive to first high pole
-                                        .splineTo(new Vector2d(28, -10), Math.toRadians(180)) //drive to first high pole and turn
+                                        .splineTo(new Vector2d(36, -10), Math.toRadians(90)) //drive to first high pole
+//                                        .splineTo(new Vector2d(28, -10), Math.toRadians(180)) //drive to first high pole and turn
                                         .setReversed(false) //undo reverse
+                                        .lineToLinearHeading(new Pose2d(31, -13, Math.toRadians(0)))
+                                        //drive to first high pol
 //                                        .turn(Math.toRadians(90)) //turn to face stack
 
 //                                        .lineToLinearHeading(new Pose2d(28, -10, Math.toRadians(0))) //back up to high pole
