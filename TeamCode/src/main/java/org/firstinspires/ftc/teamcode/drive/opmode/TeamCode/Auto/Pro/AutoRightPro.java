@@ -437,12 +437,10 @@ public class AutoRightPro extends LinearOpMode {
                     ConesScored++; // Increment cones scored
 
                     if (ConesScored >= ConesToScore.Count) {
-//                        Claw.setOpenAmount(ClawPosition.Open);
+                        Claw.setOpenAmount(ClawPosition.Open);
                         Claw.open();
 
-                        sleep((long) UtilAndDelays.OpenClawDelay);
-
-                        Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Min);
+//                        sleep((long) UtilAndDelays.OpenClawDelay);
 
                         if (SIDE == AutoSide.Right) {
                             drive.followTrajectory(
@@ -463,53 +461,79 @@ public class AutoRightPro extends LinearOpMode {
                     updateNextSlideHeight(); // Update the next slide height
                     Claw.setOpenAmount(ClawPosition.PickupOpen);
 
+//                    drive.followTrajectorySequence(
+//                            drive.trajectorySequenceBuilder(drive.getPoseEstimate())
+//                                    .addDisplacementMarker(TrajectoryDistances.ClearPole / 4, () -> {
+////                                        Claw.setOpenAmount(ClawPosition.Open);
+//                                        Claw.open();
+//
+////                                        sleep((long) UtilAndDelays.OpenClawDelay);
+//
+//                                        Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Min);
+//                                    })
+//                                    .splineToLinearHeading(new Pose2d(SIDE * TargetPolePos.X, TargetPolePos.Y - TrajectoryDistances.ClearPole, Math.toRadians(FINAL_ROT)), Math.toRadians(FINAL_ROT),
+//                                            SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.FastSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
+//                                            SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
+//                                    )
+//                                    .addDisplacementMarker(() -> {
+//                                        Arm.setRotation(ArmRotation.Center);
+//                                        Slide.setHeight(NextSlideHeightForStack, SlideSpeed.Max);
+//                                        Claw.close();
+//                                    })
+//                                    .splineTo(new Vector2d(SIDE * TrajectoryLocations.AvoidByStackPos.X, TrajectoryLocations.AvoidByStackPos.Y), Math.toRadians(FINAL_ROT),
+//                                            SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.FastSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
+//                                            SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
+//                                    )
+//                                    .addDisplacementMarker(() -> {
+//                                        Claw.setOpenAmount(ClawPosition.PickupOpen);
+//                                        Claw.open();
+//                                    })
+//                                    .splineTo(new Vector2d(SIDE * TrajectoryLocations.AlignStackPos.X, TrajectoryLocations.AlignStackPos.Y), Math.toRadians(FINAL_ROT),
+//                                            SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.NormalSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
+//                                            SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
+//                                    )
+////                                    .splineTo(new Vector2d(SIDE * (TrajectoryLocations.StackPos.X - TrajectoryDistances.ForwardPickup - TrajectoryDistances.PickupOffset), TrajectoryLocations.StackPos.Y), Math.toRadians(FINAL_ROT),
+////                                            SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.NormalSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
+////                                            SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
+////                                    )
+////                                    .splineTo(new Vector2d(SIDE * (TrajectoryLocations.StackPos.X - TrajectoryDistances.ForwardPickup), TrajectoryLocations.StackPos.Y), Math.toRadians(FINAL_ROT),
+////                                            SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.NormalSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
+////                                            SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.NormalAccel)
+////                                    )
+////                                    .waitSeconds(0.1)
+////                                    .forward(TrajectoryDistances.ForwardPickup)
+//                                    .build()
+//                    );
+
                     drive.followTrajectorySequence(
                             drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                                    .addDisplacementMarker(TrajectoryDistances.ClearPole / 4, () -> {
-//                                        Claw.setOpenAmount(ClawPosition.Open);
-                                        Claw.open();
-
-//                                        sleep((long) UtilAndDelays.OpenClawDelay);
-
-                                        Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Min);
-                                    })
-                                    .splineToLinearHeading(new Pose2d(SIDE * TargetPolePos.X, TargetPolePos.Y - TrajectoryDistances.ClearPole, Math.toRadians(FINAL_ROT)), Math.toRadians(FINAL_ROT),
+                                    .splineToLinearHeading(new Pose2d(drive.getPoseEstimate().getX(), TempStackPos.getY(), Math.toRadians(FINAL_ROT)), Math.toRadians(FINAL_ROT),
                                             SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.FastSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
                                             SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
                                     )
                                     .addDisplacementMarker(() -> {
+                                        Claw.setOpenAmount(ClawPosition.Open);
+                                        Claw.open();
+//                                        Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Min);
+                                    })
+                                    .waitSeconds(UtilAndDelays.OpenClawDelay) //waits for claw to open and drop cone
+                                    .addDisplacementMarker(() -> {
                                         Arm.setRotation(ArmRotation.Center);
+                                    })
+                                    .addDisplacementMarker(UtilAndDelays.ResetPickupDelay, () -> { //waits for arm to move
                                         Slide.setHeight(NextSlideHeightForStack, SlideSpeed.Max);
                                         Claw.close();
                                     })
-                                    .addDisplacementMarker(5, () -> {
-                                        Claw.open();
-                                    })
-                                    .splineTo(new Vector2d(SIDE * TrajectoryLocations.AvoidByStackPos.X, TrajectoryLocations.AvoidByStackPos.Y), Math.toRadians(FINAL_ROT),
-                                            SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.FastSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
+                                    .splineTo(new Vector2d(SIDE * TrajectoryLocations.AlignStackPos.X, TempStackPos.getY()), Math.toRadians(FINAL_ROT),
+                                            SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.NormalSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
                                             SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
                                     )
                                     .addDisplacementMarker(() -> {
                                         Claw.setOpenAmount(ClawPosition.PickupOpen);
                                         Claw.open();
                                     })
-                                    .splineTo(new Vector2d(SIDE * TrajectoryLocations.AlignStackPos.X, TrajectoryLocations.AlignStackPos.Y), Math.toRadians(FINAL_ROT),
-                                            SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.NormalSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
-                                            SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
-                                    )
-//                                    .splineTo(new Vector2d(SIDE * (TrajectoryLocations.StackPos.X - TrajectoryDistances.ForwardPickup - TrajectoryDistances.PickupOffset), TrajectoryLocations.StackPos.Y), Math.toRadians(FINAL_ROT),
-//                                            SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.NormalSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
-//                                            SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
-//                                    )
-//                                    .splineTo(new Vector2d(SIDE * (TrajectoryLocations.StackPos.X - TrajectoryDistances.ForwardPickup), TrajectoryLocations.StackPos.Y), Math.toRadians(FINAL_ROT),
-//                                            SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.NormalSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
-//                                            SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.NormalAccel)
-//                                    )
-//                                    .waitSeconds(0.1)
-//                                    .forward(TrajectoryDistances.ForwardPickup)
                                     .build()
                     );
-
 
                     //Line up with stack using alignment with low pole
 
