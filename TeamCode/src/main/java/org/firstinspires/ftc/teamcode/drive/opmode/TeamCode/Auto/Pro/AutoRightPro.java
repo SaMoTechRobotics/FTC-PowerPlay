@@ -48,6 +48,7 @@ public class AutoRightPro extends LinearOpMode {
     public static final double FINAL_ROT = SIDE == AutoSide.Right ? 0 : 180;
 
     public static boolean ReadEveryOther = true;
+    public static boolean ReadEveryTime = true;
 
     /*
      * Trajector Speed Vars -----------------------------------------------------------------------
@@ -168,7 +169,7 @@ public class AutoRightPro extends LinearOpMode {
         public static double LowerSlideDelay = 400;
         public static double LowerSlideDelayLowPole = 800;
 
-        public static double LowerSlideDelayHighPole = 400;
+        public static double LowerSlideDelayHighPole = 500;
 
         public static double OpenClawDelay = 10;
         public static double OpenClawPickupDelay = 0;
@@ -398,7 +399,7 @@ public class AutoRightPro extends LinearOpMode {
 //                        }
 //                    }
 
-                    if (TempPolePos != null) {
+                    if (TempPolePos != null && !ReadEveryTime) {
                         drive.followTrajectory(
                                 drive.trajectoryBuilder(drive.getPoseEstimate())
                                         .lineToLinearHeading(TempPolePos,
@@ -448,27 +449,28 @@ public class AutoRightPro extends LinearOpMode {
 
                     ConesScored++; // Increment cones scored
 
-//                    if (ConesScored >= ConesToScore.Count) {
-//                        Claw.setOpenAmount(ClawPosition.Open);
-//                        Claw.open();
-//
-////                        sleep((long) UtilAndDelays.OpenClawDelay);
-//
-//                        if (SIDE == AutoSide.Right) {
-//                            drive.followTrajectory(
-//                                    drive.trajectoryBuilder(drive.getPoseEstimate())
-//                                            .strafeRight(TrajectoryDistances.ClearPole)
-//                                            .build()
-//                            );
-//                        } else {
-//                            drive.followTrajectory(
-//                                    drive.trajectoryBuilder(drive.getPoseEstimate())
-//                                            .strafeLeft(TrajectoryDistances.ClearPole)
-//                                            .build()
-//                            );
-//                        }
-//                        break scoreCones; // If all cones have been scored, break out of loop
-//                    }
+                    if (ConesScored >= ConesToScore.Count) {
+                        Claw.setOpenAmount(ClawPosition.Open);
+                        Claw.open();
+
+//                        sleep((long) UtilAndDelays.OpenClawDelay);
+
+                        if (SIDE == AutoSide.Right) {
+                            drive.followTrajectory(
+                                    drive.trajectoryBuilder(drive.getPoseEstimate())
+                                            .strafeRight(TrajectoryDistances.ClearPole)
+                                            .build()
+                            );
+                        } else {
+                            drive.followTrajectory(
+                                    drive.trajectoryBuilder(drive.getPoseEstimate())
+                                            .strafeLeft(TrajectoryDistances.ClearPole)
+                                            .build()
+                            );
+                        }
+                        break scoreCones; // If all cones have been scored, break out of loop
+                    }
+
 
                     updateNextSlideHeight(); // Update the next slide height
                     Claw.setOpenAmount(ClawPosition.PickupOpen);
@@ -593,10 +595,6 @@ public class AutoRightPro extends LinearOpMode {
                     }
                     AlignStackIndex++;
 
-                    if (ConesScored >= ConesToScore.Count) {
-                        break scoreCones; // If all cones have been scored, break out of loop
-                    }
-
 
 //                    drive.followTrajectory(
 //                            drive.trajectoryBuilder(drive.getPoseEstimate())
@@ -650,52 +648,59 @@ public class AutoRightPro extends LinearOpMode {
             /*
              * Driving to next pole
              */
+            TrajectoryLocations.PolePos TargetPolePos = TrajectoryLocations.CloseHighPolePos;
             switch (TargetPoles[ConesScored]) {
                 case CloseHigh: {
-                    TrajectoryLocations.PolePos TargetPolePos = TrajectoryLocations.CloseHighPolePos;
-                    Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max); //set slide height to high pole
-                    drive.followTrajectory(
-                            drive.trajectoryBuilder(drive.getPoseEstimate())
-                                    .lineToLinearHeading(new Pose2d(SIDE * TargetPolePos.FindX, TargetPolePos.Y, Math.toRadians(FINAL_ROT)),
-                                            SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.FastSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
-                                            SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
-                                    )
-                                    .build()
-                    );
+                    TargetPolePos = TrajectoryLocations.CloseHighPolePos;
                 } //end of close high
+                case CloseMid: {
+                    TargetPolePos = TrajectoryLocations.CloseMidPolePos;
+                } //end of close mid
+                case FarHigh: {
+                    TargetPolePos = TrajectoryLocations.FarHighPolePos;
+                } //end of far high
                 break;
             } //end of drive to pole case
+            Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max); //set slide height to high pole
+            drive.followTrajectory(
+                    drive.trajectoryBuilder(drive.getPoseEstimate())
+                            .lineToLinearHeading(new Pose2d(SIDE * TargetPolePos.FindX, TargetPolePos.Y, Math.toRadians(FINAL_ROT)),
+                                    SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.FastSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
+                                    SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
+                            )
+                            .build()
+            );
 
 
         } //end of loop
 
-        Claw.close();
-        sleep((long) UtilAndDelays.CloseClawDelay);
-
-        Slide.setHeight(SlideHeight.LowPole, SlideSpeed.Max);
-
-        drive.followTrajectory(
-                drive.trajectoryBuilder(drive.getPoseEstimate())
-                        .lineToLinearHeading(TempLowPolePos)
-                        .build()
-        );
-
-        Arm.setRotation(SIDE == AutoSide.Right ? ArmRotation.Right : ArmRotation.Left);
-
-        sleep((long) UtilAndDelays.LowPoleWait);
-
-        Claw.setOpenAmount(ClawPosition.PickupOpen);
-        Claw.open();
-
-//        Slide.setHeight(SlideHeight.LowPole - UtilAndDelays.LowerSlideAmountLowPole, SlideSpeed.Max);
-
-//        sleep((long) UtilAndDelays.LowerSlideDelayLowPole);
-
-//        Slide.setHeight(SlideHeight.LowPole, SlideSpeed.Min);
-
-        sleep((long) UtilAndDelays.LowPoleReleaseDelay);
-
-        Arm.setRotation(ArmRotation.Center);
+//        Claw.close();
+//        sleep((long) UtilAndDelays.CloseClawDelay);
+//
+//        Slide.setHeight(SlideHeight.LowPole, SlideSpeed.Max);
+//
+//        drive.followTrajectory(
+//                drive.trajectoryBuilder(drive.getPoseEstimate())
+//                        .lineToLinearHeading(TempLowPolePos)
+//                        .build()
+//        );
+//
+//        Arm.setRotation(SIDE == AutoSide.Right ? ArmRotation.Right : ArmRotation.Left);
+//
+//        sleep((long) UtilAndDelays.LowPoleWait);
+//
+//        Claw.setOpenAmount(ClawPosition.PickupOpen);
+//        Claw.open();
+//
+////        Slide.setHeight(SlideHeight.LowPole - UtilAndDelays.LowerSlideAmountLowPole, SlideSpeed.Max);
+//
+////        sleep((long) UtilAndDelays.LowerSlideDelayLowPole);
+//
+////        Slide.setHeight(SlideHeight.LowPole, SlideSpeed.Min);
+//
+//        sleep((long) UtilAndDelays.LowPoleReleaseDelay);
+//
+//        Arm.setRotation(ArmRotation.Center);
 
         /*
          * Parking ---------------------------------------------------------------------------------
@@ -720,6 +725,7 @@ public class AutoRightPro extends LinearOpMode {
                 drive.trajectoryBuilder(drive.getPoseEstimate())
                         .addTemporalMarker(UtilAndDelays.ResetPickupDelay, () -> {
                             Claw.close();
+                            Arm.setRotation(ArmRotation.Center); //Sets arm to center position
                             Slide.setHeight(SlideHeight.Ground, SlideSpeed.Max); //Sets slide to ground height
                         })
                         .lineToLinearHeading(new Pose2d(ParkingX, TempStackPos.getY(), Math.toRadians(ParkingPositions.Rot)),
