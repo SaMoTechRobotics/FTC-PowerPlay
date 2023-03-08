@@ -81,7 +81,7 @@ public class AutoAlignManager {
             return new Pose2d( //calculates the position to align to
                     bestAlignPos.Position.getX() + (dist * perpendicularHeadingCos) + (offset * headingCos), //calculates the x value
                     bestAlignPos.Position.getY() + (dist * perpendicularHeadingSin) + (offset * headingSin), //calculates the y value
-                    bestAlignPos.Position.getHeading() //keeps the same heading
+                    AlignDataParams.KeepHeadingForCenter ? bestAlignPos.Position.getHeading() : 0 //keeps the same heading
             );
         }
 //

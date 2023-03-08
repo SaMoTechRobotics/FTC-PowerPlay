@@ -100,7 +100,7 @@ public class AutoRightPro extends LinearOpMode {
         // Stack pos                                                right                       left
         public static Vec2 StackPos = SIDE == AutoSide.Right ? new Vec2(63, TrajectoryDistances.StackY) : new Vec2(63, -13);
 
-        public static Vec2 AlignStackPos = SIDE == AutoSide.Right ? new Vec2(49, TrajectoryDistances.StackY) : new Vec2(63, -13);
+        public static Vec2 AlignStackPos = SIDE == AutoSide.Right ? new Vec2(47, TrajectoryDistances.StackY) : new Vec2(47, TrajectoryDistances.StackY);
 
         public static Vec2 AvoidByStackPos = SIDE == AutoSide.Right ? new Vec2(46, TrajectoryDistances.StackY) : new Vec2(46, -13);
 
@@ -156,14 +156,16 @@ public class AutoRightPro extends LinearOpMode {
 
 
         public static double ResetPickupDelay = 0.2;
+        public static double RotateArmDelay = 0.2;
+        public static double LowerForPickupDelay = 1;
 
         public static double GiveUpDelay = 8;
-        public static double PoleWait = 0;
+        public static double PoleWait = 100;
 
         public static double LowPoleWait = 800;
 
         public static double LowPoleReleaseDelay = 150;
-        public static double LowerSlideAmount = 8;
+        public static double LowerSlideAmount = 16;
         public static double LowerSlideAmountLowPole = 3;
 
         public static double LowerSlideDelay = 400;
@@ -522,16 +524,17 @@ public class AutoRightPro extends LinearOpMode {
 
                     drive.followTrajectorySequence(
                             drive.trajectorySequenceBuilder(drive.getPoseEstimate())
-                                    .addDisplacementMarker(() -> {
-                                        Claw.setOpenAmount(ClawPosition.Open);
-                                        Claw.open();
-//                                        Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Min);
-                                    })
                                     .lineToLinearHeading(new Pose2d(drive.getPoseEstimate().getX(), TempStackPos.getY(), Math.toRadians(FINAL_ROT)),
                                             SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.FastSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
                                             SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
                                     )
                                     .addDisplacementMarker(() -> {
+                                        Arm.setRotation(ArmRotation.Center);
+                                        Claw.setOpenAmount(ClawPosition.Open);
+                                        Claw.open();
+//                                        Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Min);
+                                    })
+                                    .UNSTABLE_addTemporalMarkerOffset(UtilAndDelays.LowerForPickupDelay, () -> {
                                         Arm.setRotation(ArmRotation.Center);
                                         Slide.setHeight(NextSlideHeightForStack, SlideSpeed.Max);
                                         Claw.setOpenAmount(ClawPosition.PickupOpen);
@@ -650,16 +653,18 @@ public class AutoRightPro extends LinearOpMode {
              */
             TrajectoryLocations.PolePos TargetPolePos = TrajectoryLocations.CloseHighPolePos;
             switch (TargetPoles[ConesScored]) {
-                case CloseHigh: {
+                case CloseHigh:
                     TargetPolePos = TrajectoryLocations.CloseHighPolePos;
-                } //end of close high
-                case CloseMid: {
+                    break;
+                //end of close high
+                case CloseMid:
                     TargetPolePos = TrajectoryLocations.CloseMidPolePos;
-                } //end of close mid
-                case FarHigh: {
+                    break;
+                //end of close mid
+                case FarHigh:
                     TargetPolePos = TrajectoryLocations.FarHighPolePos;
-                } //end of far high
-                break;
+                    break;
+                //end of far high
             } //end of drive to pole case
             Slide.setHeight(SlideHeight.HighPole, SlideSpeed.Max); //set slide height to high pole
             drive.followTrajectory(
