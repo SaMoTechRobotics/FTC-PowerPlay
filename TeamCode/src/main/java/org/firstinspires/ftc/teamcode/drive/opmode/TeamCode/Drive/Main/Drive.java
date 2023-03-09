@@ -6,7 +6,6 @@ import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.arcrobotics.ftclib.gamepad.ToggleButtonReader;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,12 +13,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Chassis;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
-import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Field.Field;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Claw.ClawPosition;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.PodLift.PodLiftPosition;
-import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorColors;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
 
 @Config
@@ -51,13 +48,12 @@ public class Drive extends LinearOpMode {
                         hardwareMap.get(Servo.class, "poleBrace")
                 );
         Claw.close();
-        Claw.raisePoleBrace();
 
         Servo podLift = hardwareMap.get(Servo.class, "podLift");
         if (AutoDrive) podLift.setPosition(PodLiftPosition.Down);
         else podLift.setPosition(PodLiftPosition.Up);
 
-        ColorSensor ColorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
+//        ColorSensor ColorSensor = hardwareMap.get(ColorSensor.class, "colorSensor");
 
         // Initialize the gamepads
         GamepadEx Gamepad1 = new GamepadEx(gamepad1);
@@ -78,13 +74,13 @@ public class Drive extends LinearOpMode {
          */
 
         while (opModeIsActive()) {
-            telemetry.addData("Color Sensor", "");
-            telemetry.addData("Red", ColorSensor.red());
-            telemetry.addData("Green", ColorSensor.green());
-            telemetry.addData("Blue", ColorSensor.blue());
-            telemetry.addData("Alpha", ColorSensor.alpha());
-            telemetry.addData("ARGB", ColorSensor.argb());
-            telemetry.addData("Detected Color", SensorColors.detectColor(ColorSensor.red(), ColorSensor.green(), ColorSensor.blue()));
+//            telemetry.addData("Color Sensor", "");
+//            telemetry.addData("Red", ColorSensor.red());
+//            telemetry.addData("Green", ColorSensor.green());
+//            telemetry.addData("Blue", ColorSensor.blue());
+//            telemetry.addData("Alpha", ColorSensor.alpha());
+//            telemetry.addData("ARGB", ColorSensor.argb());
+//            telemetry.addData("Detected Color", SensorColors.detectColor(ColorSensor.red(), ColorSensor.green(), ColorSensor.blue()));
 
             /*
              * Chassis -----------------------------------------------------------------------------
@@ -114,13 +110,13 @@ public class Drive extends LinearOpMode {
             telemetry.addLine("");
             telemetry.addData("Left Distance", Chassis.getLeftDistance());
             telemetry.addData("Right Distance", Chassis.getRightDistance());
-            if (AutoDrive) {
-                telemetry.addLine("");
-                telemetry.addLine("Auto Chassis Info");
-                telemetry.addData("Current Row", Field.getCurrentRow(Chassis.getPosition()));
-                telemetry.addData("Current Column", Field.getCurrentColumn(Chassis.getPosition()));
-                telemetry.addData("Current Rounded Heading", Chassis.getRoundedHeading());
-            }
+//            if (AutoDrive) {
+//                telemetry.addLine("");
+//                telemetry.addLine("Auto Chassis Info");
+//                telemetry.addData("Current Row", Field.getCurrentRow(Chassis.getPosition()));
+//                telemetry.addData("Current Column", Field.getCurrentColumn(Chassis.getPosition()));
+//                telemetry.addData("Current Rounded Heading", Chassis.getRoundedHeading());
+//            }
 
             /*
              * Claw --------------------------------------------------------------------------------
@@ -139,15 +135,15 @@ public class Drive extends LinearOpMode {
                 else if (Gamepad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) Claw.open();
             }
 
-            if (Slide.getInches() < SlideHeight.PoleBraceSafetyHeight) Claw.raisePoleBrace();
-            else {
-                if (Gamepad1.wasJustPressed(GamepadKeys.Button.X)) Claw.raisePoleBrace();
-                else if (Gamepad1.wasJustPressed(GamepadKeys.Button.B)) Claw.raisePoleBraceBack();
-                else if (Gamepad1.wasJustPressed(GamepadKeys.Button.Y))
-                    Claw.lowerPoleBrace(Arm.getRotation(), ClawPosition.PoleBraceAlignDirection.Backward);
-                else if (Gamepad1.wasJustPressed(GamepadKeys.Button.A))
-                    Claw.lowerPoleBrace(Arm.getRotation(), ClawPosition.PoleBraceAlignDirection.Forward);
-            }
+//            if (Slide.getInches() < SlideHeight.PoleBraceSafetyHeight) Claw.raisePoleBrace();
+//            else {
+//                if (Gamepad1.wasJustPressed(GamepadKeys.Button.X)) Claw.raisePoleBrace();
+//                else if (Gamepad1.wasJustPressed(GamepadKeys.Button.B)) Claw.raisePoleBraceBack();
+//                else if (Gamepad1.wasJustPressed(GamepadKeys.Button.Y))
+//                    Claw.lowerPoleBrace(Arm.getRotation(), ClawPosition.PoleBraceAlignDirection.Backward);
+//                else if (Gamepad1.wasJustPressed(GamepadKeys.Button.A))
+//                    Claw.lowerPoleBrace(Arm.getRotation(), ClawPosition.PoleBraceAlignDirection.Forward);
+//            }
 
 //            if (Slide.getInches() > SlideHeight.LowPole) {
 //                if (Gamepad1.wasJustPressed(GamepadKeys.Button.A)) Claw.enablePoleBrace(true);
