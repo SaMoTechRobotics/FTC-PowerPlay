@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Drive.Tests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
@@ -12,7 +11,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
-@TeleOp(name = "OldCameraTest", group = "Test")
+//@TeleOp(name = "OldCameraTest", group = "Test")
 public class OldCameraTest extends LinearOpMode {
 
 
