@@ -98,11 +98,11 @@ public class AutoRightPro extends LinearOpMode {
         public static Vec2 FirstDrive = SIDE == AutoSide.Right ? new Vec2(35, -10) : new Vec2(35, -10);
 
         // Stack pos                                                right                       left
-        public static Vec2 StackPos = SIDE == AutoSide.Right ? new Vec2(63, TrajectoryDistances.StackY) : new Vec2(63, -13);
+        public static Vec2 StackPos = SIDE == AutoSide.Right ? new Vec2(63, TrajectoryDistances.StackY) : new Vec2(63, TrajectoryDistances.StackY);
 
         public static Vec2 AlignStackPos = SIDE == AutoSide.Right ? new Vec2(47, TrajectoryDistances.StackY) : new Vec2(47, TrajectoryDistances.StackY);
 
-        public static Vec2 AvoidByStackPos = SIDE == AutoSide.Right ? new Vec2(46, TrajectoryDistances.StackY) : new Vec2(46, -13);
+        public static Vec2 AvoidByStackPos = SIDE == AutoSide.Right ? new Vec2(46, TrajectoryDistances.StackY) : new Vec2(46, TrajectoryDistances.StackY);
 
         public static class PolePos {
             public double X;
@@ -132,8 +132,8 @@ public class AutoRightPro extends LinearOpMode {
 
         public static PolePos CloseMidPolePos =
                 SIDE == AutoSide.Right ?
-                        new PolePos(32, 31, 27, -13.5, 0) :
-                        new PolePos(32, 31, 31, -13.5, 0); //left
+                        new PolePos(31, 28, 20, TrajectoryDistances.StackY, 0) :
+                        new PolePos(31, 28, 20, TrajectoryDistances.StackY, 0); //left
 
 
     }
@@ -193,7 +193,7 @@ public class AutoRightPro extends LinearOpMode {
 
         public static double Pos3 = (SIDE == AutoSide.Right ? 57 : 12); //Blue Signal Sleeve Position
 
-        public static double Y = -13.5;
+        public static double Y = -TrajectoryDistances.StackY;
 
         public static double Rot = FINAL_ROT;
     }
@@ -235,7 +235,7 @@ public class AutoRightPro extends LinearOpMode {
     }
 
     private static class AlignmentTimes {
-        public static boolean[] AlignStack = {true, false, true, false, true, true, true};
+        public static boolean[] AlignStack = {true, true, true, true, true, true, true};
         public static boolean[] AlignPole = {true, true, true, true, true, true, true};
     }
 
@@ -245,7 +245,7 @@ public class AutoRightPro extends LinearOpMode {
     private int AlignPole = 0;
     private Pose2d TempPolePos = null;
 
-    private Pose2d TempStackPos = new Pose2d(TrajectoryLocations.StackPos.X, TrajectoryLocations.StackPos.Y, FINAL_ROT);
+    private Pose2d TempStackPos = new Pose2d(SIDE * TrajectoryLocations.StackPos.X, TrajectoryLocations.StackPos.Y, FINAL_ROT);
 
     private Pose2d TempLowPolePos = null;
 
