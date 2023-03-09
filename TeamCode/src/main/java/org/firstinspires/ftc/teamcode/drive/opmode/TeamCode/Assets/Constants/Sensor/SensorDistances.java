@@ -19,10 +19,10 @@ public class SensorDistances {
      * The target distance the robot will try to align to to deliver the cone
      */
     public static double LeftPlaceDistance = 2.5;
-    public static double RightPlaceDistance = 3.5;
+    public static double RightPlaceDistance = 3;
 
 
-    public static double LeftCenterDistance = 5.5;
+    public static double LeftCenterDistance = 5;
     public static double RightCenterDistance = 5;
 
     public static double DriveBackAdjust = 1;
