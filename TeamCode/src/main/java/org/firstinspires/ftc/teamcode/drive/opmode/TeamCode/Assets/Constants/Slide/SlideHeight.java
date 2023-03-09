@@ -50,11 +50,11 @@ public class SlideHeight {
     /**
      * The minimum height for the arm to be allowed to rotate
      */
-    public static double SafetyHeight = 14;
+    public static double SafetyHeight = 10;
     /**
      * The safety margin to move arm to center preventing failure in robot
      */
-    public static double SafetyMargin = 15;
+//    public static double SafetyMargin = 15;
 
     public static double ClawOpenMargin = 18; //13
 
