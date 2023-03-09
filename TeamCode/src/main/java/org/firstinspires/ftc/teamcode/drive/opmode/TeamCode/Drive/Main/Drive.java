@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Pod
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
 
 @Config
-@TeleOp(name = "Drive", group = "Drive")
+@TeleOp(name = "Drive", group = "A")
 public class Drive extends LinearOpMode {
 
     public static boolean AutoDrive = false;

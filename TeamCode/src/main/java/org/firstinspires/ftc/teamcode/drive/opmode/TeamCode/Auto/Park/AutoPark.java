@@ -4,7 +4,6 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -22,7 +21,7 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Pod
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.SensorColors;
 
 @Config
-@Autonomous(name = "AutoPark", group = "C")
+//@Autonomous(name = "AutoPark", group = "C")
 public class AutoPark extends LinearOpMode {
 
     public static double ParkingSpeed = 60;

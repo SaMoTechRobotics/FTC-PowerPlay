@@ -4,17 +4,11 @@ import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.arcrobotics.ftclib.gamepad.GamepadKeys;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Arm;
-import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Claw;
-import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
-import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Arm.ArmRotation;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.PodLift.PodLiftPosition;
 
-@TeleOp(name = "Lift Pods", group = "Util")
+@TeleOp(name = "Lift Pods", group = "C")
 public class LiftPods extends LinearOpMode {
 
     @Override
@@ -43,8 +37,10 @@ public class LiftPods extends LinearOpMode {
 
             Gamepad2.readButtons();
 
-            if(podLift.getPosition() == PodLiftPosition.Up) telemetry.addData("Pod Position", "  UP");
-            else if(podLift.getPosition() == PodLiftPosition.Down) telemetry.addData("Pod Position", "  DOWN");
+            if (podLift.getPosition() == PodLiftPosition.Up)
+                telemetry.addData("Pod Position", "  UP");
+            else if (podLift.getPosition() == PodLiftPosition.Down)
+                telemetry.addData("Pod Position", "  DOWN");
             telemetry.update();
         }
     }

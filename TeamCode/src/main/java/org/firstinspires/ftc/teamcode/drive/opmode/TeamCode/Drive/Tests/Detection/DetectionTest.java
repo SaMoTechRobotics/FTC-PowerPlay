@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Camera;
 
 //@Disabled
-@TeleOp
+@TeleOp(name = "DetectionTest", group = "Tests")
 public class DetectionTest extends LinearOpMode {
 
     @Override

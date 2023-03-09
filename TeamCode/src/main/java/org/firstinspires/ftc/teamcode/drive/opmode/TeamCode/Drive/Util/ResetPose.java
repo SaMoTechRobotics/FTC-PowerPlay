@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.PoseStorage;
 
-@TeleOp(name = "Reset Pose", group = "Util")
+@TeleOp(name = "Reset Pose", group = "C")
 public class ResetPose extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {

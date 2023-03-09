@@ -35,7 +35,7 @@ import java.util.Arrays;
 
 @SuppressWarnings("ALL")
 @Config
-@Autonomous(name = "AutoRight", group = "AB")
+@Autonomous(name = "AutoRight", group = "Z")
 public class AutoRight extends LinearOpMode {
 
     /*
