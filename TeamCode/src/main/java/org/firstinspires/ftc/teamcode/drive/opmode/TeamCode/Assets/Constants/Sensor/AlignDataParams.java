@@ -16,4 +16,6 @@ public class AlignDataParams {
     public static double RightForwardOffset = 1; //the amount the robot must drive forward to get the pole in the claw (right side)
 
     public static boolean KeepHeadingForCenter = false;
+
+    public static double TeleopForwardStack = 10;
 }

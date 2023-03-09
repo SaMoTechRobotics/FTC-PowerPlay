@@ -9,8 +9,11 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Auto.AutoAlignManager;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.ChassisSpeed;
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Chassis.PoseStorage;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Sensor.AlignDataParams;
+import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Auto.Constants.AutoSide;
 
 /**
  * Chassis class which contains all the methods for the chassis of the robot
@@ -30,6 +33,10 @@ public class Chassis {
      */
     public SampleMecanumDrive MecanumDrive;
     public ChassisMode Mode = ChassisMode.Manual;
+
+    public ChassisAutoMode AutoMode = ChassisAutoMode.StackAlign;
+
+    private int StackAlign = AutoSide.Right;
 
     public static boolean CustomDrive = false;
 
@@ -212,6 +219,9 @@ public class Chassis {
             this.autoDrive(gamepad1);
         } else if (autoDrive && !gamepad1.getButton(GamepadKeys.Button.A) && this.Mode == ChassisMode.AutoDrive) { // If already auto driving
             // Let the robot auto drive
+            if (this.AutoMode == ChassisAutoMode.StackAlign) {
+                this.autoStackAlign(this.StackAlign);
+            }
         } else {
             this.Mode = ChassisMode.Manual;
             this.MecanumDrive.breakFollowing();
@@ -266,18 +276,36 @@ public class Chassis {
             GamepadEx gamepad1
     ) {
         this.Mode = ChassisMode.AutoDrive;
-        if (gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_UP)) {
+
+
+        if (gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_LEFT)) {
+            this.StackAlign = AutoSide.Left;
+            this.AutoMode = ChassisAutoMode.StackAlign;
+        } else if (gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_RIGHT)) {
+            this.StackAlign = AutoSide.Right;
+            this.AutoMode = ChassisAutoMode.StackAlign;
+        }
+
+        if (this.AutoMode == ChassisAutoMode.StackAlign) {
+            this.FoundStack = false;
+            this.autoStackAlign(this.StackAlign);
+        }
+    }
+
+    private boolean FoundStack = false;
+
+    private void autoStackAlign(
+            int SIDE
+    ) {
+        AutoAlignManager.smartAlignReset();
+        if (FoundStack) {
             this.MecanumDrive.followTrajectoryAsync(
-                    this.MecanumDrive.trajectoryBuilder(this.MecanumDrive.getPoseEstimate())
-                            .back(AutoDriveDist)
+                    this.MecanumDrive.trajectoryBuilder(this.getPosition())
+                            .forward(AlignDataParams.TeleopForwardStack)
                             .build()
             );
-        } else if (gamepad1.wasJustReleased(GamepadKeys.Button.DPAD_DOWN)) {
-            this.MecanumDrive.followTrajectoryAsync(
-                    this.MecanumDrive.trajectoryBuilder(this.MecanumDrive.getPoseEstimate())
-                            .forward(AutoDriveDist)
-                            .build()
-            );
+        } else if (AutoAlignManager.smartAlign(this.MecanumDrive, LeftSensor, RightSensor, PoleAlign.Forward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left, true)) {
+            this.FoundStack = true;
         }
     }
 
@@ -344,6 +372,11 @@ public class Chassis {
     public enum ChassisMode {
         Manual, //Manual control, takes input from the joysticks
         AutoDrive, //Autonomous control, does current autonomous path or action, can be interrupted by manual control
+    }
+
+    public enum ChassisAutoMode {
+        StackAlign,
+        PoleAlign
     }
 
     public enum ChassisHeading {
