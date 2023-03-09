@@ -34,7 +34,7 @@ public class Chassis {
     public SampleMecanumDrive MecanumDrive;
     public ChassisMode Mode = ChassisMode.Manual;
 
-    public ChassisAutoMode AutoMode = ChassisAutoMode.StackAlign;
+    public ChassisAutoMode AutoMode = ChassisAutoMode.None;
 
     private int StackAlign = AutoSide.Right;
 
@@ -304,6 +304,7 @@ public class Chassis {
                             .forward(AlignDataParams.TeleopForwardStack)
                             .build()
             );
+            this.AutoMode = ChassisAutoMode.None;
         } else if (AutoAlignManager.smartAlign(this.MecanumDrive, LeftSensor, RightSensor, PoleAlign.Forward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left, true)) {
             this.FoundStack = true;
         }
@@ -376,7 +377,8 @@ public class Chassis {
 
     public enum ChassisAutoMode {
         StackAlign,
-        PoleAlign
+        PoleAlign,
+        None
     }
 
     public enum ChassisHeading {
