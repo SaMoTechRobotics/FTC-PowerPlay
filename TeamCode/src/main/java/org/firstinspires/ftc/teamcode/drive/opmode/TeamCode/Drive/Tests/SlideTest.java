@@ -3,13 +3,12 @@ package org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Drive.Tests;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Classes.Slide;
 
 
-@TeleOp(name = "SlideTest", group = "Tests")
+//@TeleOp(name = "SlideTest", group = "Tests")
 public class SlideTest extends LinearOpMode {
 
     private Slide Slide;
