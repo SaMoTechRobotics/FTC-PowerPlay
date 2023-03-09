@@ -210,7 +210,7 @@ public class AutoRightPro extends LinearOpMode {
      * The goal for auto, the preloaded cone is a given so the overall auto will be:
      * 1 + ConesToScore.Cones (3) = 4 total cones
      */
-    private static class ConesToScore {
+    protected static class ConesToScore {
         public static int Count = 3;
 
         public static TargetPole Pole0 = TargetPole.CloseHigh;
