@@ -77,7 +77,7 @@ public class AutoLeftPro extends LinearOpMode {
     private static class TrajectoryDistances {
         public static double ClearPole = 2;
 
-        public static double ForwardPickupX = 63;
+        public static double ForwardPickupX = 64;
 
         public static double PickupOffset = 1;
 
@@ -251,6 +251,8 @@ public class AutoLeftPro extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        AutoAlignManager.CenterHeading = FINAL_ROT;
 
         /*
          * Init Vars -------------------------------------------------------------------------------

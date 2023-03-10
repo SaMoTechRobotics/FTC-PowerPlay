@@ -79,7 +79,7 @@ public class AutoRightPro extends LinearOpMode {
 
         public static double ClearPoleForward = 1;
 
-        public static double ForwardPickupX = 63;
+        public static double ForwardPickupX = 64;
 
         public static double PickupOffset = 1;
 
@@ -256,6 +256,8 @@ public class AutoRightPro extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        AutoAlignManager.CenterHeading = FINAL_ROT;
 
         /*
          * Init Vars -------------------------------------------------------------------------------
@@ -529,24 +531,24 @@ public class AutoRightPro extends LinearOpMode {
                     telemetry.addLine("");
                     telemetry.update();
 
-                    if (
-                            (findTimer.seconds() > UtilAndDelays.StackGiveUpDelay)
-                                    || (SIDE == AutoSide.Right ?
-                                    (drive.getPoseEstimate().getX() < SIDE * TrajectoryDistances.StackGiveupX) :
-                                    (drive.getPoseEstimate().getX() > SIDE * TrajectoryDistances.StackGiveupX))
-                    ) { //if took too long or went too far, give up
-                        drive.followTrajectory(
-                                drive.trajectoryBuilder(drive.getPoseEstimate())
-                                        .lineToLinearHeading(TempStackPos)
-                                        .build()
-                        );
-                        break;
-                    }
+//                    if (
+//                            (findTimer.seconds() > UtilAndDelays.StackGiveUpDelay)
+//                                    || (SIDE == AutoSide.Right ?
+//                                    (drive.getPoseEstimate().getX() < SIDE * TrajectoryDistances.StackGiveupX) :
+//                                    (drive.getPoseEstimate().getX() > SIDE * TrajectoryDistances.StackGiveupX))
+//                    ) { //if took too long or went too far, give up
+//                        drive.followTrajectory(
+//                                drive.trajectoryBuilder(drive.getPoseEstimate())
+//                                        .lineToLinearHeading(TempStackPos)
+//                                        .build()
+//                        );
+//                        break;
+//                    }
                 }
 
                 TempStackPos = AutoAlignManager.getCalculatedCenterPosition();
 
-                TempLowPolePos = AutoAlignManager.getCalculatedPosition();
+//                TempLowPolePos = AutoAlignManager.getCalculatedPosition();
 
 //                    TempPolePos.plus(new Pose2d(0, AutoAlignManager.getCalculatedPosition().getY() - TrajectoryDistances.StackY, 0));
 

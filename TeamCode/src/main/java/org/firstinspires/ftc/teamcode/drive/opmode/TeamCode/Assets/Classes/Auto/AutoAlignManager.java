@@ -18,11 +18,14 @@ import java.util.stream.Collectors;
 
 public class AutoAlignManager {
 
+    public static double CenterHeading = 0;
+
     public static class SmartAlignData {
         public ArrayList<AlignPos> distances = new ArrayList<>(); //list of distances and positions from the sensors
 
         public boolean sawPole = false; //if the robot saw the pole
         public boolean gotData = false; //if the robot finished getting data from the sensors
+
 
         public Pose2d calculatedPosition = new Pose2d(); //the calculated position of the robot
         public Pose2d calculatedCenterPosition = new Pose2d(); //the calculated position of the robot
@@ -81,7 +84,7 @@ public class AutoAlignManager {
             return new Pose2d( //calculates the position to align to
                     bestAlignPos.Position.getX() + (dist * perpendicularHeadingCos) + (offset * headingCos), //calculates the x value
                     bestAlignPos.Position.getY() + (dist * perpendicularHeadingSin) + (offset * headingSin), //calculates the y value
-                    AlignDataParams.KeepHeadingForCenter ? bestAlignPos.Position.getHeading() : 0 //keeps the same heading
+                    AlignDataParams.KeepHeadingForCenter ? bestAlignPos.Position.getHeading() : AutoAlignManager.CenterHeading //keeps the same heading
             );
         }
 //
