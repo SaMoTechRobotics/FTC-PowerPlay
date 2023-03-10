@@ -34,6 +34,7 @@ public class Slide {
 
         this.SlideMotor.setDirection(DcMotor.Direction.REVERSE);
         // this.SlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.SlideMotor.setTargetPosition(0);
         this.Status = SlideStatus.Stopped;
     }
 
