@@ -81,10 +81,12 @@ public class AutoAlignManager {
             double headingSin = Math.sin(bestAlignPos.Position.getHeading()); //gets the sin of the heading
             double headingCos = Math.cos(bestAlignPos.Position.getHeading()); //gets the cos of the heading
 
+            double ConstHeading = alignStrafe == Chassis.PoleAlign.Right ? 0 : Math.toRadians(180);
+
             return new Pose2d( //calculates the position to align to
                     bestAlignPos.Position.getX() + (dist * perpendicularHeadingCos) + (offset * headingCos), //calculates the x value
                     bestAlignPos.Position.getY() + (dist * perpendicularHeadingSin) + (offset * headingSin), //calculates the y value
-                    AlignDataParams.KeepHeadingForCenter ? bestAlignPos.Position.getHeading() : AutoAlignManager.CenterHeading //keeps the same heading
+                    AlignDataParams.KeepHeadingForCenter ? bestAlignPos.Position.getHeading() : ConstHeading //keeps the same heading
             );
         }
 //
