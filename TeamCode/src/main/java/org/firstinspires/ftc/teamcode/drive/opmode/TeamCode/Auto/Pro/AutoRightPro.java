@@ -521,15 +521,15 @@ public class AutoRightPro extends LinearOpMode {
 
             //Line up with stack using alignment with low pole
 
-            if (AlignmentTimes.AlignStack[AlignStackIndex]) {
-                findTimer = new ElapsedTime();
-                AutoAlignManager.smartAlignReset();
-                while (!AutoAlignManager.smartAlign(drive, LeftSensor, RightSensor, Chassis.PoleAlign.Forward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left, true) && opModeIsActive()) {
-                    telemetry.addData("Left Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
-                    telemetry.addLine("");
-                    telemetry.addData("Right Sensor", RightSensor.getDistance(DistanceUnit.INCH));
-                    telemetry.addLine("");
-                    telemetry.update();
+//            if (AlignmentTimes.AlignStack[AlignStackIndex]) {
+            findTimer = new ElapsedTime();
+            AutoAlignManager.smartAlignReset();
+            while (!AutoAlignManager.smartAlign(drive, LeftSensor, RightSensor, Chassis.PoleAlign.Forward, SIDE == AutoSide.Right ? Chassis.PoleAlign.Right : Chassis.PoleAlign.Left, true) && opModeIsActive()) {
+                telemetry.addData("Left Sensor", LeftSensor.getDistance(DistanceUnit.INCH));
+                telemetry.addLine("");
+                telemetry.addData("Right Sensor", RightSensor.getDistance(DistanceUnit.INCH));
+                telemetry.addLine("");
+                telemetry.update();
 
 //                    if (
 //                            (findTimer.seconds() > UtilAndDelays.StackGiveUpDelay)
@@ -544,9 +544,9 @@ public class AutoRightPro extends LinearOpMode {
 //                        );
 //                        break;
 //                    }
-                }
+            }
 
-                TempStackPos = AutoAlignManager.getCalculatedCenterPosition();
+            TempStackPos = AutoAlignManager.getCalculatedCenterPosition();
 
 //                TempLowPolePos = AutoAlignManager.getCalculatedPosition();
 
@@ -554,26 +554,26 @@ public class AutoRightPro extends LinearOpMode {
 
 //                    drive.setPoseEstimate(new Pose2d(drive.getPoseEstimate().getX(), TrajectoryDistances.StackY, drive.getPoseEstimate().getHeading()));
 
-                drive.followTrajectory(
-                        drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .forward(Math.abs(TrajectoryDistances.ForwardPickupX - Math.abs(drive.getPoseEstimate().getX())))
-                                .build()
-                );
+            drive.followTrajectory(
+                    drive.trajectoryBuilder(drive.getPoseEstimate())
+                            .forward(Math.abs(TrajectoryDistances.ForwardPickupX - Math.abs(drive.getPoseEstimate().getX())))
+                            .build()
+            );
 
-            } else {
-                drive.followTrajectory(
-                        drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .lineToLinearHeading(TempStackPos)
-                                .build()
-                );
-
-                drive.followTrajectory(
-                        drive.trajectoryBuilder(drive.getPoseEstimate())
-                                .forward(Math.abs(TrajectoryDistances.ForwardPickupX - Math.abs(drive.getPoseEstimate().getX())))
-                                .build()
-                );
-
-            }
+//            } else {
+//                drive.followTrajectory(
+//                        drive.trajectoryBuilder(drive.getPoseEstimate())
+//                                .lineToLinearHeading(TempStackPos)
+//                                .build()
+//                );
+//
+//                drive.followTrajectory(
+//                        drive.trajectoryBuilder(drive.getPoseEstimate())
+//                                .forward(Math.abs(TrajectoryDistances.ForwardPickupX - Math.abs(drive.getPoseEstimate().getX())))
+//                                .build()
+//                );
+//
+//            }
             AlignStackIndex++;
 
 
