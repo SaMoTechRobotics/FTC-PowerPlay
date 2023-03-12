@@ -104,7 +104,7 @@ public class AutoRightPro extends LinearOpMode {
         // Stack pos                                                right                       left
         public static Vec2 StackPos = SIDE == AutoSide.Right ? new Vec2(63, TrajectoryDistances.StackY) : new Vec2(63, TrajectoryDistances.StackY);
 
-        public static Vec2 AlignStackPos = SIDE == AutoSide.Right ? new Vec2(47, TrajectoryDistances.StackY) : new Vec2(47, TrajectoryDistances.StackY);
+        public static Vec2 AlignStackPos = SIDE == AutoSide.Right ? new Vec2(46, TrajectoryDistances.StackY) : new Vec2(47, TrajectoryDistances.StackY);
 
         public static Vec2 AvoidByStackPos = SIDE == AutoSide.Right ? new Vec2(46, TrajectoryDistances.StackY) : new Vec2(46, TrajectoryDistances.StackY);
 
@@ -131,13 +131,13 @@ public class AutoRightPro extends LinearOpMode {
                         new PolePos(8, 4, 0, -14, 0); //left
         public static PolePos CloseHighPolePos =
                 SIDE == AutoSide.Right ?
-                        new PolePos(31, 28, 20, TrajectoryDistances.StackY, 0) : //right
-                        new PolePos(31, 28, 20, TrajectoryDistances.StackY, 0); //left
+                        new PolePos(31, 28, 20, -10, 0) : //right
+                        new PolePos(31, 28, 20, -10, 0); //left
 
         public static PolePos CloseMidPolePos =
                 SIDE == AutoSide.Right ?
-                        new PolePos(31, 28, 20, TrajectoryDistances.StackY, 0) :
-                        new PolePos(31, 28, 20, TrajectoryDistances.StackY, 0); //left
+                        new PolePos(31, 28, 20, -14, 0) :
+                        new PolePos(31, 28, 20, -14, 0); //left
 
 
     }
@@ -163,8 +163,8 @@ public class AutoRightPro extends LinearOpMode {
         public static double RotateArmDelay = 0.2;
         public static double LowerForPickupDelay = 1;
 
-        public static double GiveUpDelay = 8;
-        public static double StackGiveUpDelay = 8;
+        public static double GiveUpDelay = 3;
+        public static double StackGiveUpDelay = 4;
         public static double PoleWait = 100;
 
         public static double LowPoleWait = 800;
@@ -428,13 +428,13 @@ public class AutoRightPro extends LinearOpMode {
                     telemetry.update();
                     if (
                             (findTimer.seconds() > UtilAndDelays.GiveUpDelay)
-                                    || (SIDE == AutoSide.Right ?
-                                    (drive.getPoseEstimate().getX() < SIDE * TargetPolePos.GiveUpX) :
-                                    (drive.getPoseEstimate().getX() > SIDE * TargetPolePos.GiveUpX))
+//                                    || (SIDE == AutoSide.Right ?
+//                                    (drive.getPoseEstimate().getX() < SIDE * TargetPolePos.GiveUpX) :
+//                                    (drive.getPoseEstimate().getX() > SIDE * TargetPolePos.GiveUpX))
                     ) { //if took too long or went too far, give up
                         drive.followTrajectory(
                                 drive.trajectoryBuilder(drive.getPoseEstimate())
-                                        .lineToLinearHeading(new Pose2d(SIDE * TargetPolePos.X, TargetPolePos.Y, Math.toRadians(FINAL_ROT)),
+                                        .lineToLinearHeading(new Pose2d(SIDE * TempPolePos.getX(), TempPolePos.getY(), Math.toRadians(FINAL_ROT)),
                                                 SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.NormalSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
                                                 SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.NormalAccel)
                                         ) //drive to pole estimate location
@@ -531,19 +531,19 @@ public class AutoRightPro extends LinearOpMode {
                 telemetry.addLine("");
                 telemetry.update();
 
-//                    if (
-//                            (findTimer.seconds() > UtilAndDelays.StackGiveUpDelay)
+                if (
+                        (findTimer.seconds() > UtilAndDelays.StackGiveUpDelay)
 //                                    || (SIDE == AutoSide.Right ?
 //                                    (drive.getPoseEstimate().getX() < SIDE * TrajectoryDistances.StackGiveupX) :
 //                                    (drive.getPoseEstimate().getX() > SIDE * TrajectoryDistances.StackGiveupX))
-//                    ) { //if took too long or went too far, give up
-//                        drive.followTrajectory(
-//                                drive.trajectoryBuilder(drive.getPoseEstimate())
-//                                        .lineToLinearHeading(TempStackPos)
-//                                        .build()
-//                        );
-//                        break;
-//                    }
+                ) { //if took too long or went too far, give up
+                    drive.followTrajectory(
+                            drive.trajectoryBuilder(drive.getPoseEstimate())
+                                    .lineToLinearHeading(TempStackPos)
+                                    .build()
+                    );
+                    break;
+                }
             }
 
             TempStackPos = AutoAlignManager.getCalculatedCenterPosition();
@@ -609,7 +609,7 @@ public class AutoRightPro extends LinearOpMode {
             Slide.setHeight(NextPoleHeight, SlideSpeed.Max); //set slide height to high pole
             drive.followTrajectory(
                     drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .lineToLinearHeading(new Pose2d(SIDE * NextPolePos.FindX, NextPolePos.Y, Math.toRadians(FINAL_ROT)),
+                            .lineToLinearHeading(new Pose2d(SIDE * NextPolePos.FindX, TempStackPos.getY(), Math.toRadians(FINAL_ROT)),
                                     SampleMecanumDrive.getVelocityConstraint(TrajectorySpeeds.FastSpeed, TrajectorySpeeds.NormalTurn, DriveConstants.TRACK_WIDTH),
                                     SampleMecanumDrive.getAccelerationConstraint(TrajectorySpeeds.FastAccel)
                             )
