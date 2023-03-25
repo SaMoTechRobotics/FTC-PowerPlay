@@ -41,7 +41,7 @@ import java.util.Arrays;
 @Autonomous(name = "AutoLeftPro", group = "A")
 public class AutoLeftPro extends LinearOpMode {
 
-    /*
+    /*x1
      * Global Vars ---------------------------------------------------------------------------------
      */
     public final static int SIDE = AutoSide.Left;

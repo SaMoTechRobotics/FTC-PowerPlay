@@ -236,7 +236,8 @@ public class Slide {
 //            if (this.Status != SlideStatus.Stopped) {
 //            this.stop();
         } else if (this.getTicks() < SlideHeight.AutoClawMargin) {
-            if (!claw.detectedCone() && !AButton) claw.open();
+            if (!claw.detectedCone() && claw.getSensorDistance() > ClawPosition.OpenDistance && !AButton)
+                claw.open();
 //            }
         } else if (
                 this.Status != SlideStatus.Stopped &&

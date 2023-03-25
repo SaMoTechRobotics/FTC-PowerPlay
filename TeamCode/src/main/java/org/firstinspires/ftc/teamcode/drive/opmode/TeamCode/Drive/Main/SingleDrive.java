@@ -20,8 +20,8 @@ import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Pod
 import org.firstinspires.ftc.teamcode.drive.opmode.TeamCode.Assets.Constants.Slide.SlideHeight;
 
 @Config
-@TeleOp(name = "Drive", group = "A")
-public class Drive extends LinearOpMode {
+@TeleOp(name = "SingleDrive", group = "B")
+public class SingleDrive extends LinearOpMode {
 
     public static boolean AutoDrive = false;
     public static boolean Debug = false;
@@ -87,12 +87,14 @@ public class Drive extends LinearOpMode {
              */
 
 
-            // Updates the chassis speed based on gamepad1 bumpers
-            Chassis.updateSpeed(
+            if (!Gamepad1.getButton(GamepadKeys.Button.A)) {
+                // Updates the chassis speed based on gamepad1 bumpers
+                Chassis.updateSpeed(
 //                    Slide.getInches() < SlideHeight.MidPole &&
-                    Gamepad1.getButton(GamepadKeys.Button.LEFT_BUMPER),
-                    Gamepad1.getButton(GamepadKeys.Button.RIGHT_BUMPER)
-            );
+                        Gamepad1.getButton(GamepadKeys.Button.LEFT_BUMPER),
+                        Gamepad1.getButton(GamepadKeys.Button.RIGHT_BUMPER)
+                );
+            }
 
             // Drives the robot with joysticks from gamepad 1, normal format
 //            Chassis.updateWithControls(
@@ -106,7 +108,7 @@ public class Drive extends LinearOpMode {
             Chassis.updateWithControls(
                     Gamepad1,
                     AutoDrive,
-                    false
+                    Gamepad1.getButton(GamepadKeys.Button.A)
             );
             telemetry.addLine("");
             telemetry.addData("Left Distance", Chassis.getLeftDistance());
@@ -129,11 +131,11 @@ public class Drive extends LinearOpMode {
                 Claw.setOpenAmount(ClawPosition.Open);
             }
 
-            if (ClawPosition.AutoClose && Slide.getTicks() < ClawPosition.ResetOpenMargin && Claw.detectedCone() && !Gamepad2.getButton(GamepadKeys.Button.A)) {
+            if (ClawPosition.AutoClose && Slide.getTicks() < ClawPosition.ResetOpenMargin && Claw.detectedCone() && Gamepad1.getTrigger(GamepadKeys.Trigger.LEFT_TRIGGER) < 0.5) {
                 Claw.close();
-            } else {
-                if (Gamepad2.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) Claw.close();
-                else if (Gamepad2.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) Claw.open();
+            } else if (Gamepad1.getButton(GamepadKeys.Button.A)) {
+                if (Gamepad1.wasJustPressed(GamepadKeys.Button.RIGHT_BUMPER)) Claw.close();
+                else if (Gamepad1.wasJustPressed(GamepadKeys.Button.LEFT_BUMPER)) Claw.open();
             }
 
 //            if (Slide.getInches() < SlideHeight.PoleBraceSafetyHeight) Claw.raisePoleBrace();
@@ -163,9 +165,9 @@ public class Drive extends LinearOpMode {
 
             if (Slide.getInches() > SlideHeight.SafetyHeight) Arm.updateWithControls(
                     Gamepad2.getRightX(),
-                    gamepad2.b,
-                    gamepad2.x,
-                    gamepad2.y,
+                    gamepad1.b,
+                    gamepad1.x,
+                    gamepad1.y,
                     false
 //                    Gamepad2.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) < 0.5
             );
@@ -179,17 +181,18 @@ public class Drive extends LinearOpMode {
              */
 
             Slide.updateWithControls(
-                    Gamepad2.getLeftY(),
-                    Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_UP),
-                    Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_LEFT),
-                    Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
-                    Gamepad2.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT),
-                    Gamepad2.getButton(GamepadKeys.Button.A),
+                    Gamepad1.getButton(GamepadKeys.Button.A) ? (Gamepad1.getLeftY() != 0 ? Gamepad1.getLeftY() : Gamepad1.getRightY()) : 0,
+                    Gamepad1.wasJustPressed(GamepadKeys.Button.DPAD_UP),
+                    Gamepad1.wasJustPressed(GamepadKeys.Button.DPAD_LEFT),
+                    Gamepad1.wasJustPressed(GamepadKeys.Button.DPAD_DOWN),
+                    Gamepad1.wasJustPressed(GamepadKeys.Button.DPAD_RIGHT),
+                    false,
                     Arm,
                     Claw
             );
 
-            Slide.updateSpeed(Gamepad2.getButton(GamepadKeys.Button.A));
+//            Slide.updateSpeed(Gamepad2.getButton(GamepadKeys.Button.A));
+            Slide.updateSpeed(Gamepad1.getTrigger(GamepadKeys.Trigger.RIGHT_TRIGGER) > 0.5);
 
             telemetry.addLine("");
             telemetry.addData("Slide Inches", Slide.getInches());

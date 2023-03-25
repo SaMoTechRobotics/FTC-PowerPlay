@@ -200,11 +200,17 @@ public class Chassis {
      */
     public void updateWithControls(
             GamepadEx gamepad1,
-            boolean autoDrive
+            boolean autoDrive,
+            boolean armControl
     ) {
         double driveStick = Math.abs(-gamepad1.getLeftY()) > ChassisSpeed.JoystickYMargin ? -gamepad1.getLeftY() : 0;
         double strafeStick = Math.abs(-gamepad1.getLeftX()) > ChassisSpeed.JoystickXMargin ? -gamepad1.getLeftX() : 0;
         double turnStick = gamepad1.getRightX();
+        if (armControl) {
+            driveStick = 0;
+            strafeStick = 0;
+            turnStick = 0;
+        }
         if (driveStick != 0 || strafeStick != 0 || turnStick != 0) {
 
             this.Mode = ChassisMode.Manual;
