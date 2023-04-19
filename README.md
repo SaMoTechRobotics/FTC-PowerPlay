@@ -38,6 +38,10 @@ To see the documentation of our code, go to our [docs](https://github.com/SaMoTe
 
 - [Instagram](https://www.instagram.com/samotechrobotics/)
 
+## Check out our Website
+
+### [samotechrobotics.com](https://samotechrobotics.com)
+
 ### Contact
 <p align="center">
 Contact us at SaMoTechRobotics@gmail.com
